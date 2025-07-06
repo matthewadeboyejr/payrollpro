@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+  payrollpro-frontend:
+    image: payrollpro-frontend
+    container_name: payrollpro-frontend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+      - /app/node_modules # Prevent host from overwriting container's node_modules
+    ports:
+      - 3000:3000
+    environment:
+      - NODE_ENV=development
+    command: npm run dev
