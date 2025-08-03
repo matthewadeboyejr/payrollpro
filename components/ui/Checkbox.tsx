@@ -14,7 +14,9 @@ const Checkbox = ({ name, form, label }: TextInputProps) => {
         component="input"
         className="focus:ring-focus text-accent check-box"
       />
-      {label && <p className="text-sm text-gray-600">{label}</p>}
+      {label && (
+        <p className="text-sm text-black font-medium cursor-pointer">{label}</p>
+      )}
 
       {submitFailed && errors[name] && (
         <small className="text-red-600">{errors[name]}</small>

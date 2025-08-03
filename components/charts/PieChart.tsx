@@ -109,9 +109,7 @@ const PieChart = () => {
     <div className="bg-white p-4 rounded-lg w-full">
       <div className="flex items-center gap-2 mb-5">
         <FiUsers />
-        <h2 className="text-lg font-semibold">
-          Employee Distribution by Department
-        </h2>
+        <h2 className="text-lg font-semibold">Department Cost Distribution</h2>
       </div>
       <HighchartsReact highcharts={Highcharts} options={options} />
     </div>

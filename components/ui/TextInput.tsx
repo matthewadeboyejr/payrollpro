@@ -27,8 +27,8 @@ const TextInput = ({
     type === "password" ? (showPassword ? "text" : "password") : type;
 
   return (
-    <div className="mb-3 flex flex-col w-full">
-      <label htmlFor={name} className="font-medium pb-2">
+    <div className="mb-3 flex flex-col flex-grow">
+      <label htmlFor={name} className="font-medium text-black pb-2">
         {label}
       </label>
 
@@ -39,7 +39,7 @@ const TextInput = ({
           component="input"
           placeholder={placeholder}
           readOnly={readonly}
-          className={` focus:outline-none focus:ring-focus pr-10 ${classes}`}
+          className={` focus:outline-none focus:ring-focus  ${classes}`}
         />
 
         {type === "password" && (

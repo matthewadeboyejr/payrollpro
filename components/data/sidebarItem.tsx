@@ -41,11 +41,11 @@ const menus = [
         url: "/dashboard/leave-management",
       },
       {
-        id: "Rota-Scheduling",
+        id: "rota-scheduling",
         role: "admin",
         label: "Rota & Scheduling",
         icon: <FaRegClock />,
-        url: "/dashboard/Rota-Scheduling",
+        url: "/dashboard/rota-scheduling",
       },
       {
         id: "expense-management",
@@ -73,7 +73,7 @@ const menus = [
         role: "admin",
         label: "Payslip",
         icon: <FiCreditCard />,
-        url: "/dashboard/payslip",
+        url: "/dashboard/payslip-management",
       },
     ],
   },

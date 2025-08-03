@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import DropdownComponent from "../ui/Dropdown";
-import { FiPlus, FiSearch } from "react-icons/fi";
+import { FiFilter, FiPlus, FiSearch } from "react-icons/fi";
 import Modal from "../ui/Modal";
 import AddNewEmployeeForm from "../forms/AddNewEmployeeForm";
 
@@ -8,8 +8,9 @@ import { Form } from "react-final-form";
 import { validate } from "validate.js";
 import { AddNewEmployeeFormValues } from "../types/formFields";
 import { addNewEmployeeConstraints } from "../forms/contraints/contraints";
+import { BiExport } from "react-icons/bi";
 
-const EmployeeManagementTable = () => {
+const RotaAndSchedulingTable = () => {
   const [search, setSearch] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const onSubmit = (values: AddNewEmployeeFormValues) => {
@@ -22,25 +23,48 @@ const EmployeeManagementTable = () => {
 
   return (
     <div className="flex flex-col gap-4 bg-white p-4 rounded-sm">
-      <div className="flex flex-col md:flex-row justify-between items-center gap-2">
+      <div className="flex items-center gap-2">
+        <h2 className="text-lg font-semibold">Shift Schedule</h2>
+      </div>
+      <div className="flex  flex-col md:flex-row justify-between items-center gap-2">
         <div className="flex flex-1 items-center gap-2 border border-gray-200 px-2 py-3 rounded-sm w-full md:w-auto  bg-gray-50">
           <FiSearch className="text-gray-500" />
           <input
             type="text"
             placeholder="search employee by name or email"
-            className="w-full outline-none  focus:outline-none focus:ring-focus focus:ring-focus text-sm"
+            className=" outline-none  focus:outline-none focus:ring-focus focus:ring-focus text-sm w-full"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
 
-        <div className="flex items-center gap-2 w-full md:w-auto">
+        <div className="flex items-center gap-2 w-full md:w-auto justify-end">
           <button
             className="primary-btn flex items-center gap-2 w-full md:w-auto"
             onClick={() => setIsModalOpen(true)}
           >
             <FiPlus />
-            <span>Add Employee</span>
+            <span>Add Shift</span>
+          </button>
+          <button
+            className="secondary-btn flex items-center gap-2 w-full md:w-auto  "
+            onClick={() => {
+              console.log("filter");
+            }}
+          >
+            <FiFilter className="text-blue-500" />
+            <span>Filter</span>
+          </button>
+          <button
+            className="secondary-btn flex items-center gap-2 w-full md:w-auto"
+            onClick={() => {
+              console.log("export");
+            }}
+          >
+            <span>
+              <BiExport className="text-blue-500" />
+            </span>
+            <span>Export</span>
           </button>
         </div>
       </div>
@@ -49,13 +73,7 @@ const EmployeeManagementTable = () => {
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
               <th scope="col" className="px-6 py-3">
-                Employee ID
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Name
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Email
+                Employee
               </th>
               <th scope="col" className="px-6 py-3">
                 Department
@@ -64,10 +82,17 @@ const EmployeeManagementTable = () => {
                 Position
               </th>
               <th scope="col" className="px-6 py-3">
-                Status
+                Date
               </th>
               <th scope="col" className="px-6 py-3">
-                Start Date
+                Time
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Hours
+              </th>
+
+              <th scope="col" className="px-6 py-3">
+                Status
               </th>
               <th scope="col" className="px-6 py-3">
                 Actions
@@ -76,12 +101,6 @@ const EmployeeManagementTable = () => {
           </thead>
           <tbody>
             <tr className=" border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
-              <th
-                scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-              >
-                EMP001
-              </th>
               <td className="px-6 py-4 flex flex-col gap-2 items-start">
                 <span className="text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white">
                   John Smith
@@ -90,15 +109,17 @@ const EmployeeManagementTable = () => {
                   +44 7700 900123
                 </span>
               </td>
-              <td className="px-6 py-4">john.smith@example.com</td>
               <td className="px-6 py-4">Engineering</td>
               <td className="px-6 py-4">Senior Developer</td>
+              <td className="px-6 py-4">2021-01-01</td>
+              <td className="px-6 py-4">09:00 - 17:00</td>
+              <td className="px-6 py-4">10H</td>
+
               <td className="px-6 py-4">
                 <span className="bg-green-200 text-green-800 px-2 py-1 rounded-full text-xs">
-                  Active
+                  Scheduled
                 </span>
               </td>
-              <td className="px-6 py-4">2021-01-01</td>
               <td className="px-6 py-4">
                 <DropdownComponent
                   options={[
@@ -119,6 +140,7 @@ const EmployeeManagementTable = () => {
           heading={"Add New Employee"}
           desc={"Add a new employee to the system"}
           onClose={() => setIsModalOpen(false)}
+          submitBtnText="Add New Employee"
         >
           <Form<AddNewEmployeeFormValues>
             onSubmit={onSubmit}
@@ -137,4 +159,4 @@ const EmployeeManagementTable = () => {
   );
 };
 
-export default EmployeeManagementTable;
+export default RotaAndSchedulingTable;

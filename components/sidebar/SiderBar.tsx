@@ -11,9 +11,11 @@ import {
   toggleSidebar,
 } from "@/redux/slice/sidebar.slice";
 import { IoClose } from "react-icons/io5";
+import { usePathname } from "next/navigation";
 
 const SiderBar = () => {
   const dispatch = useAppDispatch();
+  const pathname = usePathname();
   const { isOpen, isMobile, activeMenu, collapsed } = useAppSelector(
     (state) => state.sidebar
   );
@@ -29,6 +31,11 @@ const SiderBar = () => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, [dispatch]);
+
+  // Set active menu based on current pathname
+  useEffect(() => {
+    dispatch(setActiveMenu(pathname));
+  }, [pathname, dispatch]);
 
   // Don't render sidebar on mobile when closed
   if (isMobile && !isOpen) {

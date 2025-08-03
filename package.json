@@ -6,12 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "postinstall": "flowbite-react patch"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.8.2",
     "@types/react-redux": "^7.1.34",
-    "flowbite-react": "^0.11.8",
     "highcharts": "^12.3.0",
     "highcharts-react-official": "^3.2.2",
     "next": "15.3.5",

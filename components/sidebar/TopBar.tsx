@@ -5,12 +5,42 @@ import { IoNotificationsOutline } from "react-icons/io5";
 import { MdMenuOpen, MdMenu } from "react-icons/md";
 import { useAppSelector, useAppDispatch } from "@/redux/hooks";
 import { toggleSidebar, toggleCollapsed } from "@/redux/slice/sidebar.slice";
+import menus from "../data/sidebarItem";
 
 const TopBar = () => {
   const dispatch = useAppDispatch();
-  const { isOpen, isMobile, collapsed } = useAppSelector(
+  const { isOpen, isMobile, collapsed, activeMenu } = useAppSelector(
     (state) => state.sidebar
   );
+
+  // Function to get page title from active menu
+  const getPageTitle = () => {
+    if (!activeMenu || activeMenu === "/dashboard") return "Overview";
+
+    // Find the menu item that matches the active menu URL
+    for (const menu of menus) {
+      const foundSubmenu = menu.submenus.find(
+        (submenu) => submenu.url === activeMenu
+      );
+      if (foundSubmenu) {
+        return foundSubmenu.label;
+      }
+    }
+
+    // Handle edge cases for pages that might not be in the menu
+    if (activeMenu.includes("/dashboard/")) {
+      // Extract the page name from the URL and format it
+      const pageName = activeMenu.split("/dashboard/")[1];
+      if (pageName) {
+        return pageName
+          .split("-")
+          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(" ");
+      }
+    }
+
+    return "Overview";
+  };
 
   return (
     <aside className="flex items-center justify-between">
@@ -33,9 +63,7 @@ const TopBar = () => {
           </button>
         )}
 
-        <h1 className="text-sm md:text-lg  font-semibold">
-          Employee Management
-        </h1>
+        <h1 className="text-sm md:text-lg  font-semibold">{getPageTitle()}</h1>
       </div>
 
       <div className="flex items-center gap-2">

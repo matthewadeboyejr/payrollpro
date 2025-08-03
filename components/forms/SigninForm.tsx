@@ -8,7 +8,6 @@ import { SigninFormProps } from "../types/formFields";
 const SigninForm = ({ form, handleSubmit, submitting }: SigninFormProps) => {
   return (
     <div>
-      {" "}
       <form onSubmit={handleSubmit}>
         <TextInput
           label="Email "

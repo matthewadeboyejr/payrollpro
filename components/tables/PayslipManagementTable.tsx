@@ -1,15 +1,15 @@
 import React, { useState } from "react";
-import DropdownComponent from "../ui/Dropdown";
-import { FiPlus, FiSearch } from "react-icons/fi";
+import { FiSearch, FiUsers } from "react-icons/fi";
 import Modal from "../ui/Modal";
-import AddNewEmployeeForm from "../forms/AddNewEmployeeForm";
+import DropdownComponent from "../ui/Dropdown";
 
 import { Form } from "react-final-form";
 import { validate } from "validate.js";
 import { AddNewEmployeeFormValues } from "../types/formFields";
 import { addNewEmployeeConstraints } from "../forms/contraints/contraints";
+import BulkActionForm from "../forms/BulkActionForm";
 
-const EmployeeManagementTable = () => {
+const PayslipManagementTable = () => {
   const [search, setSearch] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const onSubmit = (values: AddNewEmployeeFormValues) => {
@@ -22,25 +22,32 @@ const EmployeeManagementTable = () => {
 
   return (
     <div className="flex flex-col gap-4 bg-white p-4 rounded-sm">
-      <div className="flex flex-col md:flex-row justify-between items-center gap-2">
+      <div className="flex items-center gap-2">
+        {/* <h2 className="text-lg font-semibold">Shift Schedule</h2> */}
+      </div>
+      <div className="flex  flex-col md:flex-row justify-between items-center gap-2">
         <div className="flex flex-1 items-center gap-2 border border-gray-200 px-2 py-3 rounded-sm w-full md:w-auto  bg-gray-50">
           <FiSearch className="text-gray-500" />
           <input
             type="text"
             placeholder="search employee by name or email"
-            className="w-full outline-none  focus:outline-none focus:ring-focus focus:ring-focus text-sm"
+            className=" outline-none  focus:outline-none focus:ring-focus focus:ring-focus text-sm w-full"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
 
-        <div className="flex items-center gap-2 w-full md:w-auto">
+        <div className="flex items-center gap-2 w-full md:w-auto justify-end">
           <button
-            className="primary-btn flex items-center gap-2 w-full md:w-auto"
-            onClick={() => setIsModalOpen(true)}
+            className="secondary-btn flex items-center gap-2 w-full md:w-auto"
+            onClick={() => {
+              setIsModalOpen(true);
+            }}
           >
-            <FiPlus />
-            <span>Add Employee</span>
+            <span>
+              <FiUsers className="text-blue-500" />
+            </span>
+            <span>Bulk Actions</span>
           </button>
         </div>
       </div>
@@ -49,25 +56,24 @@ const EmployeeManagementTable = () => {
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
               <th scope="col" className="px-6 py-3">
-                Employee ID
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Name
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Email
+                Employee
               </th>
               <th scope="col" className="px-6 py-3">
                 Department
               </th>
               <th scope="col" className="px-6 py-3">
-                Position
+                Pay Period
               </th>
+              <th scope="col" className="px-6 py-3">
+                Gross Pay
+              </th>
+
+              <th scope="col" className="px-6 py-3">
+                Net Pay
+              </th>
+
               <th scope="col" className="px-6 py-3">
                 Status
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Start Date
               </th>
               <th scope="col" className="px-6 py-3">
                 Actions
@@ -76,34 +82,32 @@ const EmployeeManagementTable = () => {
           </thead>
           <tbody>
             <tr className=" border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
-              <th
-                scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-              >
-                EMP001
-              </th>
               <td className="px-6 py-4 flex flex-col gap-2 items-start">
                 <span className="text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white">
                   John Smith
                 </span>
                 <span className="text-xs text-gray-500 whitespace-nowrap dark:text-gray-400">
-                  +44 7700 900123
+                  EMP001
                 </span>
               </td>
-              <td className="px-6 py-4">john.smith@example.com</td>
               <td className="px-6 py-4">Engineering</td>
-              <td className="px-6 py-4">Senior Developer</td>
+              <td className="px-6 py-4">June 2024</td>
+              <td className="px-6 py-4">£7,200</td>
+
+              <td className="px-6 py-4">£5,190</td>
               <td className="px-6 py-4">
                 <span className="bg-green-200 text-green-800 px-2 py-1 rounded-full text-xs">
-                  Active
+                  Sent
                 </span>
               </td>
-              <td className="px-6 py-4">2021-01-01</td>
               <td className="px-6 py-4">
                 <DropdownComponent
                   options={[
-                    { title: "Edit", onClick: () => {} },
-                    { title: "Delete", onClick: () => {} },
+                    { title: "View Payslip", onClick: () => {} },
+                    {
+                      title: "Download PDF",
+                      onClick: () => {},
+                    },
                   ]}
                   label="Actions"
                   size="sm"
@@ -116,15 +120,16 @@ const EmployeeManagementTable = () => {
       {isModalOpen && (
         <Modal
           size={"2xl"}
-          heading={"Add New Employee"}
-          desc={"Add a new employee to the system"}
+          heading={"Bulk Payslip Actions"}
+          desc={"Perform actions on multiple payslips at once."}
           onClose={() => setIsModalOpen(false)}
+          submitBtnText="Execute Action"
         >
           <Form<AddNewEmployeeFormValues>
             onSubmit={onSubmit}
             validate={validateForm}
             render={({ handleSubmit, form, submitting }) => (
-              <AddNewEmployeeForm
+              <BulkActionForm
                 handleSubmit={handleSubmit}
                 form={form}
                 submitting={submitting}
@@ -137,4 +142,4 @@ const EmployeeManagementTable = () => {
   );
 };
 
-export default EmployeeManagementTable;
+export default PayslipManagementTable;
