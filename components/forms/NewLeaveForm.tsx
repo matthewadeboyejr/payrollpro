@@ -3,15 +3,17 @@ import TextInput from "../ui/TextInput";
 import { FormProps } from "../types/formFields";
 import SelectInput from "../ui/SelectInput";
 import TextareaInput from "../ui/TextareaInput";
+import useConstantData from "@/hooks/useConstantData";
 
 const NewLeaveForm = ({ form, handleSubmit }: FormProps) => {
+  const { leaveTypeOptions } = useConstantData();
   return (
     <div>
       <form onSubmit={handleSubmit} className="">
         <div className="grid grid-cols-2 gap-2">
           <TextInput
-            label="Employee ID"
-            name="employeeId"
+            label="Employee No."
+            name="employeeNo"
             type="text"
             placeholder="EMP001"
             form={form}
@@ -28,14 +30,7 @@ const NewLeaveForm = ({ form, handleSubmit }: FormProps) => {
           <SelectInput
             label="Leave Type"
             name="leaveType"
-            options={[
-              { value: "Annual", label: "Annual" },
-              { value: "Sick", label: "Sick" },
-              { value: "Maternity", label: "Maternity" },
-              { value: "Paternity", label: "Paternity" },
-              { value: "Emergency", label: "Emergency" },
-              { value: "Unpaid", label: "Unpaid" },
-            ]}
+            options={leaveTypeOptions}
             form={form}
           />
         </div>

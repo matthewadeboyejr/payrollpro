@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ReduxProvider } from "@/redux/Provider";
+import { Toaster } from "react-hot-toast";
+import { ModalProvider } from "@/context/ModalContext";
 
 const inter = Inter({
   variable: "--font-inter-sans",
@@ -21,7 +23,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable}  antialiased`}>
-        <ReduxProvider>{children}</ReduxProvider>
+        <ReduxProvider>
+          <ModalProvider>
+            {children}
+            <Toaster />
+          </ModalProvider>
+        </ReduxProvider>
       </body>
     </html>
   );

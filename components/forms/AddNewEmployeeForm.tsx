@@ -2,33 +2,16 @@ import React from "react";
 import TextInput from "../ui/TextInput";
 import { AddNewEmployeeFormProps } from "../types/formFields";
 import SelectInput from "../ui/SelectInput";
+import useConstantData from "@/hooks/useConstantData";
 
 const AddNewEmployeeForm = ({
   form,
   handleSubmit,
 }: AddNewEmployeeFormProps) => {
+  const { departmentOptions, positionOptions } = useConstantData();
   return (
     <div>
       <form onSubmit={handleSubmit} className="">
-        <div className="grid grid-cols-2 gap-2">
-          <TextInput
-            label="Employee ID"
-            name="employeeId"
-            type="text"
-            placeholder="EMP001"
-            form={form}
-          />
-          <SelectInput
-            label="Status"
-            name="status"
-            options={[
-              { value: "active", label: "Active" },
-              { value: "inactive", label: "Inactive" },
-            ]}
-            form={form}
-          />
-        </div>
-
         <div className="grid grid-cols-2 gap-2">
           <TextInput
             label="First Name"
@@ -65,18 +48,17 @@ const AddNewEmployeeForm = ({
         </div>
 
         <div className="grid grid-cols-2 gap-2">
-          <TextInput
+          <SelectInput
             label="Department"
-            name="department"
-            type="text"
-            placeholder="Engineering"
+            name="departmentId"
+            options={departmentOptions}
             form={form}
           />
-          <TextInput
+
+          <SelectInput
             label="Position"
-            name="position"
-            type="text"
-            placeholder="Senior Developer"
+            name="positionId"
+            options={positionOptions}
             form={form}
           />
         </div>
@@ -85,10 +67,20 @@ const AddNewEmployeeForm = ({
           <TextInput
             label="Annual Salary (£)"
             name="annualSalary"
-            type="text"
+            type="number"
             placeholder="50000"
             form={form}
           />
+          <TextInput
+            label="Rate Per Hour (£)"
+            name="ratePerHour"
+            type="number"
+            placeholder="10"
+            form={form}
+          />
+        </div>
+
+        <div className="flex items-center gap-4">
           <TextInput
             label="Start Date"
             name="startDate"
@@ -96,13 +88,10 @@ const AddNewEmployeeForm = ({
             placeholder="2021-01-01"
             form={form}
           />
-        </div>
-
-        <div className="flex items-center gap-4">
           <TextInput
             label="Address"
             name="address"
-            type="text"
+            type="textarea"
             placeholder="123 Main St, Anytown, USA"
             form={form}
           />

@@ -1,27 +1,38 @@
 import React, { useState } from "react";
-import DropdownComponent from "../ui/Dropdown";
+import DropdownComponent, { Dropdown } from "../ui/Dropdown";
 import { FiPlus, FiSearch } from "react-icons/fi";
-import Modal from "../ui/Modal";
-import AddNewEmployeeForm from "../forms/AddNewEmployeeForm";
-
-import { Form } from "react-final-form";
 import { validate } from "validate.js";
-import { AddNewEmployeeFormValues } from "../types/formFields";
-import { addNewEmployeeConstraints } from "../forms/contraints/contraints";
+
+import UsersTableSkeleton from "../ui/UsersTableSkeleton";
+import { useGetEmployeesQuery } from "@/services/api/constants/employee.constant";
+import { Employee } from "../types/employment";
+import AddEmployee from "../employeeManagement/sub-component/AddEmployee";
+import { useModal } from "@/context/ModalContext";
+import { useAction } from "@/hooks/useAction";
+import { formatDT } from "@/utils/formatDT";
+import EditEmployee from "../employeeManagement/sub-component/EditEmployee";
+import ViewEmployee from "../employeeManagement/sub-component/ViewEmployee";
+import CreateLeaveRequest from "../leaveManagement/sub-component/CreateLeaveRequest";
+import StatusBadge from "@/utils/StatusBadge";
+import { useDebounce } from "@/hooks/useDebounce";
 
 const EmployeeManagementTable = () => {
   const [search, setSearch] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const onSubmit = (values: AddNewEmployeeFormValues) => {
-    console.log(values);
-  };
+  const debouncedSearch = useDebounce(search, 400);
+  const { isModalOpen, setIsModalOpen } = useModal();
+  const { deactivateEmployee, isDeactivatingEmployee } = useAction();
+  const { data, isLoading } = useGetEmployeesQuery(debouncedSearch);
+  const [initialValues, setInitialValues] = useState<Employee | null>(null);
+  const [selectedEmployeeId, setSelectedEmployeeId] = useState<string | null>(
+    null
+  );
+  const employees = data?.data;
 
-  const validateForm = (values: AddNewEmployeeFormValues) => {
-    return validate(values, addNewEmployeeConstraints) || undefined;
-  };
-
+  if (isLoading) {
+    return <UsersTableSkeleton />;
+  }
   return (
-    <div className="flex flex-col gap-4 bg-white p-4 rounded-sm">
+    <div className="flex flex-col gap-4 bg-white p-4 rounded-sm ">
       <div className="flex flex-col md:flex-row justify-between items-center gap-2">
         <div className="flex flex-1 items-center gap-2 border border-gray-200 px-2 py-3 rounded-sm w-full md:w-auto  bg-gray-50">
           <FiSearch className="text-gray-500" />
@@ -37,7 +48,7 @@ const EmployeeManagementTable = () => {
         <div className="flex items-center gap-2 w-full md:w-auto">
           <button
             className="primary-btn flex items-center gap-2 w-full md:w-auto"
-            onClick={() => setIsModalOpen(true)}
+            onClick={() => setIsModalOpen("add-employee")}
           >
             <FiPlus />
             <span>Add Employee</span>
@@ -75,63 +86,73 @@ const EmployeeManagementTable = () => {
             </tr>
           </thead>
           <tbody>
-            <tr className=" border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
-              <th
-                scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-              >
-                EMP001
-              </th>
-              <td className="px-6 py-4 flex flex-col gap-2 items-start">
-                <span className="text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                  John Smith
-                </span>
-                <span className="text-xs text-gray-500 whitespace-nowrap dark:text-gray-400">
-                  +44 7700 900123
-                </span>
-              </td>
-              <td className="px-6 py-4">john.smith@example.com</td>
-              <td className="px-6 py-4">Engineering</td>
-              <td className="px-6 py-4">Senior Developer</td>
-              <td className="px-6 py-4">
-                <span className="bg-green-200 text-green-800 px-2 py-1 rounded-full text-xs">
-                  Active
-                </span>
-              </td>
-              <td className="px-6 py-4">2021-01-01</td>
-              <td className="px-6 py-4">
-                <DropdownComponent
-                  options={[
-                    { title: "Edit", onClick: () => {} },
-                    { title: "Delete", onClick: () => {} },
-                  ]}
-                  label="Actions"
-                  size="sm"
-                />
-              </td>
-            </tr>
+            {employees?.map((employee: Employee) => {
+              const { date: startDate } = formatDT(employee.startDate);
+              return (
+                <tr
+                  key={employee.id}
+                  className=" border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 "
+                >
+                  <td className="px-6 py-4">{employee.employeeNo || "-"}</td>
+                  <td className="px-6 py-4">{employee.fullName || "-"}</td>
+                  <td className="px-6 py-4">{employee.email || "-"}</td>
+                  <td className="px-6 py-4">{employee.department || "-"}</td>
+                  <td className="px-6 py-4">{employee.position || "-"}</td>
+                  <td className="px-6 py-4">
+                    <StatusBadge status={employee?.status} />
+                  </td>
+                  <td className="px-6 py-4">{startDate || "-"}</td>
+
+                  <td className="px-6 py-4 relative">
+                    <Dropdown
+                      options={[
+                        {
+                          title: "View",
+                          onClick: () => {
+                            setSelectedEmployeeId(employee.id);
+                            setIsModalOpen("view-employee");
+                          },
+                        },
+                        {
+                          title: "Edit",
+                          onClick: () => {
+                            setInitialValues(employee);
+                            setIsModalOpen("edit-employee");
+                          },
+                        },
+                        {
+                          title: "Leave Request",
+                          onClick: () => {
+                            setInitialValues(employee);
+                            setIsModalOpen("create-leaveRequest");
+                          },
+                        },
+                        {
+                          title: "Delete",
+                          onClick: () => {
+                            deactivateEmployee(employee.id);
+                          },
+                        },
+                      ]}
+                      label="Actions"
+                      size="sm"
+                    />
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
-      {isModalOpen && (
-        <Modal
-          size={"2xl"}
-          heading={"Add New Employee"}
-          desc={"Add a new employee to the system"}
-          onClose={() => setIsModalOpen(false)}
-        >
-          <Form<AddNewEmployeeFormValues>
-            onSubmit={onSubmit}
-            validate={validateForm}
-            render={({ handleSubmit, form, submitting }) => (
-              <AddNewEmployeeForm
-                handleSubmit={handleSubmit}
-                form={form}
-                submitting={submitting}
-              />
-            )}
-          />
-        </Modal>
+      {isModalOpen === "add-employee" && <AddEmployee />}
+      {isModalOpen === "edit-employee" && (
+        <EditEmployee initialValues={initialValues || null} />
+      )}
+      {isModalOpen === "create-leaveRequest" && (
+        <CreateLeaveRequest initialValues={initialValues || null} />
+      )}
+      {isModalOpen === "view-employee" && (
+        <ViewEmployee selectedEmployeeId={selectedEmployeeId as string} />
       )}
     </div>
   );

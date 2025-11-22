@@ -8,6 +8,7 @@ import Notifications from "@/components/settings/Notifications";
 import System from "@/components/settings/System";
 import { Form } from "react-final-form";
 import { SettingFormValues } from "@/components/types/formFields";
+import Users from "@/components/settings/Users";
 
 const Settings = () => {
   const [activeTab, setActiveTab] = useState("General");
@@ -17,6 +18,7 @@ const Settings = () => {
     { label: "Security" },
     { label: "Notifications" },
     { label: "System" },
+    { label: "Users" },
   ];
 
   const handleTabClick = (tab: string) => {
@@ -69,6 +71,7 @@ const Settings = () => {
           </form>
         )}
       />
+      {activeTab === "Users" && <Users />}
     </main>
   );
 };

@@ -1,32 +1,36 @@
 import React, { useState } from "react";
 import DropdownComponent, { Dropdown } from "../ui/Dropdown";
-import { FiPlus, FiSearch, FiUsers } from "react-icons/fi";
+import { FiSearch, FiUsers } from "react-icons/fi";
 import Modal from "../ui/Modal";
-import { Form } from "react-final-form";
-import { validate } from "validate.js";
-import {
-  LeaveDetailsProps,
-  NewLeaveFormValues,
-  ReviewLeaveFormValues,
-} from "../types/formFields";
-import { addNewEmployeeConstraints } from "../forms/contraints/contraints";
-import NewLeaveForm from "../forms/NewLeaveForm";
-import { BsClock } from "react-icons/bs";
-import ReviewLeaveForm from "../forms/ReviewLeaveForm ";
+
+import { useGetLeaveRequestQuery } from "@/services/api/constants/Leave.constant";
+import { getLeave, LeaveDetails as LeaveDetailsType } from "../types/Leave";
+import { formatDT } from "@/utils/formatDT";
+import StatusBadge from "@/utils/StatusBadge";
+import ReviewLeaveRequest from "../leaveManagement/sub-component/ReviewLeaveRequest";
+
+import { useModal } from "@/context/ModalContext";
+import UsersTableSkeleton from "../ui/UsersTableSkeleton";
+import LeaveDetails from "../leaveManagement/sub-component/LeaveDetails";
+import { useDebounce } from "@/hooks/useDebounce";
 
 const LeaveManagementTable = () => {
+  const [status, setStatus] = useState("");
   const [search, setSearch] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState<
-    "add" | "edit" | "review" | "view" | null
-  >(null);
+  const debouncedSearch = useDebounce(search, 400);
+  const { data, isLoading } = useGetLeaveRequestQuery({
+    search: debouncedSearch,
+    status, // "" means all
+  });
 
-  const onSubmit = (values: NewLeaveFormValues | ReviewLeaveFormValues) => {
-    console.log(values);
-  };
+  const [initialValues, setInitialValues] = useState<getLeave | null>(null);
+  const { isModalOpen, setIsModalOpen } = useModal();
 
-  const validateForm = (values: NewLeaveFormValues | ReviewLeaveFormValues) => {
-    return validate(values, addNewEmployeeConstraints) || undefined;
-  };
+  const leaveRequests = data?.data;
+
+  if (isLoading) {
+    return <UsersTableSkeleton />;
+  }
 
   return (
     <div className="flex flex-col gap-4 bg-white p-4 rounded-sm">
@@ -47,30 +51,45 @@ const LeaveManagementTable = () => {
         </div>
 
         <div className="flex items-center gap-2 w-full md:w-auto justify-end">
-          <button
+          {/*  <button
             className="primary-btn flex items-center gap-2 w-full md:w-auto"
             onClick={() => setIsModalOpen("add")}
           >
             <FiPlus />
             <span>New Leave Request</span>
-          </button>
+          </button> */}
 
           <DropdownComponent
             options={[
               {
+                title: "All",
+                onClick: () => setStatus(""),
+              },
+              {
                 title: "Approved",
-                onClick: () => {},
+                onClick: () => setStatus("Approved"),
               },
               {
                 title: "Rejected",
-                onClick: () => {},
+                onClick: () => setStatus("Rejected"),
               },
-              { title: "Pending", onClick: () => {} },
-              { title: "Reimbursed", onClick: () => {} },
+              {
+                title: "Pending",
+                onClick: () => setStatus("pending"),
+              },
             ]}
             label="Status"
             size="sm"
           />
+          <button
+            className="secondary-btn px-4 py-2 border rounded-sm"
+            onClick={() => {
+              setSearch("");
+              setStatus("");
+            }}
+          >
+            Clear Filters
+          </button>
           {/*    <button
             className="secondary-btn flex items-center gap-2 w-full md:w-auto"
             onClick={() => {
@@ -119,243 +138,84 @@ const LeaveManagementTable = () => {
             </tr>
           </thead>
           <tbody>
-            <tr className=" border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
-              <td className="px-6 py-4"> LR001</td>
-              <td className="px-6 py-4 flex flex-col gap-2 items-start">
-                <span className="text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                  John Smith
-                </span>
-                <span className="text-xs text-gray-500 whitespace-nowrap dark:text-gray-400">
-                  +44 7700 900123
-                </span>
-              </td>
-              <td className="px-6 py-4">
-                <span className="bg-blue-200 text-blue-800 px-2 py-1 rounded-full text-xs">
-                  Annual
-                </span>
-              </td>
-              <td className="px-6 py-4">15/01/2024</td>
-              <td className="px-6 py-4">15/01/2024</td>
-              <td className="px-6 py-4">5</td>
-              <td className="px-6 py-4">
-                <span className="bg-green-200 text-green-800 px-2 py-1 rounded-full text-xs">
-                  Approved
-                </span>
-              </td>
-              <td className="px-6 py-4">15/01/2024</td>
-              <td className="px-6 py-4 relative">
-                <Dropdown
-                  options={[
-                    {
-                      title: "view Details",
-                      onClick: () => setIsModalOpen("view"),
-                    },
-                    {
-                      title: "Review",
-                      onClick: () => setIsModalOpen("review"),
-                    },
-                  ]}
-                  label="Actions"
-                  size="sm"
-                />
-              </td>
-            </tr>
+            {leaveRequests?.map((request: getLeave) => {
+              const { date: startDate } = formatDT(request?.startDate || "");
+              const { date: endDate } = formatDT(request?.endDate || "");
+              const { date: submitDate } = formatDT(request?.createdAt || "");
+              return (
+                <tr
+                  className=" border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200"
+                  key={request?.id}
+                >
+                  <td className="px-6 py-4 text-nowrap">
+                    {" "}
+                    {request?.requestNo}
+                  </td>
+                  <td className="px-6 py-4 flex flex-col gap-2 items-start">
+                    <span className="text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                      {request?.employeeName}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4">
+                    <StatusBadge status={request?.leaveType} />
+                  </td>
+                  <td className="px-6 py-4">{startDate}</td>
+                  <td className="px-6 py-4">{endDate}</td>
+                  <td className="px-6 py-4">{request?.days}</td>
+                  <td className="px-6 py-4">
+                    <StatusBadge status={request?.status} />
+                  </td>
+                  <td className="px-6 py-4">{submitDate}</td>
+                  <td className="px-6 py-4 relative">
+                    <Dropdown
+                      options={[
+                        {
+                          title: "view Details",
+                          onClick: () => {
+                            setInitialValues(request);
+                            setIsModalOpen("view");
+                          },
+                        },
+                        ...(request?.status?.toLowerCase() !== "approved" &&
+                        request?.status?.toLowerCase() !== "rejected"
+                          ? [
+                              {
+                                title: "Review",
+                                onClick: () => {
+                                  setInitialValues(request);
+                                  setIsModalOpen("review-leaveRequest");
+                                },
+                              },
+                            ]
+                          : []),
+                      ]}
+                      label="Actions"
+                      size="sm"
+                    />
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
-      {isModalOpen === "add" && (
-        <Modal
-          size={"2xl"}
-          heading={"Submit Leave Request"}
-          desc={
-            "Fill in the details for your leave request. Your manager will be notified for approva"
-          }
-          onClose={() => setIsModalOpen(null)}
-          submitBtnText="Add Leave Request"
-        >
-          <Form<NewLeaveFormValues>
-            onSubmit={onSubmit}
-            validate={validateForm}
-            render={({ handleSubmit, form, submitting }) => (
-              <NewLeaveForm
-                handleSubmit={handleSubmit}
-                form={form}
-                submitting={submitting}
-              />
-            )}
-          />
-        </Modal>
-      )}
 
-      {isModalOpen === "view" && (
+      {isModalOpen === "view" && initialValues && (
         <Modal
           size={"2xl"}
-          heading={"Review Leave Request"}
-          desc={"Review and approve or reject this leave request"}
+          heading={"Employee Leave Request Details"}
+          desc={"check below the details of this employee request"}
           onClose={() => setIsModalOpen(null)}
-          secondaryBtnText="Reject"
-          secondaryBtnColor="bg-red-500 hover:bg-red-600"
-          submitBtnText="Approve"
+          showSubmitBtn={false}
         >
-          <LeaveDetails
-            employee="Emily Davis"
-            leaveType="Annual"
-            startDate="14/01/2024"
-            endDate="14/01/2024"
-            employeeId="EMP002"
-            reason="Family vacation"
-            status="Pending"
-            submittedDate="14/01/2024"
-            approvedBy="Jane Smith"
-            approvedDate="14/01/2024"
-            duration="5"
-          />
-          <Form<ReviewLeaveFormValues>
-            onSubmit={onSubmit}
-            validate={validateForm}
-            render={({ handleSubmit, form, submitting }) => (
-              <ReviewLeaveForm
-                handleSubmit={handleSubmit}
-                form={form}
-                submitting={submitting}
-              />
-            )}
-          />
+          <LeaveDetails initialValues={initialValues as LeaveDetailsType} />
         </Modal>
       )}
-      {isModalOpen === "review" && (
-        <Modal
-          size={"2xl"}
-          heading={"Review Leave Request"}
-          desc={"Review and approve or reject this leave request"}
-          onClose={() => setIsModalOpen(null)}
-          secondaryBtnText="Reject"
-          secondaryBtnColor="bg-red-500 hover:bg-red-600"
-          submitBtnText="Approve"
-        >
-          <LeaveDetails
-            employee="Emily Davis"
-            leaveType="Annual"
-            startDate="14/01/2024"
-            endDate="14/01/2024"
-            employeeId="EMP002"
-            reason="Family vacation"
-            status="Pending"
-            submittedDate="14/01/2024"
-            approvedBy="Jane Smith"
-            approvedDate="14/01/2024"
-            duration="5"
-          />
-          <Form<ReviewLeaveFormValues>
-            onSubmit={onSubmit}
-            validate={validateForm}
-            render={({ handleSubmit, form, submitting }) => (
-              <ReviewLeaveForm
-                handleSubmit={handleSubmit}
-                form={form}
-                submitting={submitting}
-              />
-            )}
-          />
-        </Modal>
+      {isModalOpen === "review-leaveRequest" && initialValues && (
+        <ReviewLeaveRequest initialValues={initialValues as LeaveDetailsType} />
       )}
     </div>
   );
 };
 
 export default LeaveManagementTable;
-
-export const LeaveDetails = ({
-  employee,
-  leaveType,
-  startDate,
-  endDate,
-  employeeId,
-  reason,
-  status,
-  submittedDate,
-  approvedBy,
-  approvedDate,
-  duration,
-}: LeaveDetailsProps) => {
-  return (
-    <div className="space-y-4 mb-4 ">
-      <div className="grid grid-cols-2 gap-2  ">
-        <div className="flex flex-col gap-1">
-          <span className="text-sm text-gray-500 font-medium flex items-center gap-2">
-            <FiUsers />
-            Employee
-          </span>
-          <span className="text-sm font-semibold text-black">{employee}</span>
-          <span className="text-sm text-gray-500 font-medium flex items-center gap-2">
-            ID: {employeeId}
-          </span>
-        </div>
-        <div className="flex flex-col gap-1">
-          <span className="text-sm text-gray-500 font-medium flex items-center gap-2">
-            <BsClock />
-            Status
-          </span>
-          <span className="text-xs w-fit font-semibold text-black bg-gray-200 rounded-full px-2 py-1">
-            {status}
-          </span>
-        </div>
-      </div>
-
-      <h2 className="text-sm font-semibold text-black pt-2 border-t  border-gray-200">
-        Leave Details
-      </h2>
-      <div className="grid grid-cols-2 gap-2 border-b border-gray-200 pb-4">
-        <div className="flex flex-col gap-1">
-          <span className="text-sm text-gray-500 font-medium">Leave Type</span>
-          <span className="text-sm font-semibold text-black">{leaveType}</span>
-        </div>
-        <div className="flex flex-col gap-1">
-          <span className="text-sm text-gray-500 font-medium">Duration:</span>
-          <span className="text-sm font-semibold text-black">{duration}</span>
-        </div>
-        <div className="flex flex-col gap-1">
-          <span className="text-sm text-gray-500 font-medium">Start Date</span>
-          <span className="text-sm font-semibold text-black">{startDate}</span>
-        </div>
-        <div className="flex flex-col gap-1">
-          <span className="text-sm text-gray-500 font-medium">End Date:</span>
-          <span className="text-sm font-semibold text-black">{endDate}</span>
-        </div>
-      </div>
-      <h2 className="text-sm font-semibold text-black">Reason for Leave</h2>
-      <div className=" bg-gray-50 p-4 rounded-sm">
-        <div className="flex flex-col gap-1">
-          <span className="text-sm text-gray-500 font-medium">{reason}</span>
-        </div>
-      </div>
-
-      <h2 className="text-sm font-semibold text-black pt-2 border-t  border-gray-200">
-        Submission Details
-      </h2>
-      <div className="grid grid-cols-2 gap-2 border-b border-gray-200 pb-4">
-        <div className="flex flex-col gap-1">
-          <span className="text-sm text-gray-500 font-medium">
-            Submitted Date
-          </span>
-          <span className="text-sm font-semibold text-black">
-            {submittedDate}
-          </span>
-        </div>
-        <div className="flex flex-col gap-1">
-          <span className="text-sm text-gray-500 font-medium">Approved By</span>
-          <span className="text-sm font-semibold text-black">{approvedBy}</span>
-        </div>
-
-        <div className="flex flex-col gap-1">
-          <span className="text-sm text-gray-500 font-medium">
-            Approved Date:
-          </span>
-          <span className="text-sm font-semibold text-black">
-            {approvedDate}
-          </span>
-        </div>
-      </div>
-    </div>
-  );
-};

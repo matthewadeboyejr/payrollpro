@@ -9,13 +9,23 @@ const SignupForm = ({ form, handleSubmit, submitting }: SignupFormProps) => {
     <div>
       {" "}
       <form onSubmit={handleSubmit}>
-        <TextInput
-          label="Name"
-          name="name"
-          type="text"
-          placeholder="John Doe"
-          form={form}
-        />
+        <div className="grid md:grid-cols-2 grid-cols-1 gap-2">
+          <TextInput
+            label="First Name"
+            name="firstName"
+            type="text"
+            placeholder="John Doe"
+            form={form}
+          />
+          <TextInput
+            label="Last Name"
+            name="lastName"
+            type="text"
+            placeholder="Doe"
+            form={form}
+          />
+        </div>
+
         <TextInput
           label="Email "
           name="email"
@@ -23,18 +33,12 @@ const SignupForm = ({ form, handleSubmit, submitting }: SignupFormProps) => {
           placeholder="example@domain.com"
           form={form}
         />
+
         <TextInput
-          label="Password"
-          name="password"
-          type="password"
-          placeholder="*****"
-          form={form}
-        />
-        <TextInput
-          label="Confirm Password"
-          name="confirmPassword"
-          type="password"
-          placeholder="*****"
+          label="Phone Number"
+          name="phoneNumber"
+          type="text"
+          placeholder="07700900123"
           form={form}
         />
 

@@ -5,6 +5,8 @@ import { IoNotificationsOutline } from "react-icons/io5";
 import { MdMenuOpen, MdMenu } from "react-icons/md";
 import { useAppSelector, useAppDispatch } from "@/redux/hooks";
 import { toggleSidebar, toggleCollapsed } from "@/redux/slice/sidebar.slice";
+import { userData, userIsAuthenticated } from "@/redux/slice/user.slice";
+import LogoutButton from "../auth/LogoutButton";
 import menus from "../data/sidebarItem";
 
 const TopBar = () => {
@@ -12,6 +14,8 @@ const TopBar = () => {
   const { isOpen, isMobile, collapsed, activeMenu } = useAppSelector(
     (state) => state.sidebar
   );
+  const user = useAppSelector(userData);
+  const isAuthenticated = useAppSelector(userIsAuthenticated);
 
   // Function to get page title from active menu
   const getPageTitle = () => {
@@ -73,6 +77,14 @@ const TopBar = () => {
         <p className="text-xs text-black font-semibold bg-gray-200 py-1 px-2 rounded-sm text-nowrap">
           Live Data
         </p>
+        {user && isAuthenticated && (
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-gray-600">Welcome, {user.name}</span>
+            <LogoutButton className="text-xs bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md transition-colors duration-200">
+              Logout
+            </LogoutButton>
+          </div>
+        )}
       </div>
     </aside>
   );

@@ -6,8 +6,12 @@ import Cards from "@/components/ui/Cards";
 import AboutPage from "@/components/ui/AboutPage";
 import { LuUserCheck, LuUserX } from "react-icons/lu";
 import EmployeeManagementTable from "@/components/tables/EmployeeManagementTable";
+import { useGetEmployeesSummaryQuery } from "@/services/api/constants/employee.constant";
 
 const EmployeesManagement = () => {
+  const { data } = useGetEmployeesSummaryQuery(undefined);
+
+  const summary = data?.data;
   return (
     <main className="w-full">
       <AboutPage about="Manage your team members and their information" />
@@ -15,7 +19,7 @@ const EmployeesManagement = () => {
         <Cards
           title="Total Employees"
           icon={<FiUsers />}
-          value="3"
+          value={summary?.totalEmployees || "-"}
           data=""
           color="green"
           details=""
@@ -23,25 +27,25 @@ const EmployeesManagement = () => {
         <Cards
           title="Active Employees"
           icon={<LuUserCheck />}
-          value="2"
+          value={summary?.activeEmployees || "-"}
           data=""
           color=""
           details=""
         />{" "}
         <Cards
-          title="On Leave Employees"
+          title="Inactive Employees"
           icon={<LuUserX />}
-          value="1"
+          value={summary?.inactiveEmployees || "-"}
           data=""
-          color="green"
+          color=""
           details=""
         />
         <Cards
-          title="Inactive Employees"
+          title="On Leave Employees"
           icon={<LuUserX />}
-          value="0"
+          value={summary?.onLeaveEmployees || "-"}
           data=""
-          color=""
+          color="green"
           details=""
         />
       </section>

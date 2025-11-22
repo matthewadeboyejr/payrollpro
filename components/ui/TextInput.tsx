@@ -27,19 +27,19 @@ const TextInput = ({
     type === "password" ? (showPassword ? "text" : "password") : type;
 
   return (
-    <div className="mb-3 flex flex-col flex-grow">
+    <div className="mb-3 flex flex-col flex-grow w-full">
       <label htmlFor={name} className="font-medium text-black pb-2">
         {label}
       </label>
 
-      <div className="relative border border-gray-200 px-2 py-2 rounded-sm ">
+      <div className="relative border border-gray-200 px-2 py-2 rounded-sm w-full">
         <Field
           name={name}
           type={inputType}
           component="input"
           placeholder={placeholder}
           readOnly={readonly}
-          className={` focus:outline-none focus:ring-focus  ${classes}`}
+          className={` focus:outline-none focus:ring-focus  ${classes} w-full`}
         />
 
         {type === "password" && (

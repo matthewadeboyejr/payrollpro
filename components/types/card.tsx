@@ -1,8 +1,15 @@
-export interface CardProps {
-  title?: string;
-  icon?: React.ReactNode;
-  value?: string;
-  data?: string;
-  color?: string;
-  details?: string;
+export interface getLeave {
+  id: number;
+  requestNo: string;
+  employeeName: string;
+  leaveType: string;
+  startDate: string;
+  endDate: string;
+  status: string;
+  reason: string;
+  comment: string;
+  approvedBy: string;
+  days: number;
+  remainingBalance: number;
+  createdAt: string;
 }

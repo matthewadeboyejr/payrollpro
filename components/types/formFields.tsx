@@ -51,9 +51,10 @@ export type SigninFormProps = FinalFormProps;
 
 // Signup Form specific types
 export interface SignupFormValues {
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
-  password: string;
+  phoneNumber: string;
   confirmPassword: string;
   check?: boolean;
 }
@@ -63,22 +64,76 @@ export type SignupFormProps = FinalFormProps;
 // Add New Employee Form specific types
 
 export interface AddNewEmployeeFormValues {
-  employeeId: string;
+  firstName: "string";
+  lastName: "string";
+  email: "string";
+  phone: "string";
+  address: "string";
+  emergencyContactName: "string";
+  emergencyContactPhone: "string";
+  startDate: string;
+  departmentId: number;
+  positionId: number;
+  ratePerHour: number;
+  annualSalary: number;
+}
+
+export interface EditEmployeeFormValues {
+  fullName: string;
   firstName: string;
   lastName: string;
   email: string;
   phone: string;
-  department: string;
-  position: string;
-  annualSalary: string;
-  startDate: string;
   address: string;
   emergencyContactName: string;
   emergencyContactPhone: string;
-  status?: string;
+  startDate: string;
+  departmentId: number;
+  positionId: number;
+  ratePerHour: number;
+  annualSalary: number;
+  status: string;
+}
+export interface EditLeaveTypeValues {
+  fullName: string;
+  reason: string;
+  startDate: string;
+  endDate: string;
+  employeeNo: string;
 }
 
 export type AddNewEmployeeFormProps = FinalFormProps;
+
+export interface AddNewUserFormValues {
+  userId?: string;
+  roleId: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
+}
+export interface EditUserFormValues {
+  id?: string;
+  userId?: string;
+  roles?: string[] | any[]; // Optional - from API response
+  roleIds: string[];
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
+  status: string[] | any[];
+}
+
+export type AddNewUserFormProps = FinalFormProps;
+
+export interface EditUserFormProps extends FinalFormProps {
+  initialValues?: Partial<EditUserFormValues> | null;
+}
+
+export interface EditEmployeeFormProps extends FinalFormProps {
+  initialValues?: Partial<EditEmployeeFormValues> | null;
+}
+
 export interface AddNewExpenseFormValues {
   employeeId: string;
   category: string;
@@ -93,15 +148,16 @@ export interface AddNewExpenseFormValues {
 export type AddNewExpenseFormProps = FinalFormProps;
 export interface NewLeaveFormValues {
   employeeId: string;
+  employeeNo: string;
   leaveType: string;
   startDate: string;
   endDate: string;
   reason: string;
-  status: string;
+  /* status: string;
   submittedDate: string;
   approvedBy: string;
   approvedDate: string;
-  duration: string;
+  duration: string; */
 }
 
 export type NewLeaveFormProps = FinalFormProps;
@@ -112,7 +168,7 @@ export interface ReviewExpenseFormValues {
 export type ReviewExpenseFormProps = FinalFormProps;
 
 export interface ReviewLeaveFormValues {
-  comments: string;
+  comment: string;
 }
 
 export type ReviewLeaveFormProps = FinalFormProps;
@@ -190,3 +246,18 @@ export type SettingFormProps = {
 };
 
 export type RegionalSettingsFormProps = FinalFormProps;
+
+// Set Password Form specific types
+export interface SetPasswordFormValues {
+  password: string;
+  confirmPassword: string;
+}
+
+export type SetPasswordFormProps = FinalFormProps;
+
+// Forget Password Form specific types
+export interface ForgetPasswordFormValues {
+  email: string;
+}
+
+export type ForgetPasswordFormProps = FinalFormProps;
