@@ -1,3 +1,14 @@
+import React from "react";
+
+export interface CardProps {
+  title?: string;
+  icon?: React.ReactNode;
+  value?: string | number;
+  data?: string | number;
+  color?: string;
+  details?: string;
+}
+
 export interface getLeave {
   id: number;
   requestNo: string;
