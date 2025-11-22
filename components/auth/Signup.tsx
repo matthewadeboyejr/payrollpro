@@ -1,7 +1,6 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Form } from "react-final-form";
 import { validate } from "validate.js";
-import { useRouter } from "next/navigation";
 import { signupConstraints } from "../forms/contraints/contraints";
 import SignupForm from "../forms/SignupForm";
 import { SignupFormValues, FormValidationResult } from "../types/formFields";
@@ -9,8 +8,6 @@ import { SignupFormValues, FormValidationResult } from "../types/formFields";
 import { showAlert } from "../ui/ShowAlert";
 
 const Signup = () => {
-  const router = useRouter();
-
   //const [registerUser, { isLoading, isSuccess }] = useRegisterUserMutation();
 
   const onSubmit = async (values: SignupFormValues) => {
@@ -21,17 +18,25 @@ const Signup = () => {
       phoneNumber: values.phoneNumber,
     };
 
-    try {
-      const result = await registerUser(payload).unwrap();
-      console.log("result", result);
-    } catch (err: any) {
-      console.error("Signup error:", err?.data);
-      const errorMessage =
-        err?.data?.message ||
-        err?.message ||
-        "Registration failed. Please try again.";
-      showAlert("Registration Error", errorMessage, "error");
-    }
+    // TODO: Implement registration when API is ready
+    // try {
+    //   const result = await registerUser(payload).unwrap();
+    //   console.log("result", result);
+    // } catch (err: unknown) {
+    //   const error = err as { data?: { message?: string }; message?: string };
+    //   console.error("Signup error:", error?.data);
+    //   const errorMessage =
+    //     error?.data?.message ||
+    //     error?.message ||
+    //     "Registration failed. Please try again.";
+    //   showAlert("Registration Error", errorMessage, "error");
+    // }
+    console.log("Signup payload:", payload);
+    showAlert(
+      "Info",
+      "Registration functionality is not yet implemented",
+      "info"
+    );
   };
 
   const validateForm = (

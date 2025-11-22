@@ -12,7 +12,15 @@ import useConstantData from "@/hooks/useConstantData";
 
 type RoleOption = { value: string; label: string };
 
-const mapRolesToIds = (roles: any[], roleOptions?: RoleOption[]): string[] => {
+interface Role {
+  id?: string;
+  name?: string;
+}
+
+const mapRolesToIds = (
+  roles: (Role | string)[],
+  roleOptions?: RoleOption[]
+): string[] => {
   if (!Array.isArray(roles)) return [];
 
   return roles
@@ -50,7 +58,15 @@ const EditUser = ({
   initialValues: EditUserFormValues | null;
 }) => {
   const { isModalOpen, setIsModalOpen } = useModal();
-  const [formRef, setFormRef] = useState<any>(null);
+  const [formRef, setFormRef] = useState<{
+    submit: () => void;
+    reset: () => void;
+    initialize: (
+      values:
+        | Partial<EditUserFormValues>
+        | ((values: EditUserFormValues) => Partial<EditUserFormValues>)
+    ) => void;
+  } | null>(null);
   const { roleOptions } = useConstantData();
   const [editUser, { isLoading: isEditingUser }] = useUpdateUserMutation();
 
@@ -147,10 +163,11 @@ const EditUser = ({
           );
           formRef?.reset();
         }
-      } catch (err: any) {
+      } catch (err: unknown) {
+        const error = err as { data?: { message?: string }; message?: string };
         const errorMessage =
-          err?.data?.message ||
-          err?.message ||
+          error?.data?.message ||
+          error?.message ||
           "User editing failed. Please try again.";
         showAlert("Error", errorMessage, "error");
       } finally {

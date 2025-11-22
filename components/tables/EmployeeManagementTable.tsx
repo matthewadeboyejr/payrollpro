@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import DropdownComponent, { Dropdown } from "../ui/Dropdown";
+import { Dropdown } from "../ui/Dropdown";
 import { FiPlus, FiSearch } from "react-icons/fi";
-import { validate } from "validate.js";
 
 import UsersTableSkeleton from "../ui/UsersTableSkeleton";
 import { useGetEmployeesQuery } from "@/services/api/constants/employee.constant";
@@ -20,7 +19,7 @@ const EmployeeManagementTable = () => {
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 400);
   const { isModalOpen, setIsModalOpen } = useModal();
-  const { deactivateEmployee, isDeactivatingEmployee } = useAction();
+  const { deactivateEmployee } = useAction();
   const { data, isLoading } = useGetEmployeesQuery(debouncedSearch);
   const [initialValues, setInitialValues] = useState<Employee | null>(null);
   const [selectedEmployeeId, setSelectedEmployeeId] = useState<string | null>(

@@ -9,9 +9,14 @@ import { useModal } from "@/context/ModalContext";
 import { useAddNewUserMutation } from "@/services/api/constants/auth.constant";
 import { showAlert } from "@/components/ui/ShowAlert";
 
+interface FormRef {
+  reset: () => void;
+  submit: () => void;
+}
+
 const AddUser = () => {
-  const { isModalOpen, setIsModalOpen } = useModal();
-  const [formRef, setFormRef] = useState<any>(null);
+  const { setIsModalOpen } = useModal();
+  const [formRef, setFormRef] = useState<FormRef | null>(null);
 
   const [addNewUser, { isLoading: isAddingUser }] = useAddNewUserMutation();
 
@@ -34,9 +39,12 @@ const AddUser = () => {
           formRef.reset();
         }
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const error = err as { data?: string; message?: string };
       const errorMessage =
-        err?.data || err?.message || "User addition failed. Please try again.";
+        error?.data ||
+        error?.message ||
+        "User addition failed. Please try again.";
       showAlert("Error", errorMessage, "error");
     } finally {
       setIsModalOpen(null);
@@ -65,7 +73,7 @@ const AddUser = () => {
       <Form<AddNewUserFormValues>
         onSubmit={onSubmit}
         validate={validateForm}
-        render={({ handleSubmit, form, submitting, values }) => {
+        render={({ handleSubmit, form, submitting }) => {
           // Store form reference for modal submit
           if (!formRef) {
             setFormRef(form);

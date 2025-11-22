@@ -15,16 +15,15 @@ import { getLeave } from "@/components/types/Leave";
 
 const LeaveManagement = () => {
   const [tab, setTab] = useState<"table" | "calendar">("table");
-  const { data: summaryData, isLoading: isLoadingSummary } =
-    useGetLeaveRequestSummaryQuery(undefined);
+  const { data: summaryData } = useGetLeaveRequestSummaryQuery(undefined);
   const { data: leaveRequestsData, isLoading: isLoadingLeaveRequests } =
     useGetLeaveRequestQuery({ search: "", status: "" });
 
   const summary = summaryData?.data;
-  const leaveRequests = leaveRequestsData?.data || [];
 
   // Transform leave request data for calendar
   const calendarData = useMemo(() => {
+    const leaveRequests = leaveRequestsData?.data || [];
     const statusColorMap: Record<string, string> = {
       approved: "#22c55e", // green
       rejected: "#ef4444", // red
@@ -56,7 +55,7 @@ const LeaveManagement = () => {
       createdAt: request.createdAt,
       approvedDate: "", // Not available in getLeave, will be empty
     }));
-  }, [leaveRequests]);
+  }, [leaveRequestsData?.data]);
 
   return (
     <main className="w-full">

@@ -8,25 +8,16 @@ import { SigninFormValues, FormValidationResult } from "../types/formFields";
 import { useLoginUserMutation } from "@/services/api/constants/auth.constant";
 import { showAlert } from "../ui/ShowAlert";
 import { useDispatch } from "react-redux";
-import {
-  updateUser,
-  userData,
-  userIsAuthenticated,
-  userToken,
-  userRefreshToken,
-} from "@/redux/slice/user.slice";
+import { updateUser, userIsAuthenticated } from "@/redux/slice/user.slice";
 import { useAppSelector } from "@/redux/hooks";
 
 const Signin = () => {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  const user = useAppSelector(userData);
-  const token = useAppSelector(userToken);
-  const refreshToken = useAppSelector(userRefreshToken);
   const isAuthenticated = useAppSelector(userIsAuthenticated);
 
-  const [loginUser, { isLoading, isSuccess }] = useLoginUserMutation();
+  const [loginUser, { isSuccess }] = useLoginUserMutation();
 
   const onSubmit = async (values: SigninFormValues) => {
     const payload = {
@@ -49,9 +40,10 @@ const Signin = () => {
           })
         );
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       const errorMessage =
-        err?.data?.message || "Login failed. Please try again.";
+        (err as { data?: { message?: string } })?.data?.message ||
+        "Login failed. Please try again.";
       showAlert("Login Error", errorMessage, "error");
     }
   };

@@ -22,7 +22,7 @@ const ReviewLeaveRequest = ({
   initialValues: LeaveDetailsType;
 }) => {
   const { setIsModalOpen } = useModal();
-  const [formRef, setFormRef] = useState<any>(null);
+  const [formRef, setFormRef] = useState<{ reset: () => void } | null>(null);
 
   const requestId = initialValues?.id;
   const [rejectLeaveRequest, { isLoading: isRejectingLeave }] =
@@ -48,10 +48,11 @@ const ReviewLeaveRequest = ({
         formRef?.reset();
         setIsModalOpen(null);
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const error = err as { data?: { message?: string }; message?: string };
       const errorMessage =
-        err?.data?.message ||
-        err?.message ||
+        error?.data?.message ||
+        error?.message ||
         "Failed to approve leave request. Please try again.";
       showAlert("Error", errorMessage, "error");
     } finally {
@@ -85,10 +86,11 @@ const ReviewLeaveRequest = ({
           formRef?.reset();
           setIsModalOpen(null);
         }
-      } catch (err: any) {
+      } catch (err: unknown) {
+        const error = err as { data?: { message?: string }; message?: string };
         const errorMessage =
-          err?.data?.message ||
-          err?.message ||
+          error?.data?.message ||
+          error?.message ||
           "Failed to reject leave request. Please try again.";
         showAlert("Error", errorMessage, "error");
       } finally {

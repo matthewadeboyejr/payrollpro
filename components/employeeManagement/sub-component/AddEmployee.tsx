@@ -9,9 +9,14 @@ import { showAlert } from "@/components/ui/ShowAlert";
 import { addNewEmployeeConstraints } from "@/components/forms/contraints/contraints";
 import { validate } from "validate.js";
 
+interface FormRef {
+  reset: () => void;
+  submit: () => void;
+}
+
 const AddEmployee = () => {
-  const { isModalOpen, setIsModalOpen } = useModal();
-  const [formRef, setFormRef] = useState<any>(null);
+  const { setIsModalOpen } = useModal();
+  const [formRef, setFormRef] = useState<FormRef | null>(null);
 
   const [addNewEmployee, { isLoading: isAddingEmployee }] =
     useAddNewEmployeeMutation();
@@ -44,10 +49,11 @@ const AddEmployee = () => {
           formRef.reset();
         }
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const error = err as { data?: string; message?: string };
       const errorMessage =
-        err?.data ||
-        err?.message ||
+        error?.data ||
+        error?.message ||
         "Employee addition failed. Please try again.";
       showAlert("Error", errorMessage, "error");
     } finally {

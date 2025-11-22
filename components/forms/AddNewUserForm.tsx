@@ -1,17 +1,8 @@
 import React from "react";
 import TextInput from "../ui/TextInput";
-import SelectInput from "../ui/SelectInput";
-import Spinner from "../ui/Spinner";
 import { AddNewUserFormProps } from "../types/formFields";
-import useConstantData from "@/hooks/useConstantData";
 
-const AddNewUserForm = ({
-  form,
-  handleSubmit,
-  submitting,
-}: AddNewUserFormProps) => {
-  const { roleOptions } = useConstantData();
-
+const AddNewUserForm = ({ form, handleSubmit }: AddNewUserFormProps) => {
   return (
     <div>
       <form onSubmit={handleSubmit} className="">

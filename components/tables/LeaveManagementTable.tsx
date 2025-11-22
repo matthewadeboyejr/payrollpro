@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import DropdownComponent, { Dropdown } from "../ui/Dropdown";
-import { FiSearch, FiUsers } from "react-icons/fi";
+import { FiSearch } from "react-icons/fi";
 import Modal from "../ui/Modal";
 
 import { useGetLeaveRequestQuery } from "@/services/api/constants/Leave.constant";

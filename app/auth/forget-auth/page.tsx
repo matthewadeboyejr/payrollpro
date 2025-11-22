@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import ForgetPasswordForm from "../../../components/forms/ForgetPasswordForm";
 import { Form } from "react-final-form";
 import { validate } from "validate.js";

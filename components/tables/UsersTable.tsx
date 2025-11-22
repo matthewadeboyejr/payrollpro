@@ -1,10 +1,7 @@
 import React, { useState } from "react";
 import DropdownComponent from "../ui/Dropdown";
 import { FiPlus, FiSearch } from "react-icons/fi";
-import {
-  useGetUserByIdQuery,
-  useGetUsersQuery,
-} from "@/services/api/constants/auth.constant";
+import { useGetUsersQuery } from "@/services/api/constants/auth.constant";
 
 import { formatDT } from "@/utils/formatDT";
 import StatusBadge from "@/utils/StatusBadge";
@@ -16,15 +13,27 @@ import { useModal } from "@/context/ModalContext";
 import EditUser from "../settings/sub-component/EditUser";
 import { useAction } from "@/hooks/useAction";
 import ViewUser from "../settings/sub-component/ViewUser";
+import { EditUserFormValues } from "../types/formFields";
+
+interface User {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber?: string;
+  roles?: string[];
+  createdAt?: string;
+  status?: string;
+  roleIds?: string[];
+}
 
 const UsersTable = () => {
-  const { deactivate, isDeactivating } = useAction();
+  const { deactivate } = useAction();
   const { isModalOpen, setIsModalOpen } = useModal();
   const [search, setSearch] = useState("");
 
-  const [formRef, setFormRef] = useState<any>(null);
-  const [initialValues, setInitialValues] = useState<any>(null);
-  const [selectedUserId, setSelectedUserId] = useState<any>(null);
+  const [initialValues, setInitialValues] = useState<User | null>(null);
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
 
   const { data, isLoading } = useGetUsersQuery(undefined);
 
@@ -90,9 +99,9 @@ const UsersTable = () => {
             </tr>
           </thead>
           <tbody>
-            {users?.map((user: any, index: number) => {
+            {users?.map((user: User, index: number) => {
               const fullName = user.firstName + " " + user.lastName;
-              const { date: createdDate } = formatDT(user.createdAt);
+              const { date: createdDate } = formatDT(user.createdAt || "");
               const status = user?.status?.toLowerCase() || "-";
 
               return (
@@ -117,10 +126,10 @@ const UsersTable = () => {
                   <td className="px-6 py-4">{user.email || "-"}</td>
                   <td className="px-6 py-4 flex flex-col gap-2 items-start">
                     <ul className="flex flex-col gap-2 items-start">
-                      {user?.roles?.map((role: any, index: number) => (
+                      {user?.roles?.map((role: string, roleIndex: number) => (
                         <li
                           className="text-xs text-gray-500 whitespace-nowrap dark:text-gray-400 list-disc"
-                          key={index}
+                          key={roleIndex}
                         >
                           {role || "-"}
                         </li>
@@ -175,8 +184,14 @@ const UsersTable = () => {
         </table>
       </div>
       {isModalOpen === "add" && <AddUser />}
-      {isModalOpen === "edit" && <EditUser initialValues={initialValues} />}
-      {isModalOpen === "view" && <ViewUser selectedUserId={selectedUserId} />}
+      {isModalOpen === "edit" && initialValues && (
+        <EditUser
+          initialValues={initialValues as unknown as EditUserFormValues}
+        />
+      )}
+      {isModalOpen === "view" && selectedUserId && (
+        <ViewUser selectedUserId={selectedUserId} />
+      )}
     </div>
   );
 };

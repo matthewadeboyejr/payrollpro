@@ -1,4 +1,3 @@
-import AddNewEmployeeForm from "@/components/forms/AddNewEmployeeForm";
 import {
   EditLeaveTypeValues,
   NewLeaveFormValues,
@@ -22,7 +21,10 @@ const CreateLeaveRequest = ({
   initialValues: Employee | null;
 }) => {
   const { setIsModalOpen } = useModal();
-  const [formRef, setFormRef] = useState<any>(null);
+  const [formRef, setFormRef] = useState<{
+    reset: () => void;
+    submit: () => void;
+  } | null>(null);
   const router = useRouter();
 
   const [createLeaveRequest, { isLoading: isRequestingLeave }] =
@@ -86,9 +88,12 @@ const CreateLeaveRequest = ({
 
         router.push("/dashboard/leave-management");
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const error = err as { data?: string; message?: string };
       const errorMessage =
-        err?.data?.message || "Leave Request failed. Please try again.";
+        error?.data ||
+        error?.message ||
+        "Leave Request failed. Please try again.";
       showAlert("Error", errorMessage, "error");
     } finally {
       setIsModalOpen(null);

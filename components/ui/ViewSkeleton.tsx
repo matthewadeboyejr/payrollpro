@@ -1,8 +1,6 @@
 import React from "react";
 
-interface ViewSkeletonProps {}
-
-const ViewSkeleton: React.FC<ViewSkeletonProps> = () => {
+const ViewSkeleton: React.FC = () => {
   return (
     <div className="grid md:grid-cols-2 grid-cols-2 gap-4 text-sm">
       {/* First Name */}

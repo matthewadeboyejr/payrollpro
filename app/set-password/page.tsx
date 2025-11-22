@@ -20,21 +20,20 @@ const SetPassword = () => {
   const [isValidToken, setIsValidToken] = useState<boolean | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const [setPassword, { isLoading: isSettingPassword, isSuccess }] =
-    useSetPasswordMutation();
+  const [setPassword, { isSuccess }] = useSetPasswordMutation();
 
   useEffect(() => {
     const tokenFromUrl = searchParams.get("token");
     if (tokenFromUrl) {
       setToken(tokenFromUrl);
-      validateToken(tokenFromUrl);
+      validateToken();
     } else {
       setIsValidToken(false);
       setIsLoading(false);
     }
   }, [searchParams]);
 
-  const validateToken = async (token: string) => {
+  const validateToken = async () => {
     try {
       setIsValidToken(true);
       setIsLoading(false);
@@ -55,15 +54,13 @@ const SetPassword = () => {
       };
       console.log("payload", payload);
 
-      const response = await setPassword(payload).unwrap();
-
-      /*  if (response) {
-        showAlert("Success", response, "success");
-        router.push("/auth?message=password-reset-success");
-      } */
-    } catch (err: any) {
+      await setPassword(payload).unwrap();
+    } catch (err: unknown) {
+      const error = err as { data?: string; message?: string };
       const errorMessage =
-        err?.data || err?.message || "Password reset failed. Please try again.";
+        error?.data ||
+        error?.message ||
+        "Password reset failed. Please try again.";
       showAlert("Error", errorMessage, "error");
     }
   };
@@ -73,7 +70,7 @@ const SetPassword = () => {
       showAlert("Success", "Password reset successfully", "success");
       router.push("/auth?message=password-reset-success");
     }
-  }, [isSuccess]);
+  }, [isSuccess, router]);
 
   const validateForm = (
     values: SetPasswordFormValues

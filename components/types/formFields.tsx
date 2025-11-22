@@ -115,13 +115,13 @@ export interface AddNewUserFormValues {
 export interface EditUserFormValues {
   id?: string;
   userId?: string;
-  roles?: string[] | any[]; // Optional - from API response
+  roles?: string[]; // Optional - from API response
   roleIds: string[];
   firstName: string;
   lastName: string;
   email: string;
   phoneNumber: string;
-  status: string[] | any[];
+  status: string[];
 }
 
 export type AddNewUserFormProps = FinalFormProps;

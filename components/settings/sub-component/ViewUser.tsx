@@ -51,7 +51,7 @@ const ViewUser = ({ selectedUserId }: { selectedUserId: string }) => {
           <div className="flex flex-col gap-2">
             <h2 className="text-xs text-gray-500">Roles</h2>
             <ul className="flex flex-col gap-2 items-start">
-              {userDetails?.roles?.map((role: any) => (
+              {userDetails?.roles?.map((role: string) => (
                 <li
                   key={role}
                   className="text-xs bg-gray-100 text-gray-500 px-2 py-1 rounded-md whitespace-nowrap"

@@ -1,25 +1,15 @@
-import AddNewEmployeeForm from "@/components/forms/AddNewEmployeeForm";
-import {
-  AddNewEmployeeFormValues,
-  EditEmployeeFormValues,
-  EditUserFormValues,
-} from "@/components/types/formFields";
+import { EditEmployeeFormValues } from "@/components/types/formFields";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Form } from "react-final-form";
 import Modal from "@/components/ui/Modal";
 import { useModal } from "@/context/ModalContext";
-import {
-  useAddNewEmployeeMutation,
-  useUpdateEmployeeMutation,
-} from "@/services/api/constants/employee.constant";
+import { useUpdateEmployeeMutation } from "@/services/api/constants/employee.constant";
 import { showAlert } from "@/components/ui/ShowAlert";
-import {
-  addNewEmployeeConstraints,
-  editEmployeeConstraints,
-} from "@/components/forms/contraints/contraints";
+import { editEmployeeConstraints } from "@/components/forms/contraints/contraints";
 import { validate } from "validate.js";
 import { Employee } from "@/components/types/employment";
 import EditEmployeeForm from "@/components/forms/EditEmployeeForm";
+import useConstantData from "@/hooks/useConstantData";
 
 const EditEmployee = ({
   initialValues,
@@ -27,20 +17,27 @@ const EditEmployee = ({
   initialValues: Employee | null;
 }) => {
   const { isModalOpen, setIsModalOpen } = useModal();
-  const [formRef, setFormRef] = useState<any>(null);
+  const [formRef, setFormRef] = useState<{
+    reset: () => void;
+    submit: () => void;
+    initialize: (
+      values:
+        | Partial<EditEmployeeFormValues>
+        | ((values: EditEmployeeFormValues) => Partial<EditEmployeeFormValues>)
+    ) => void;
+  } | null>(null);
 
   const [updateEmployee, { isLoading: isUpdatingEmployee }] =
     useUpdateEmployeeMutation();
 
   // Build normalized initial form values using available option lists
-  const { departmentOptions, positionOptions } =
-    require("@/hooks/useConstantData").default();
+  const { departmentOptions, positionOptions } = useConstantData();
 
   const normalizedInitialValues = useMemo(() => {
     if (!initialValues) return undefined;
 
     const findIdByLabel = (
-      options: Array<{ value: any; label: string }> | undefined,
+      options: Array<{ value: string; label: string }> | undefined,
       label?: string | null
     ) => {
       if (!options || !label) return undefined;
@@ -48,7 +45,8 @@ const EditEmployee = ({
     };
 
     // Format start date for <input type="date"> as YYYY-MM-DD; treat sentinel as empty
-    const raw = (initialValues as any).startDate as string | undefined;
+    const employeeData = initialValues as Employee & Record<string, unknown>;
+    const raw = employeeData.startDate as string | undefined;
     let startDateForInput: string | undefined = undefined;
     if (raw && raw !== "0001-01-01T00:00:00") {
       const d = new Date(raw);
@@ -61,24 +59,30 @@ const EditEmployee = ({
     }
 
     return {
-      email: (initialValues as any).email || "",
-      phone: (initialValues as any).phone || "",
-      address: (initialValues as any).address || "",
-      status: (initialValues as any).status || "",
+      email: (employeeData.email as string) || "",
+      phone: (employeeData.phone as string) || "",
+      address: (employeeData.address as string) || "",
+      status: (employeeData.status as string) || "",
       startDate: startDateForInput || "",
       departmentId:
-        (initialValues as any).departmentId ??
-        findIdByLabel(departmentOptions, (initialValues as any).department),
+        (employeeData.departmentId as string | undefined) ??
+        findIdByLabel(
+          departmentOptions,
+          employeeData.department as string | undefined
+        ),
       positionId:
-        (initialValues as any).positionId ??
-        findIdByLabel(positionOptions, (initialValues as any).position),
+        (employeeData.positionId as string | undefined) ??
+        findIdByLabel(
+          positionOptions,
+          employeeData.position as string | undefined
+        ),
       annualSalary:
-        typeof (initialValues as any).annualSalary === "number"
-          ? (initialValues as any).annualSalary
+        typeof employeeData.annualSalary === "number"
+          ? employeeData.annualSalary
           : undefined,
       ratePerHour:
-        typeof (initialValues as any).ratePerHour === "number"
-          ? (initialValues as any).ratePerHour
+        typeof employeeData.ratePerHour === "number"
+          ? employeeData.ratePerHour
           : undefined,
     } as Partial<EditEmployeeFormValues>;
   }, [initialValues, departmentOptions, positionOptions]);
@@ -166,10 +170,11 @@ const EditEmployee = ({
           );
           formRef?.reset();
         }
-      } catch (err: any) {
+      } catch (err: unknown) {
+        const error = err as { data?: { message?: string }; message?: string };
         const errorMessage =
-          err?.data?.message ||
-          err?.message ||
+          error?.data?.message ||
+          error?.message ||
           "Employee editing failed. Please try again.";
         showAlert("Error", errorMessage, "error");
       } finally {
@@ -183,6 +188,7 @@ const EditEmployee = ({
       updateEmployee,
       formRef,
       setIsModalOpen,
+      buildChangedPayload,
     ]
   );
 
