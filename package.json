@@ -15,7 +15,7 @@
     "date-fns": "^4.1.0",
     "highcharts": "^12.3.0",
     "highcharts-react-official": "^3.2.2",
-    "next": "15.3.5",
+    "next": "15.3.8",
     "react": "^19.0.0",
     "react-big-calendar": "^1.19.4",
     "react-dom": "^19.0.0",
