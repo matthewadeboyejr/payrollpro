@@ -20,7 +20,8 @@ export interface getLeave {
   reason: string;
   comment: string;
   approvedBy: string;
-  days: number;
+  dayRequested: number;
+  hoursRequested: number;
   remainingBalance: number;
   createdAt: string;
 }

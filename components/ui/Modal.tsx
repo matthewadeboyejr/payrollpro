@@ -12,6 +12,7 @@ const Modal = ({
   onSubmit,
   secondaryBtnText,
   showSubmitBtn = true,
+  showCancelBtn = true,
   submitBtnText = "Submit",
   secondaryBtnColor = "bg-red-500 hover:bg-red-600",
   isSubmitting = false,
@@ -33,9 +34,11 @@ const Modal = ({
         <div className="my-5">{children}</div>
         <div className="flex justify-end border-t border-gray-200 pt-5">
           <div className="flex gap-3 ">
-            <button className="secondary-btn" onClick={onClose}>
-              Cancel
-            </button>
+            {showCancelBtn && (
+              <button className="secondary-btn" onClick={onClose}>
+                Cancel
+              </button>
+            )}
             {secondaryBtnText && (
               <button
                 type="button"

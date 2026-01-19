@@ -100,12 +100,12 @@ export const Dropdown = ({ options }: DropdownProps) => {
     };
   }, []);
   return (
-    <div className="relative " ref={dropdownRef}>
+    <div className="relative" ref={dropdownRef}>
       <button className="cursor-pointer" onClick={() => setIsOpen(!isOpen)}>
         <HiOutlineDotsVertical color="black" size={20} />
       </button>
       {isOpen && (
-        <div className="absolute top-full  right-0 mt-1 w-fit bg-white border border-gray-200 rounded-md shadow-lg z-20 max-h-[200px] overflow-y-auto">
+        <div className="absolute flex flex-col gap-2 top-full  right-0 mt-1 w-fit bg-white border border-gray-200 rounded-md shadow-lg z-20 max-h-[200px] overflow-y-auto">
           {options?.map((option, index) => (
             <button
               key={index}

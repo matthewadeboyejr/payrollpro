@@ -4,7 +4,13 @@ import {
 } from "@/components/types/formFields";
 import apiSlice from "../apiSlice";
 
-import { EMPLOYEES } from "./constants";
+import {
+  EMPLOYEES,
+  EMPLOYMENT_TYPES,
+  GRADE_LEVELS,
+  SALARY_BANDS,
+  WORK_SCHEDULE_TYPES,
+} from "./constants";
 
 export const employeeApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -58,6 +64,30 @@ export const employeeApiSlice = apiSlice.injectEndpoints({
       }),
       providesTags: ["Employee"],
     }),
+    getEmploymentTypes: builder.query({
+      query: () => ({
+        url: `${EMPLOYMENT_TYPES}`,
+        method: "GET",
+      }),
+    }),
+    getSalaryBandsByGradeLevelId: builder.query({
+      query: (gradeLevelId) => ({
+        url: `${SALARY_BANDS}/gradeLevel/${gradeLevelId}`,
+        method: "GET",
+      }),
+    }),
+    getGradeLevels: builder.query({
+      query: () => ({
+        url: `${GRADE_LEVELS}`,
+        method: "GET",
+      }),
+    }),
+    getWorkScheduleTypes: builder.query({
+      query: () => ({
+        url: `${WORK_SCHEDULE_TYPES}`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -68,4 +98,9 @@ export const {
   useUpdateEmployeeMutation,
   useGetEmployeeByIdQuery,
   useGetEmployeesSummaryQuery,
+  useGetEmploymentTypesQuery,
+  useLazyGetSalaryBandsByGradeLevelIdQuery,
+  useGetSalaryBandsByGradeLevelIdQuery,
+  useGetGradeLevelsQuery,
+  useGetWorkScheduleTypesQuery,
 } = employeeApiSlice;

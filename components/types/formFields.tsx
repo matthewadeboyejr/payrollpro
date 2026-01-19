@@ -31,6 +31,13 @@ export interface SelectInputProps {
   desc?: string;
   readonly?: boolean;
   multiple?: boolean;
+  onChange?: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+}
+
+export interface SearchableSelectInputProps extends SelectInputProps {
+  onSearch?: (searchTerm: string) => void;
+  isLoading?: boolean;
+  placeholder?: string;
 }
 
 // React Final Form specific types
@@ -76,10 +83,17 @@ export interface AddNewEmployeeFormValues {
   positionId: number;
   ratePerHour: number;
   annualSalary: number;
+  weeklyHours: number;
+  workingDaysPerWeek: number;
+  gradeLevelId: number;
+  salaryBandId: number;
+  employmentTypeId: number;
+  customSalary: number;
+  workScheduleTypeId: number;
 }
 
 export interface EditEmployeeFormValues {
-  fullName: string;
+  fullName?: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -90,9 +104,16 @@ export interface EditEmployeeFormValues {
   startDate: string;
   departmentId: number;
   positionId: number;
-  ratePerHour: number;
-  annualSalary: number;
+  ratePerHour?: number;
+  annualSalary?: number;
   status: string;
+  weeklyHours?: number;
+  workingDaysPerWeek?: number;
+  gradeLevelId?: number;
+  salaryBandId?: number;
+  employmentTypeId?: number;
+  customSalary?: number;
+  workScheduleTypeId?: number;
 }
 export interface EditLeaveTypeValues {
   fullName: string;
@@ -123,13 +144,48 @@ export interface EditUserFormValues {
   phoneNumber: string;
   status: string[];
 }
+export interface EditSalaryBandFormValues {
+  id?: string;
+  code: string;
+  gradeLevelId: string;
+  step: number;
+  description: string;
+  payType: string;
+  currency: string;
+  minSalary: number;
+  midPoint: number;
+  maxSalary: number;
+  housingAllowance: number;
+  transportAllowance: number;
+  otherAllowance: number;
+}
+
+export interface AddNewSalaryBandFormValues {
+  code: string;
+  gradeLevelId: string;
+  step: number;
+  description: string;
+  payType: string;
+  currency: string;
+  minSalary: number;
+  midPoint: number;
+  maxSalary: number;
+  housingAllowance: number;
+  transportAllowance: number;
+  otherAllowance: number;
+}
 
 export type AddNewUserFormProps = FinalFormProps;
+
+export type AddNewSalaryBandFormProps = FinalFormProps;
 
 export interface EditUserFormProps extends FinalFormProps {
   initialValues?: Partial<EditUserFormValues> | null;
 }
 
+export interface EditSalaryBandFormProps extends FinalFormProps {
+  initialValues?: Partial<EditSalaryBandFormValues> | null;
+}
 export interface EditEmployeeFormProps extends FinalFormProps {
   initialValues?: Partial<EditEmployeeFormValues> | null;
 }
@@ -153,6 +209,9 @@ export interface NewLeaveFormValues {
   startDate: string;
   endDate: string;
   reason: string;
+  isHalfDay?: string | boolean;
+  timeDesignation?: "AM" | "PM";
+  employeeName?: string;
   /* status: string;
   submittedDate: string;
   approvedBy: string;
@@ -261,3 +320,22 @@ export interface ForgetPasswordFormValues {
 }
 
 export type ForgetPasswordFormProps = FinalFormProps;
+
+export interface NewShiftFormValues {
+  name: string;
+  departmentId: number;
+  ratePerHour: number;
+  startTime: string;
+  endTime: string;
+  isOvernight: boolean;
+  description: string;
+  address: string;
+  emergencyContactName: string;
+  emergencyContactPhone: string;
+}
+
+export interface NewRotaFormValues {
+  workDate: string;
+  employeeId: string;
+  shiftId: string;
+}

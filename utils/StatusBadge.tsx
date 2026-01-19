@@ -8,11 +8,18 @@ const statusColors = {
   active: "bg-green-100 text-green-800",
   Active: "bg-green-100 text-green-800",
   Approved: "bg-green-100 text-green-800",
+  approved: "bg-green-100 text-green-800",
   Rejected: "bg-red-100 text-red-800  ",
   "Annual Leave": "bg-blue-100 text-blue-800",
   "Sick Leave": "bg-red-100 text-red-800",
   "Personal Leave": "bg-purple-100 text-purple-800",
   "Maternity Leave": "bg-green-100 text-green-800",
+  Cancelled: "bg-red-100 text-red-800",
+  cancelled: "bg-red-100 text-red-800",
+  Completed: "bg-green-100 text-green-800",
+  completed: "bg-green-100 text-green-800",
+  Open: "bg-blue-100 text-blue-800",
+  open: "bg-blue-100 text-blue-800",
 
   //DRAFT: "bg-gray-100 text-gray-800 ",
 };
@@ -27,7 +34,7 @@ const StatusBadge = ({ status }: { status: string }) => {
 
   return (
     <span
-      className={`px-3 py-1 text-sm capitalize font-medium  rounded-full ${colorClass} flex items-center w-fit gap-1 text-nowrap`}
+      className={`px-2 py-1 text-xs capitalize   rounded-full ${colorClass} flex items-center w-fit gap-1 text-nowrap`}
     >
       {/* <GoDotFill /> */}
       {normalizedStatus}

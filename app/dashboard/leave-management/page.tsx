@@ -10,52 +10,35 @@ import LeaveCalendar from "@/components/leaveManagement/LeaveCalendar";
 import {
   useGetLeaveRequestSummaryQuery,
   useGetLeaveRequestQuery,
+  useGetLeaveRequestCalendarQuery,
 } from "@/services/api/constants/Leave.constant";
-import { getLeave } from "@/components/types/Leave";
+import { getLeave, getLeaveCalendar } from "@/components/types/Leave";
 
 const LeaveManagement = () => {
   const [tab, setTab] = useState<"table" | "calendar">("table");
   const { data: summaryData } = useGetLeaveRequestSummaryQuery(undefined);
   const { data: leaveRequestsData, isLoading: isLoadingLeaveRequests } =
     useGetLeaveRequestQuery({ search: "", status: "" });
+  const { data: calendarResponse, isLoading: isLoadingCalendar } =
+    useGetLeaveRequestCalendarQuery(undefined);
 
   const summary = summaryData?.data;
 
-  // Transform leave request data for calendar
   const calendarData = useMemo(() => {
-    const leaveRequests = leaveRequestsData?.data || [];
-    const statusColorMap: Record<string, string> = {
-      approved: "#22c55e", // green
-      rejected: "#ef4444", // red
-      pending: "#f59e0b", // amber
-      reimbursed: "#3b82f6", // blue
-    };
+    const leaveRequests = calendarResponse?.data || [];
 
-    return leaveRequests.map((request: getLeave) => ({
+    return leaveRequests.map((request: getLeaveCalendar) => ({
       id: request.id,
-      title: `${request.employeeName} - ${request.leaveType}`,
-      employeeId: request.id, // Using id as fallback
-      leaveTypeId: request.id, // Using id as fallback
+      title: `${request.title}`,
+      employeeId: request.employeeId, // Using id as fallback
+      leaveTypeId: request.leaveTypeId, // Using id as fallback
       requestNo: request.requestNo,
-      start: request.startDate,
-      end: request.endDate,
-      status: request.status?.toLowerCase() || "pending",
-      color:
-        statusColorMap[request.status?.toLowerCase() || "pending"] || "#6b7280",
-      // Include all fields needed for modal display
-      employeeName: request.employeeName,
-      leaveType: request.leaveType,
-      startDate: request.startDate,
-      endDate: request.endDate,
-      reason: request.reason,
-      comment: request.comment,
-      approvedBy: request.approvedBy,
-      days: request.days,
-      remainingBalance: request.remainingBalance,
-      createdAt: request.createdAt,
-      approvedDate: "", // Not available in getLeave, will be empty
+      start: request.start,
+      end: request.end,
+      status: request.status?.toLowerCase(),
+      color: request?.color,
     }));
-  }, [leaveRequestsData?.data]);
+  }, [calendarResponse]);
 
   return (
     <main className="w-full">
@@ -73,25 +56,16 @@ const LeaveManagement = () => {
           title="Approved This Month"
           icon={<IoCalendarClearOutline />}
           value={summary?.totalApprovedThisMonth || "-"}
-          //data="+2"
-          //color=""
-          //details="from last month"
         />{" "}
         <Cards
           title="Total Days Approved"
           icon={<IoCalendarClearOutline />}
           value={summary?.totalDaysApproved || "-"}
-          //data=""
-          //color="green"
-          //details="This year"
         />
         <Cards
           title="Average Days/Request"
           icon={<IoCalendarClearOutline />}
           value={summary?.averageDaysPerRequest || "-"}
-          //data=""
-          //color=""
-          //details="Per approved request"
         />
       </section>
       {/*    <LeaveBalance /> */}

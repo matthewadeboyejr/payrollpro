@@ -16,7 +16,7 @@ const TextareaInput = ({
 
   return (
     <div className="mb-3 flex flex-col flex-grow">
-      <label htmlFor={name} className="font-medium pb-2">
+      <label htmlFor={name} className="text-xs pb-2">
         {label}
       </label>
 

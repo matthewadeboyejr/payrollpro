@@ -4,6 +4,7 @@ import { SettingFormProps } from "../types/formFields";
 import TextInput from "../ui/TextInput";
 import { BiBuilding, BiGlobe } from "react-icons/bi";
 import SelectInput from "../ui/SelectInput";
+import SalaryBandTable from "../tables/SalaryBandTable";
 
 const General = ({ form }: SettingFormProps) => {
   return (
@@ -81,6 +82,15 @@ const General = ({ form }: SettingFormProps) => {
               form={form}
             />
           </div>
+        </div>
+      </section>
+      <section className="w-full mt-5 bg-white p-4 rounded-lg">
+        <div className="flex items-center gap-2 mb-5">
+          <BiGlobe className="font-bold" />
+          <h2 className="text-lg font-semibold">Salary Bands</h2>
+        </div>
+        <div className="w-full">
+          <SalaryBandTable />
         </div>
       </section>
     </div>

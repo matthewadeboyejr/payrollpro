@@ -42,7 +42,8 @@ interface LeaveRequest {
   reason?: string;
   comment?: string | null;
   approvedBy?: string | null;
-  days?: number;
+  dayRequested?: number;
+  hoursRequested?: number;
   remainingBalance?: number;
   createdAt?: string;
   approvedDate?: string;
@@ -127,10 +128,11 @@ const LeaveCalendar: React.FC<LeaveCalendarProps> = ({ data }) => {
       reason: resource.reason || "",
       comment: resource.comment ?? null,
       approvedBy: resource.approvedBy ?? null,
-      days: (resource.days || 1) as 1, // Type assertion needed due to interface definition
-      remainingBalance: resource.remainingBalance || 0,
-      createdAt: resource.createdAt || new Date().toISOString(),
-      approvedDate: resource.approvedDate || "",
+      dayRequested: (resource.dayRequested || 1) as 1, // Type assertion needed due to interface definition
+      hoursRequested: (resource.hoursRequested || 0) as 0, // Type assertion needed due to interface definition
+      remainingBalance: (resource.remainingBalance || 0) as 0, // Type assertion needed due to interface definition
+      createdAt: (resource.createdAt || new Date().toISOString()) as string, // Type assertion needed due to interface definition
+      approvedDate: (resource.approvedDate || "") as string, // Type assertion needed due to interface definition
     };
 
     setSelectedLeave(leaveDetails);

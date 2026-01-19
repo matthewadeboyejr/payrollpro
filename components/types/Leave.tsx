@@ -9,9 +9,21 @@ export interface getLeave {
   reason: string;
   comment: string;
   approvedBy: string;
-  days: number;
+  dayRequested: number;
+  hoursRequested: number;
   remainingBalance: number;
   createdAt: string;
+}
+export interface getLeaveCalendar {
+  id: number;
+  title: string;
+  employeeId: number;
+  leaveTypeId: number;
+  start: string;
+  end: string;
+  status?: string;
+  color: string;
+  requestNo: string;
 }
 export interface LeaveDetails {
   id: number;
@@ -24,7 +36,8 @@ export interface LeaveDetails {
   reason: string;
   comment: string | null;
   approvedBy: string | null;
-  days: 1;
+  dayRequested: number;
+  hoursRequested: number;
   remainingBalance: number;
   createdAt: string;
   approvedDate: string;

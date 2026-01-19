@@ -40,9 +40,24 @@ export const addNewEmployeeConstraints = {
   positionId: {
     presence: true,
   },
-  annualSalary: {
+  weeklyHours: {
     presence: true,
   },
+  workingDaysPerWeek: {
+    presence: true,
+  },
+  gradeLevelId: {
+    presence: true,
+  },
+  salaryBandId: {
+    presence: true,
+  },
+  employmentTypeId: {
+    presence: true,
+  },
+  /*  customSalary: {
+    presence: true,
+  }, */
   startDate: {
     presence: true,
   },
@@ -134,6 +149,33 @@ export const addNewUserConstraints = {
     presence: true,
   },
 };
+export const addNewSalaryBandConstraints = {
+  code: {
+    presence: true,
+  },
+  gradeLevelId: {
+    presence: true,
+  },
+  step: {
+    presence: true,
+  },
+
+  payType: {
+    presence: true,
+  },
+  currency: {
+    presence: true,
+  },
+  minSalary: {
+    presence: true,
+  },
+  midPoint: {
+    presence: true,
+  },
+  maxSalary: {
+    presence: true,
+  },
+};
 
 export const editUserConstraints = {
   firstName: {
@@ -166,7 +208,55 @@ export const addLeaveRequestConstraints = {
   reason: {
     presence: true,
   },
+  isHalfDay: {
+    presence: true,
+  },
+  // timeDesignation is conditionally validated in the validateForm function
 };
 export const rejectLeaveRequestConstraints = {
   // Comment is optional for rejection
+};
+
+export const addShiftConstraints = {
+  name: {
+    presence: true,
+  },
+  departmentId: {
+    presence: true,
+  },
+  ratePerHour: {
+    presence: true,
+  },
+  startTime: {
+    presence: true,
+  },
+  endTime: {
+    presence: true,
+  },
+  isOvernight: {
+    presence: true,
+  },
+  description: {
+    presence: true,
+  },
+  address: {
+    presence: true,
+  },
+  emergencyContactName: {
+    presence: true,
+  },
+  emergencyContactPhone: {
+    presence: true,
+  },
+};
+export const addRotaConstraints = {
+  workDate: {
+    presence: true,
+  },
+  employeeId: {
+    presence: false, // optional
+  },
+  shiftId: {
+    presence: true,
+  },
 };

@@ -64,8 +64,11 @@ const CreateLeaveRequest = ({
 
   const onSubmitLeaveRequest = async (values: NewLeaveFormValues) => {
     console.log("click leave leave");
+    const isHalfDay = values.isHalfDay === "true" ? true : false;
     const payload = {
       employeeId: employeeId,
+      isHalfDay: isHalfDay,
+      timeDesignation: isHalfDay ? values.timeDesignation : "fullday",
       leaveTypeId: values.leaveType,
       startDate: values.startDate
         ? new Date(values.startDate).toISOString()
@@ -89,10 +92,18 @@ const CreateLeaveRequest = ({
         router.push("/dashboard/leave-management");
       }
     } catch (err: unknown) {
-      const error = err as { data?: string; message?: string };
+      console.log("error", err);
+      const error = err as {
+        data?: { code?: number; title?: string; message?: string | string[] };
+      };
+
+      // Handle message as string or string array
+      const message = error?.data?.message;
+      const messageText = Array.isArray(message) ? message.join(", ") : message;
+
       const errorMessage =
-        error?.data ||
-        error?.message ||
+        error?.data?.title ||
+        messageText ||
         "Leave Request failed. Please try again.";
       showAlert("Error", errorMessage, "error");
     } finally {
@@ -102,7 +113,21 @@ const CreateLeaveRequest = ({
   };
 
   const validateForm = (values: NewLeaveFormValues) => {
-    return validate(values, addLeaveRequestConstraints) || undefined;
+    const errors = validate(values, addLeaveRequestConstraints) || {};
+
+    const isHalfDayValue =
+      values.isHalfDay === "true" ||
+      values.isHalfDay === true ||
+      String(values.isHalfDay) === "true";
+
+    if (isHalfDayValue && !values.timeDesignation) {
+      return {
+        ...errors,
+        timeDesignation: ["Time designation is required for half day leave"],
+      };
+    }
+
+    return Object.keys(errors).length > 0 ? errors : undefined;
   };
 
   return (

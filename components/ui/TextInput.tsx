@@ -28,7 +28,7 @@ const TextInput = ({
 
   return (
     <div className="mb-3 flex flex-col flex-grow w-full">
-      <label htmlFor={name} className="font-medium text-black pb-2">
+      <label htmlFor={name} className=" text-xs pb-2">
         {label}
       </label>
 

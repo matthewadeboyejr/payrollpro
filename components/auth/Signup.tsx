@@ -18,20 +18,6 @@ const Signup = () => {
       phoneNumber: values.phoneNumber,
     };
 
-    // TODO: Implement registration when API is ready
-    // try {
-    //   const result = await registerUser(payload).unwrap();
-    //   console.log("result", result);
-    // } catch (err: unknown) {
-    //   const error = err as { data?: { message?: string }; message?: string };
-    //   console.error("Signup error:", error?.data);
-    //   const errorMessage =
-    //     error?.data?.message ||
-    //     error?.message ||
-    //     "Registration failed. Please try again.";
-    //   showAlert("Registration Error", errorMessage, "error");
-    // }
-    console.log("Signup payload:", payload);
     showAlert(
       "Info",
       "Registration functionality is not yet implemented",

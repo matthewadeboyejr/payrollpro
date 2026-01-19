@@ -7,9 +7,15 @@ export const REFRESH_TOKEN = "auth/refresh-token";
 
 // Employee constants
 export const EMPLOYEES = "employee";
+export const EMPLOYMENT_TYPES = "EmploymentType";
 export const DEPARTMENTS = "department";
 export const POSITIONS = "position";
-
+export const SALARY_BANDS = "SalaryBand";
+export const GRADE_LEVELS = "GradeLevel";
+export const WORK_SCHEDULE_TYPES = "WorkScheduleType";
 // Leave constants
 export const LEAVEREQUEST = "LeaveRequest";
 export const LEAVETYPE = "LeaveType";
+// Shift constants
+export const SHIFTS = "shifts";
+export const ROTA = "rota";

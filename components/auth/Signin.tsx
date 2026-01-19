@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import SigninForm from "../forms/SigninForm";
 import { Form } from "react-final-form";
 import { validate } from "validate.js";
@@ -8,16 +8,13 @@ import { SigninFormValues, FormValidationResult } from "../types/formFields";
 import { useLoginUserMutation } from "@/services/api/constants/auth.constant";
 import { showAlert } from "../ui/ShowAlert";
 import { useDispatch } from "react-redux";
-import { updateUser, userIsAuthenticated } from "@/redux/slice/user.slice";
-import { useAppSelector } from "@/redux/hooks";
+import { updateUser } from "@/redux/slice/user.slice";
 
 const Signin = () => {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  const isAuthenticated = useAppSelector(userIsAuthenticated);
-
-  const [loginUser, { isSuccess }] = useLoginUserMutation();
+  const [loginUser] = useLoginUserMutation();
 
   const onSubmit = async (values: SigninFormValues) => {
     const payload = {
@@ -27,9 +24,8 @@ const Signin = () => {
     try {
       const result = await loginUser(payload).unwrap();
 
-      if (result?.code === 200) {
-        showAlert("Login Success", result?.message, "success");
-
+      if (result?.code === 200 && result?.data?.token) {
+        // Update Redux state first (synchronous update)
         dispatch(
           updateUser({
             user: result?.data?.user,
@@ -39,6 +35,15 @@ const Signin = () => {
             isAuthenticated: true,
           })
         );
+
+        // Show success message
+        showAlert("Login Success", result?.message, "success");
+
+        // Navigate after state update
+        // Use Promise to ensure state is processed before navigation
+        Promise.resolve().then(() => {
+          router.replace("/dashboard");
+        });
       }
     } catch (err: unknown) {
       const errorMessage =
@@ -47,12 +52,6 @@ const Signin = () => {
       showAlert("Login Error", errorMessage, "error");
     }
   };
-
-  useEffect(() => {
-    if (isSuccess && isAuthenticated) {
-      router.push("/dashboard");
-    }
-  }, [isSuccess, router, isAuthenticated]);
 
   const validateForm = (
     values: SigninFormValues

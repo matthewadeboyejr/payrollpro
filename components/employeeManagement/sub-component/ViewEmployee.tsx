@@ -39,7 +39,7 @@ const ViewEmployee = ({
       {isLoadingEmployeeData ? (
         <ViewSkeleton />
       ) : employeeDetails ? (
-        <div className="space-y-4 mb-4 ">
+        <div className="space-y-4 mb-4  overflow-y-auto max-h-[500px]">
           <div className="grid grid-cols-2 gap-2  ">
             <div className="flex flex-col gap-1">
               <span className="text-sm text-gray-500 font-medium flex items-center gap-2">
@@ -85,7 +85,6 @@ const ViewEmployee = ({
               <StatusBadge status={employeeDetails?.status} />
             </div>
           </div>
-
           <h2 className="text-sm font-semibold text-black pt-2 border-t  border-gray-200">
             Job Details
           </h2>
@@ -116,10 +115,26 @@ const ViewEmployee = ({
             </div>
             <div className="flex flex-col gap-1">
               <span className="text-sm text-gray-500 font-medium">
-                End Date:
+                Weekly Hours:
               </span>
               <span className="text-sm font-semibold text-black">
-                {endDate}
+                {employeeDetails?.weeklyHours}
+              </span>
+            </div>
+            <div className="flex flex-col gap-1">
+              <span className="text-sm text-gray-500 font-medium">
+                Working Days Per Week:
+              </span>
+              <span className="text-sm font-semibold text-black">
+                {employeeDetails?.workingDaysPerWeek}
+              </span>
+            </div>
+            <div className="flex flex-col gap-1">
+              <span className="text-sm text-gray-500 font-medium">
+                Employment Type:
+              </span>
+              <span className="text-sm font-semibold text-black">
+                {employeeDetails?.employmentTypeName}
               </span>
             </div>
           </div>
@@ -129,22 +144,30 @@ const ViewEmployee = ({
           <div className="grid grid-cols-2 gap-2 border-b border-gray-200 pb-4">
             <div className="flex flex-col gap-1">
               <span className="text-sm text-gray-500 font-medium">
-                Annual Salary
+                Grade Level:
               </span>
               <span className="text-sm font-semibold text-black">
-                {employeeDetails?.annualSalary}
+                {employeeDetails?.gradeLevelName}
+              </span>
+            </div>
+
+            <div className="flex flex-col gap-1">
+              <span className="text-sm text-gray-500 font-medium">
+                Salary Band:
+              </span>
+              <span className="text-sm font-semibold text-black">
+                {employeeDetails?.salaryBandCode}
               </span>
             </div>
             <div className="flex flex-col gap-1">
               <span className="text-sm text-gray-500 font-medium">
-                Rate per hour:
+                Custom salary:
               </span>
               <span className="text-sm font-semibold text-black">
-                {employeeDetails?.ratePerHour}
+                {employeeDetails?.customSalary}
               </span>
             </div>
           </div>
-
           <h2 className="text-sm font-semibold text-black pt-2 ">
             Admin Details
           </h2>
@@ -169,7 +192,6 @@ const ViewEmployee = ({
           <h2 className="text-sm font-semibold text-black pt-2 ">
             Leave Summary
           </h2>
-
           <LeaveSummaryCard
             leaveSummary={(leaveSummary as LeaveSummaryItem[]) || []}
           />

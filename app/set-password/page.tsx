@@ -52,7 +52,6 @@ const SetPassword = () => {
         token,
         password: values.password,
       };
-      console.log("payload", payload);
 
       await setPassword(payload).unwrap();
     } catch (err: unknown) {

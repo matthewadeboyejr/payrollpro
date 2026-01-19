@@ -10,6 +10,7 @@ const SelectInput = ({
   readonly,
   multiple,
   desc,
+  onChange,
 }: SelectInputProps) => {
   const typedForm = form as {
     getState: () => { submitFailed: boolean; errors: Record<string, string> };
@@ -18,22 +19,29 @@ const SelectInput = ({
 
   return (
     <div className="mb-3 flex flex-col w-full">
-      <label htmlFor={name} className="font-medium text-black pb-2">
+      <label htmlFor={name} className="text-xs pb-2">
         {label}
       </label>
-      <Field
-        name={name}
-        className="relative border border-gray-200 px-2 py-2 rounded-sm focus:outline-none focus:ring-focus"
-        component="select"
-        disabled={readonly}
-        multiple={multiple}
-      >
-        <option value="">select</option>
-        {options?.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
+      <Field name={name} disabled={readonly} multiple={multiple}>
+        {({ input }) => (
+          <select
+            {...input}
+            className="relative border border-gray-200 px-2 py-2 rounded-sm focus:outline-none focus:ring-focus"
+            disabled={readonly}
+            multiple={multiple}
+            onChange={(e) => {
+              input.onChange(e);
+              onChange?.(e);
+            }}
+          >
+            <option value="">select</option>
+            {options?.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        )}
       </Field>
       {submitFailed && errors[name] && (
         <small className="text-red-600">{errors[name]}</small>

@@ -1,4 +1,5 @@
 export interface ModalProps {
+  showCancelBtn?: boolean;
   secondaryBtnText?: string;
   submitBtnText?: string;
   showSubmitBtn?: boolean;

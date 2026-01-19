@@ -15,6 +15,13 @@ export const leaveApiSlice = apiSlice.injectEndpoints({
       }),
       providesTags: ["Leave"],
     }),
+    getLeaveRequestCalendar: builder.query({
+      query: () => ({
+        url: `${LEAVEREQUEST}/calendar`,
+        method: "GET",
+      }),
+      providesTags: ["Leave"],
+    }),
     getLeaveRequestSummary: builder.query({
       query: () => ({
         url: `${LEAVEREQUEST}/summary`,
@@ -78,4 +85,5 @@ export const {
   useApproveLeaveRequestMutation,
   useRejectLeaveRequestMutation,
   useGetLeaveRequestSummaryQuery,
+  useGetLeaveRequestCalendarQuery,
 } = leaveApiSlice;

@@ -117,14 +117,20 @@ const LeaveManagementTable = () => {
                 Type
               </th>
               <th scope="col" className="px-6 py-3">
-                Start Date
+                Start
               </th>
               <th scope="col" className="px-6 py-3">
-                End Date
+                End
               </th>
 
               <th scope="col" className="px-6 py-3">
                 Days
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Hours
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Balance
               </th>
               <th scope="col" className="px-6 py-3">
                 Status
@@ -144,7 +150,7 @@ const LeaveManagementTable = () => {
               const { date: submitDate } = formatDT(request?.createdAt || "");
               return (
                 <tr
-                  className=" border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200"
+                  className=" border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 text-nowrap"
                   key={request?.id}
                 >
                   <td className="px-6 py-4 text-nowrap">
@@ -161,16 +167,22 @@ const LeaveManagementTable = () => {
                   </td>
                   <td className="px-6 py-4">{startDate}</td>
                   <td className="px-6 py-4">{endDate}</td>
-                  <td className="px-6 py-4">{request?.days}</td>
+                  <td className="px-6 py-4">{request?.dayRequested || "-"}</td>
+                  <td className="px-6 py-4">
+                    {request?.hoursRequested || "-"}
+                  </td>
+                  <td className="px-6 py-4">
+                    {request?.remainingBalance || "-"}
+                  </td>
                   <td className="px-6 py-4">
                     <StatusBadge status={request?.status} />
                   </td>
-                  <td className="px-6 py-4">{submitDate}</td>
+                  <td className="px-6 py-4 ">{submitDate}</td>
                   <td className="px-6 py-4 relative">
                     <Dropdown
                       options={[
                         {
-                          title: "view Details",
+                          title: "View Details",
                           onClick: () => {
                             setInitialValues(request);
                             setIsModalOpen("view");

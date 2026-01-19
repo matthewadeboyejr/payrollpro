@@ -28,6 +28,28 @@ const NewLeaveForm = ({ form, handleSubmit }: FormProps) => {
         </div>
         <div className="flex items-center gap-4">
           <SelectInput
+            label="Duration Type"
+            name="isHalfDay"
+            options={[
+              { value: "true", label: "Half Day" },
+              { value: "false", label: "Full Day" },
+            ]}
+            form={form}
+          />
+          {form.getState()?.values?.isHalfDay === "true" && (
+            <SelectInput
+              label="Time Designation"
+              name="timeDesignation"
+              options={[
+                { value: "AM", label: "AM" },
+                { value: "PM", label: "PM" },
+              ]}
+              form={form}
+            />
+          )}
+        </div>
+        <div className="flex items-center gap-4">
+          <SelectInput
             label="Leave Type"
             name="leaveType"
             options={leaveTypeOptions}

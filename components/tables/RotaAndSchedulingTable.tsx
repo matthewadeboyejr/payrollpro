@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import DropdownComponent from "../ui/Dropdown";
+import DropdownComponent, { Dropdown } from "../ui/Dropdown";
 import { FiFilter, FiPlus, FiSearch } from "react-icons/fi";
 import Modal from "../ui/Modal";
 import AddNewEmployeeForm from "../forms/AddNewEmployeeForm";
@@ -9,17 +9,23 @@ import { validate } from "validate.js";
 import { AddNewEmployeeFormValues } from "../types/formFields";
 import { addNewEmployeeConstraints } from "../forms/contraints/contraints";
 import { BiExport } from "react-icons/bi";
+import { useGetShiftsQuery } from "@/services/api/constants/shift.constant";
+import { useModal } from "@/context/ModalContext";
+import { Shifts } from "../types/shifts";
+import AddShift from "../shift-rota/sub-component/AddShift";
+import { useShift } from "@/context/ShiftContext";
+import TableSkeleton from "../ui/TableSkeleton";
 
 const RotaAndSchedulingTable = () => {
+  const { isModalOpen, setIsModalOpen } = useModal();
+  const { departmentId, setDepartmentId, shifts, setShifts, shiftsData, isLoadingShifts } =
+    useShift();
+  console.log(shiftsData);
   const [search, setSearch] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const onSubmit = (values: AddNewEmployeeFormValues) => {
-    console.log(values);
-  };
+  const [initialValues, setInitialValues] = useState<Shifts | null>(null);
+  const [selectedShiftId, setSelectedShiftId] = useState<number | null>(null);
+ 
 
-  const validateForm = (values: AddNewEmployeeFormValues) => {
-    return validate(values, addNewEmployeeConstraints) || undefined;
-  };
 
   return (
     <div className="flex flex-col gap-4 bg-white p-4 rounded-sm">
@@ -41,7 +47,7 @@ const RotaAndSchedulingTable = () => {
         <div className="flex items-center gap-2 w-full md:w-auto justify-end">
           <button
             className="primary-btn flex items-center gap-2 w-full md:w-auto"
-            onClick={() => setIsModalOpen(true)}
+            onClick={() => setIsModalOpen("add-shift")}
           >
             <FiPlus />
             <span>Add Shift</span>
@@ -68,93 +74,89 @@ const RotaAndSchedulingTable = () => {
           </button>
         </div>
       </div>
-      <div className="relative overflow-x-auto">
+      <div className="relative overflow-x-auto pb-28">
+       {isLoadingShifts? <TableSkeleton columns={5} rows={5} /> : <>
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
               <th scope="col" className="px-6 py-3">
-                Employee
+                Shift Name
               </th>
               <th scope="col" className="px-6 py-3">
                 Department
               </th>
               <th scope="col" className="px-6 py-3">
-                Position
+                Is Overnight
               </th>
               <th scope="col" className="px-6 py-3">
-                Date
+                Start Time
               </th>
               <th scope="col" className="px-6 py-3">
-                Time
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Hours
+                End Time
               </th>
 
-              <th scope="col" className="px-6 py-3">
-                Status
-              </th>
               <th scope="col" className="px-6 py-3">
                 Actions
               </th>
             </tr>
           </thead>
           <tbody>
-            <tr className=" border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
-              <td className="px-6 py-4 flex flex-col gap-2 items-start">
-                <span className="text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                  John Smith
-                </span>
-                <span className="text-xs text-gray-500 whitespace-nowrap dark:text-gray-400">
-                  +44 7700 900123
-                </span>
-              </td>
-              <td className="px-6 py-4">Engineering</td>
-              <td className="px-6 py-4">Senior Developer</td>
-              <td className="px-6 py-4">2021-01-01</td>
-              <td className="px-6 py-4">09:00 - 17:00</td>
-              <td className="px-6 py-4">10H</td>
 
-              <td className="px-6 py-4">
-                <span className="bg-green-200 text-green-800 px-2 py-1 rounded-full text-xs">
-                  Scheduled
-                </span>
-              </td>
-              <td className="px-6 py-4">
-                <DropdownComponent
-                  options={[
-                    { title: "Edit", onClick: () => {} },
-                    { title: "Delete", onClick: () => {} },
-                  ]}
-                  label="Actions"
-                  size="sm"
-                />
-              </td>
-            </tr>
+
+
+            {shiftsData && shiftsData.length === 0 ? (
+              <tr>
+                <td colSpan={5} className="px-6 py-4 text-center">
+                  No shifts found
+                </td>
+              </tr>
+            ) : (
+              shiftsData?.map((shift: any) => (
+              <tr className=" border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
+                <td className="px-6 py-4">{shift?.name}</td>
+                <td className="px-6 py-4">{shift?.departmentName}</td>
+                <td className="px-6 py-4">
+                  {shift?.isOvernight ? "Yes" : "No"}
+                </td>
+                <td className="px-6 py-4">{shift?.startTime}</td>
+                <td className="px-6 py-4">{shift?.endTime}</td>
+
+                <td className="px-6 py-4 relative">
+                  <Dropdown
+                    options={[
+                      {
+                        title: "View",
+                        onClick: () => {
+                          setSelectedShiftId(shift.id);
+                          setIsModalOpen("view-shift");
+                        },
+                      },
+                      {
+                        title: "Edit",
+                        onClick: () => {
+                          setInitialValues(shift);
+                          setIsModalOpen("edit-shift");
+                        },
+                      },
+                      {
+                        title: "Delete",
+                        onClick: () => {
+                          ("");
+                        },
+                      },
+                    ]}
+                    label="Actions"
+                    size="sm"
+                  />
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
+       </>}
       </div>
-      {isModalOpen && (
-        <Modal
-          size={"2xl"}
-          heading={"Add New Employee"}
-          desc={"Add a new employee to the system"}
-          onClose={() => setIsModalOpen(false)}
-          submitBtnText="Add New Employee"
-        >
-          <Form<AddNewEmployeeFormValues>
-            onSubmit={onSubmit}
-            validate={validateForm}
-            render={({ handleSubmit, form, submitting }) => (
-              <AddNewEmployeeForm
-                handleSubmit={handleSubmit}
-                form={form}
-                submitting={submitting}
-              />
-            )}
-          />
-        </Modal>
-      )}
+      {isModalOpen === "add-shift" && <AddShift />}
     </div>
   );
 };
