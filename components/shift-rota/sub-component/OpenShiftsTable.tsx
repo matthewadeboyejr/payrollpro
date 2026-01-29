@@ -9,7 +9,6 @@ import EditRota from "./EditRota";
 import { useModal } from "@/context/ModalContext";
 import {
   useClaimRotaMutation,
-  useCompleteRotaMutation,
 } from "@/services/api/constants/shift.constant";
 import { showAlert } from "@/components/ui/ShowAlert";
 import { useAction } from "@/hooks/useAction";
@@ -43,7 +42,7 @@ const OpenShiftsTable: React.FC<OpenShiftsTableProps> = ({ shifts }) => {
   const { isModalOpen, setIsModalOpen } = useModal();
   const [selectedRota, setSelectedRota] = useState<ApiShift | null>(null);
   const { deleteRotaAction } = useAction();
-  const [completeRota] = useCompleteRotaMutation();
+
   const [claimRota] = useClaimRotaMutation();
 
   const formatTime = (timeString: string) => {
@@ -75,8 +74,8 @@ const OpenShiftsTable: React.FC<OpenShiftsTableProps> = ({ shifts }) => {
         Array.isArray(error?.data?.message)
           ? error.data.message.join(", ")
           : error?.data?.title ||
-            error?.data?.message ||
-            "Failed to claim rota";
+          error?.data?.message ||
+          "Failed to claim rota";
       showAlert("Error", errorMessage, "error");
     }
   };
@@ -103,7 +102,7 @@ const OpenShiftsTable: React.FC<OpenShiftsTableProps> = ({ shifts }) => {
           <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr>
-               
+
                 <th scope="col" className="px-6 py-3">
                   Work Date
                 </th>
@@ -142,7 +141,7 @@ const OpenShiftsTable: React.FC<OpenShiftsTableProps> = ({ shifts }) => {
                       key={shift.id}
                       className="border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200"
                     >
-                     
+
                       <td className="px-6 py-4">{workDate || "-"}</td>
                       <td className="px-6 py-4">{shift.shiftName || "-"}</td>
                       <td className="px-6 py-4">

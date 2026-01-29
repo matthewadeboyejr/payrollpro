@@ -8,20 +8,20 @@ import { addShiftConstraints } from "@/components/forms/contraints/contraints";
 import { validate } from "validate.js";
 
 import NewShiftForm from "@/components/forms/NewShiftForm";
-import { useCreateShiftMutation } from "@/services/api/constants/shift.constant";
+import { useEditShiftMutation } from "@/services/api/constants/shift.constant";
 
-const AddShift = () => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const EditShift = ({ initialValues, shiftId }: { initialValues: any, shiftId: string }) => {
   const { setIsModalOpen } = useModal();
   const [formRef, setFormRef] = useState<{
     reset: () => void;
     submit: () => void;
   } | null>(null);
 
-  const [createShift, { isLoading: isSubmittingShift }] =
-    useCreateShiftMutation();
+  const [editShift, { isLoading: isSubmittingShift }] =
+    useEditShiftMutation();
 
   const onSubmitShift = async (values: NewShiftFormValues) => {
-    console.log("click shift shift");
 
     // Convert time format from "HH:mm" to "HH:mm:ss" for .NET TimeSpan
     const formatTimeForTimeSpan = (time: string): string => {
@@ -30,7 +30,7 @@ const AddShift = () => {
       return `${time}:00`;
     };
 
-    const payload = {
+    const fullPayload = {
       name: values.name,
       departmentId: values.departmentId,
       ratePerHour: values.ratePerHour,
@@ -43,9 +43,24 @@ const AddShift = () => {
       emergencyContactPhone: values.emergencyContactPhone,
     };
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const payload = Object.keys(fullPayload).reduce((acc: any, key) => {
+      const k = key as keyof typeof fullPayload;
+      if (fullPayload[k] !== initialValues[k]) {
+        acc[k] = fullPayload[k];
+      }
+      return acc;
+    }, {});
+
+    if (Object.keys(payload).length === 0) {
+      showAlert("Info", "No changes made", "info");
+      setIsModalOpen(null);
+      return;
+    }
+
     try {
       console.log("payload ", payload);
-      const response = await createShift(payload).unwrap();
+      const response = await editShift({ payload, shiftId }).unwrap();
       if (response?.code === 201 || response?.code === 200) {
         showAlert("Success", response?.message, "Success");
         // Reset form after successful submission
@@ -67,7 +82,7 @@ const AddShift = () => {
       const errorMessage =
         error?.data?.title ||
         messageText ||
-        "Shift submission failed. Please try again.";
+        "Shift update failed. Please try again.";
       showAlert("Error", errorMessage, "error");
     } finally {
       setIsModalOpen(null);
@@ -83,8 +98,8 @@ const AddShift = () => {
     <div>
       <Modal
         size={"2xl"}
-        heading={"New Shift"}
-        desc={"Fill in the details to submit a new shift."}
+        heading={"Edit Shift"}
+        desc={"Update the details of the shift."}
         onClose={() => setIsModalOpen(null)}
         onSubmit={() => {
           if (formRef) {
@@ -92,11 +107,12 @@ const AddShift = () => {
           }
         }}
         isSubmitting={isSubmittingShift}
-        submitBtnText="Submit Shift "
+        submitBtnText="Update Shift"
       >
         <Form<NewShiftFormValues>
           onSubmit={onSubmitShift}
           validate={validateForm}
+          initialValues={initialValues}
           render={({ handleSubmit, form, submitting }) => {
             // Store form reference for modal submit
             if (!formRef) {
@@ -116,4 +132,4 @@ const AddShift = () => {
   );
 };
 
-export default AddShift;
+export default EditShift;

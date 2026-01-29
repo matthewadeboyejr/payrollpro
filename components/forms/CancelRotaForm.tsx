@@ -1,7 +1,7 @@
 import React from "react";
-  import { FormProps } from "../types/formFields";
+import { FormProps } from "../types/formFields";
 import TextareaInput from "../ui/TextareaInput";
-import { validate } from "validate.js";
+
 
 
 const CancelRotaForm = ({ form, handleSubmit }: FormProps) => {
@@ -17,7 +17,7 @@ const CancelRotaForm = ({ form, handleSubmit }: FormProps) => {
             placeholder="Reason for Cancellation"
             form={form}
           />
-      
+
         </div>
       </form>
     </div>

@@ -22,7 +22,7 @@ const ViewEmployee = ({
 
   console.log("employeeDetails", employeeDetails);
   const { date: startDate } = formatDT(employeeDetails?.startDate);
-  const { date: endDate } = formatDT(employeeDetails?.endDate);
+
 
   return (
     <Modal

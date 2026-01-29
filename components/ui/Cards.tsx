@@ -9,11 +9,11 @@ const Cards = ({ title, icon, value, data, color, details }: CardProps) => {
           {title && <h4 className="text-sm  ">{title}</h4>}
           {icon && <p className="text-sm font-semibold">{icon}</p>}
         </div>
-        {value && <h2 className="text-2xl font-bold">{value}</h2>}
+        {(value || value === 0) && <h2 className="text-2xl font-bold">{value}</h2>}
 
         <p className="text-sm text-gray-500 flex items-center gap-1">
           {data && <span className={`text-${color}-500 text-xs`}>{data}</span>}
-          {details && <span className="text-xs text-gray-500">{details}</span>}
+          {details && <span className="text-xs text-gray-500 border border-blue-100 px-2 py-1 rounded-full">{details}</span>}
         </p>
       </div>
     </div>

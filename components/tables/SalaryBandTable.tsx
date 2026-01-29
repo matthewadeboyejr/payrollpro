@@ -13,7 +13,7 @@ import EditSalaryBand from "../settings/sub-component/EditSalaryBand";
 import ViewSalaryBand from "../settings/sub-component/ViewSalary";
 import Spinner from "../ui/Spinner";
 
-interface SalaryBand {
+export interface SalaryBand {
   id: string;
   code: string;
   gradeLevel: string;
@@ -36,6 +36,9 @@ const SalaryBandTable = () => {
   const [initialValues, setInitialValues] = useState<SalaryBand | null>(null);
   const [selectedSalaryBandId, setSelectedSalaryBandId] = useState<
     string | null
+  >(null);
+  const [selectedSalaryBand, setSelectedSalaryBand] = useState<
+    SalaryBand | null
   >(null);
 
   const { data: salaryBands, isLoading } = useGetSalaryBandsQuery(undefined);
@@ -147,7 +150,7 @@ const SalaryBandTable = () => {
                   </td>
                   <td className="px-6 py-4 relative">
                     {isDeletingSalaryBand &&
-                    selectedSalaryBandId === salaryBand.id ? (
+                      selectedSalaryBandId === salaryBand.id ? (
                       <div className="flex items-center justify-center">
                         <Spinner />
                       </div>
@@ -158,6 +161,7 @@ const SalaryBandTable = () => {
                             title: "View",
                             onClick: () => {
                               setSelectedSalaryBandId(salaryBand.id);
+                              setSelectedSalaryBand(salaryBand);
                               setIsModalOpen("view-salaryBand");
                             },
                           },
@@ -202,7 +206,7 @@ const SalaryBandTable = () => {
         />
       )}
       {isModalOpen === "view-salaryBand" && selectedSalaryBandId && (
-        <ViewSalaryBand selectedSalaryBandId={selectedSalaryBandId} />
+        <ViewSalaryBand selectedSalaryBand={selectedSalaryBand} />
       )}
     </div>
   );

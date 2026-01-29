@@ -260,3 +260,11 @@ export const addRotaConstraints = {
     presence: true,
   },
 };
+
+export const claimRotaConstraints = {
+  employeeId: {
+    presence: true,
+  },
+};
+
+

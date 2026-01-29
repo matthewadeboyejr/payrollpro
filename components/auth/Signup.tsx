@@ -10,13 +10,8 @@ import { showAlert } from "../ui/ShowAlert";
 const Signup = () => {
   //const [registerUser, { isLoading, isSuccess }] = useRegisterUserMutation();
 
-  const onSubmit = async (values: SignupFormValues) => {
-    const payload = {
-      firstName: values.firstName,
-      lastName: values.lastName,
-      email: values.email,
-      phoneNumber: values.phoneNumber,
-    };
+  const onSubmit = async () => {
+
 
     showAlert(
       "Info",

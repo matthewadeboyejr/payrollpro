@@ -10,6 +10,13 @@ export const shiftApiSlice = apiSlice.injectEndpoints({
       }),
       providesTags: ["Shifts"],
     }),
+    getShiftById: builder.query({
+      query: (shiftId) => ({
+        url: `${SHIFTS}/${shiftId}`,
+        method: "GET",
+      }),
+      providesTags: ["Shifts"],
+    }),
     createShift: builder.mutation({
       query: (shiftData) => ({
         url: `${SHIFTS}`,
@@ -18,9 +25,31 @@ export const shiftApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Shifts"],
     }),
+    editShift: builder.mutation({
+      query: ({ payload, shiftId }) => ({
+        url: `${SHIFTS}/${shiftId}`,
+        body: payload,
+        method: "PUT",
+      }),
+      invalidatesTags: ["Shifts"],
+    }),
+    deleteShift: builder.mutation({
+      query: (shiftId) => ({
+        url: `${SHIFTS}/${shiftId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Shifts"],
+    }),
     getRota: builder.query({
       query: (rotaFilters) => ({
         url: `${ROTA}/monthly?departmentId=${rotaFilters.departmentId}&month=${rotaFilters.month}&year=${rotaFilters.year}&search=${rotaFilters.search}`,
+        method: "GET",
+      }),
+      providesTags: ["Rota"],
+    }),
+    getRotaSummary: builder.query({
+      query: (rotaFilters) => ({
+        url: `${ROTA}/rota-summary?departmentId=${rotaFilters.departmentId}&month=${rotaFilters.month}&year=${rotaFilters.year}`,
         method: "GET",
       }),
       providesTags: ["Rota"],
@@ -41,7 +70,7 @@ export const shiftApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: ["Rota"],
     }),
     editRota: builder.mutation({
-      query: ({payload, rotaId}) => ({
+      query: ({ payload, rotaId }) => ({
         url: `${ROTA}/${rotaId}`,
         body: payload,
         method: "PUT",
@@ -93,4 +122,8 @@ export const {
   useCancelRotaMutation,
   useDeleteRotaMutation,
   useEditRotaMutation,
+  useGetShiftByIdQuery,
+  useEditShiftMutation,
+  useDeleteShiftMutation,
+  useGetRotaSummaryQuery,
 } = shiftApiSlice;

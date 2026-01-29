@@ -12,14 +12,14 @@ import {
   useGetLeaveRequestQuery,
   useGetLeaveRequestCalendarQuery,
 } from "@/services/api/constants/Leave.constant";
-import { getLeave, getLeaveCalendar } from "@/components/types/Leave";
+import { getLeaveCalendar } from "@/components/types/Leave";
 
 const LeaveManagement = () => {
   const [tab, setTab] = useState<"table" | "calendar">("table");
   const { data: summaryData } = useGetLeaveRequestSummaryQuery(undefined);
-  const { data: leaveRequestsData, isLoading: isLoadingLeaveRequests } =
+  const { isLoading: isLoadingLeaveRequests } =
     useGetLeaveRequestQuery({ search: "", status: "" });
-  const { data: calendarResponse, isLoading: isLoadingCalendar } =
+  const { data: calendarResponse } =
     useGetLeaveRequestCalendarQuery(undefined);
 
   const summary = summaryData?.data;
@@ -48,9 +48,9 @@ const LeaveManagement = () => {
           title="Pending Requests"
           icon={<IoCalendarClearOutline />}
           value={summary?.totalPending || "-"}
-          //data=""
-          //color="green"
-          //details="Awaiting approval"
+        //data=""
+        //color="green"
+        //details="Awaiting approval"
         />{" "}
         <Cards
           title="Approved This Month"
@@ -74,22 +74,20 @@ const LeaveManagement = () => {
         <div className="bg-white p-5 rounded-md flex gap-2 border border-gray-200">
           <button
             onClick={() => setTab("table")}
-            className={`px-4 py-2 rounded-sm font-medium transition-all duration-200 ${
-              tab === "table"
-                ? "bg-blue-500 text-white"
-                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-            }`}
+            className={`px-4 py-2 rounded-sm font-medium transition-all duration-200 ${tab === "table"
+              ? "bg-blue-500 text-white"
+              : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              }`}
           >
             Table
           </button>
 
           <button
             onClick={() => setTab("calendar")}
-            className={`px-4 py-2 rounded-sm font-medium transition-all duration-200 ${
-              tab === "calendar"
-                ? "bg-blue-500 text-white"
-                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-            }`}
+            className={`px-4 py-2 rounded-sm font-medium transition-all duration-200 ${tab === "calendar"
+              ? "bg-blue-500 text-white"
+              : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              }`}
           >
             Calendar
           </button>

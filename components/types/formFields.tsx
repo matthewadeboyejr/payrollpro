@@ -1,3 +1,4 @@
+import { FormApi } from "final-form";
 import { FormRenderProps } from "react-final-form";
 
 export interface FormState {
@@ -41,8 +42,9 @@ export interface SearchableSelectInputProps extends SelectInputProps {
 }
 
 // React Final Form specific types
-export interface FinalFormProps {
-  form: unknown;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export interface FinalFormProps<T = any> {
+  form: FormApi<T>;
   handleSubmit: FormRenderProps["handleSubmit"];
   submitting: FormRenderProps["submitting"];
 }
@@ -338,4 +340,8 @@ export interface NewRotaFormValues {
   workDate: string;
   employeeId: string;
   shiftId: string;
+}
+
+export interface ClaimRotaFormValues {
+  employeeId: string;
 }

@@ -3,7 +3,7 @@ import { useDeactivateUserMutation } from "@/services/api/constants/auth.constan
 import { useDeactivateemployeeMutation } from "@/services/api/constants/employee.constant";
 //import { useRejectLeaveRequestMutation } from "@/services/api/constants/Leave.constant";
 import { useDeactivateSalaryBandMutation } from "@/services/api/constants/setting.constant";
-import { useDeleteRotaMutation } from "@/services/api/constants/shift.constant";
+import { useDeleteRotaMutation, useDeleteShiftMutation } from "@/services/api/constants/shift.constant";
 import Swal from "sweetalert2";
 
 export const useAction = () => {
@@ -14,6 +14,7 @@ export const useAction = () => {
   const [deactivateSalaryBand, { isLoading: isDeletingSalaryBand }] =
     useDeactivateSalaryBandMutation();
   const [deleteRota, { isLoading: isDeletingRota }] = useDeleteRotaMutation();
+  const [deleteShift, { isLoading: isDeletingShift }] = useDeleteShiftMutation();
   const deactivate = async (userId: string) => {
     if (!userId) {
       console.error("Invalid rowData: Missing ID");
@@ -69,8 +70,8 @@ export const useAction = () => {
         showAlert(
           "Error",
           error?.data?.message ||
-            error?.message ||
-            "Failed to Deactivate employee",
+          error?.message ||
+          "Failed to Deactivate employee",
           "error"
         );
       }
@@ -102,8 +103,8 @@ export const useAction = () => {
         showAlert(
           "Error",
           error?.data?.message ||
-            error?.message ||
-            "Failed to Delete salary band",
+          error?.message ||
+          "Failed to Delete salary band",
           "error"
         );
       }
@@ -140,6 +141,37 @@ export const useAction = () => {
     }
   };
 
+  const deleteShiftAction = async (shiftId: string) => {
+    if (!shiftId) {
+      console.error("Invalid rowData: Missing ID");
+      return;
+    }
+
+    const result = await Swal.fire({
+      title: "Delete  Shift?",
+      text: "This action will permanently delete this shift!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#bd5a00",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, Delete!",
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await deleteShift(shiftId).unwrap();
+        showAlert("Success", "Shift Deleted", "success");
+      } catch (error: any) {
+        console.error("Reset Failed:", error);
+        showAlert(
+          "Error",
+          error?.data?.message || error?.message || "Failed to Delete shift",
+          "error"
+        );
+      }
+    }
+  };
+
   return {
     deactivate,
     isDeactivating,
@@ -149,5 +181,7 @@ export const useAction = () => {
     isDeletingSalaryBand,
     deleteRotaAction,
     isDeletingRota,
+    deleteShiftAction,
+    isDeletingShift,
   };
 };

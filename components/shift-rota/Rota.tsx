@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { BiExport } from "react-icons/bi";
-import { FiFilter, FiPlus, FiSearch, FiX } from "react-icons/fi";
+import { FiFilter, FiPlus, FiSearch, FiUsers, FiX } from "react-icons/fi";
 import { useModal } from "@/context/ModalContext";
 import AddRota from "./sub-component/AddRota";
 import { useShift } from "@/context/ShiftContext";
 import RotaCalendar from "./sub-component/RotaCalender";
 import OpenShiftsTable from "./sub-component/OpenShiftsTable";
 import { useDebounce } from "@/hooks/useDebounce";
+import Cards from "../ui/Cards";
+import { FaRegClock } from "react-icons/fa";
 
 const Rota = () => {
   const [search, setSearch] = useState("");
@@ -14,19 +16,19 @@ const Rota = () => {
   const [activeTab, setActiveTab] = useState<"all" | "open">("all");
   const { isModalOpen, setIsModalOpen } = useModal();
   const shiftContext = useShift();
-  const rota = shiftContext?.rota || [];
-  const { rotaFilters, setRotaFilters } = shiftContext || {};
+  const rota = useMemo(() => shiftContext?.rota || [], [shiftContext?.rota]);
+  const { rotaFilters, setRotaFilters, rotaSummaryData } = shiftContext || {};
 
   // Debounce search input
   const debouncedSearch = useDebounce(search, 400);
 
   // Update rotaFilters when debounced search changes
   useEffect(() => {
-    if (setRotaFilters && rotaFilters) {
-      setRotaFilters({
-        ...rotaFilters,
+    if (setRotaFilters) {
+      setRotaFilters((prev) => ({
+        ...prev,
         search: debouncedSearch,
-      });
+      }));
     }
   }, [debouncedSearch, setRotaFilters]);
 
@@ -35,7 +37,7 @@ const Rota = () => {
     if (rotaFilters?.search) {
       setSearch(rotaFilters.search);
     }
-  }, []);
+  }, [rotaFilters?.search]);
 
   // Check if any filters are active
   const hasActiveFilters =
@@ -47,10 +49,32 @@ const Rota = () => {
   // Filter rota based on active tab
   const filteredRota = useMemo(() => {
     if (activeTab === "open") {
-      return rota.filter((shift: any) => shift.isOpen === true);
+      return rota.filter((shift: { isOpen: boolean }) => shift.isOpen === true);
     }
     return rota;
   }, [rota, activeTab]);
+
+
+  // Format summary date details
+  const formattedDateDetails = useMemo(() => {
+    if (!rotaSummaryData) return "All Time";
+
+    const { month, year } = rotaSummaryData;
+
+    if (month && year) {
+      // Create a date object to get the month name
+      // Month is 1-indexed in the data usually, or check if it's 0-indexed. 
+      // Assuming 1-12 based on common APIs, but let's be safe.
+      // If month is a string "1", "01", etc.
+      const date = new Date(Number(year), Number(month) - 1);
+      const monthName = date.toLocaleString('default', { month: 'long' });
+      return `${monthName} ${year}`;
+    }
+
+    if (year) return `${year}`;
+
+    return "All Time";
+  }, [rotaSummaryData]);
 
   return (
     <>
@@ -59,11 +83,10 @@ const Rota = () => {
         <div className="flex gap-6">
           <button
             onClick={() => setActiveTab("all")}
-            className={`relative px-1 py-3 font-medium text-sm transition-all duration-200 ${
-              activeTab === "all"
-                ? "text-blue-600"
-                : "text-gray-600 hover:text-gray-900"
-            }`}
+            className={`relative px-1 py-3 font-medium text-sm transition-all duration-200 ${activeTab === "all"
+              ? "text-blue-600"
+              : "text-gray-600 hover:text-gray-900"
+              }`}
           >
             All Rota
             {activeTab === "all" && (
@@ -73,11 +96,10 @@ const Rota = () => {
 
           <button
             onClick={() => setActiveTab("open")}
-            className={`relative px-1 py-3 font-medium text-sm transition-all duration-200 ${
-              activeTab === "open"
-                ? "text-blue-600"
-                : "text-gray-600 hover:text-gray-900"
-            }`}
+            className={`relative px-1 py-3 font-medium text-sm transition-all duration-200 ${activeTab === "open"
+              ? "text-blue-600"
+              : "text-gray-600 hover:text-gray-900"
+              }`}
           >
             Open Shifts
             {activeTab === "open" && (
@@ -86,6 +108,37 @@ const Rota = () => {
           </button>
         </div>
       </section>
+
+
+      <section className="flex gap-5 flex-col md:flex-row  w-full mt-5">
+        <Cards
+          title="Total Shifts Hours"
+          icon={<FaRegClock />}
+          value={rotaSummaryData?.totalShiftHours || 0}
+          details={formattedDateDetails}
+        />{" "}
+        <Cards
+          title="Total Shifts Covered"
+          icon={<FiUsers />}
+          value={rotaSummaryData?.totalShiftsCovered || 0}
+          details={formattedDateDetails}
+        />{" "}
+        <Cards
+          title="Total Shifts  NotCovered"
+          icon={<FiUsers />}
+          value={rotaSummaryData?.totalShiftsNotCovered || 0}
+          details={formattedDateDetails}
+        />{" "}
+
+
+        <Cards
+          title="Total shift cancelled"
+          icon={<FaRegClock />}
+          value={rotaSummaryData?.totalCancelledShifts || 0}
+          details={formattedDateDetails}
+        />
+      </section>
+
 
       <div className="flex flex-col md:flex-row justify-between items-center gap-2 mt-5">
         <div className="flex flex-1 items-center gap-2 border border-gray-200 px-2 py-3 rounded-sm w-full md:w-auto bg-gray-50">
@@ -125,9 +178,8 @@ const Rota = () => {
           </button>
           {activeTab === "all" && (
             <button
-              className={`secondary-btn flex items-center gap-2 w-full md:w-auto ${
-                hasActiveFilters ? "bg-blue-50 border-blue-300" : ""
-              }`}
+              className={`secondary-btn flex items-center gap-2 w-full md:w-auto ${hasActiveFilters ? "bg-blue-50 border-blue-300" : ""
+                }`}
               onClick={() => setIsFilterOpen(!isFilterOpen)}
             >
               <FiFilter className="text-blue-500" />

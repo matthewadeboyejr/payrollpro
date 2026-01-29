@@ -30,26 +30,26 @@ const EditEmployeeForm = ({
   const { data: employmentTypes } = useGetEmploymentTypesQuery(undefined);
   const { data: workScheduleTypes } = useGetWorkScheduleTypesQuery(undefined);
   const workScheduleTypeOptions = workScheduleTypes?.map(
-    (workScheduleType: any) => ({
+    (workScheduleType: { id: string; name: string }) => ({
       value: workScheduleType?.id,
       label: workScheduleType?.name,
     })
   );
-  const employmentTypeOptions = employmentTypes?.map((employmentType: any) => ({
+  const employmentTypeOptions = employmentTypes?.map((employmentType: { id: string; name: string }) => ({
     value: employmentType?.id,
     label: employmentType?.name,
   }));
   const { data: gradeLevels } = useGetGradeLevelsQuery(undefined);
-  const gradeLevelOptions = gradeLevels?.map((gradeLevel: any) => ({
+  const gradeLevelOptions = gradeLevels?.map((gradeLevel: { id: string; name: string }) => ({
     value: gradeLevel?.id,
     label: gradeLevel?.name,
   }));
   const [
     getSalaryBandsByGradeLevelId,
-    { data: salaryBands, error, isLoading },
+    { data: salaryBands },
   ] = useLazyGetSalaryBandsByGradeLevelIdQuery();
   const salaryBandOptions = useMemo(() => {
-    return salaryBands?.data?.map((salaryBand: any) => ({
+    return salaryBands?.data?.map((salaryBand: { id: string; code: string }) => ({
       value: salaryBand?.id,
       label: salaryBand?.code,
     }));
@@ -64,9 +64,9 @@ const EditEmployeeForm = ({
   // Watch for grade level changes and fetch salary bands
   useEffect(() => {
     const unsubscribe = typedForm.subscribe(
-      (formState: any) => {
+      (formState) => {
         const currentGradeLevelId = formState.values?.gradeLevelId;
-        if (currentGradeLevelId && currentGradeLevelId !== gradeLevelId) {
+        if (currentGradeLevelId && String(currentGradeLevelId) !== gradeLevelId) {
           setGradeLevelId(String(currentGradeLevelId));
           getSalaryBandsByGradeLevelId(String(currentGradeLevelId));
           // Clear salary band when grade level changes

@@ -24,7 +24,6 @@ import {
 import ViewRota from "./ViewRota";
 import { useModal } from "@/context/ModalContext";
 import {
-  useClaimRotaMutation,
   useCompleteRotaMutation,
 } from "@/services/api/constants/shift.constant";
 import { showAlert } from "@/components/ui/ShowAlert";
@@ -33,6 +32,7 @@ import { useGetDepartmentsQuery } from "@/services/api/constants/data.constant";
 import { useAction } from "@/hooks/useAction";
 import CancelRota from "./CancelRota";
 import EditRota from "./EditRota";
+import ClaimRota from "./ClaimRota";
 
 // Type Definitions
 interface ApiShift {
@@ -210,7 +210,7 @@ const RotaCalendar: React.FC<RotaCalendarProps> = ({
   const { rotaFilters, setRotaFilters } = shiftContext || {};
   const { data: departmentsResponse } = useGetDepartmentsQuery(undefined);
   const filterRef = useRef<HTMLDivElement>(null);
-  const { deleteRotaAction, isDeletingRota } = useAction();
+  const { deleteRotaAction } = useAction();
   // Initialize currentWeek based on rotaFilters or current date
   const getInitialWeek = () => {
     if (rotaFilters?.month && rotaFilters?.year) {
@@ -223,6 +223,7 @@ const RotaCalendar: React.FC<RotaCalendarProps> = ({
 
   const [currentWeek, setCurrentWeek] = useState(getInitialWeek());
   const { isModalOpen, setIsModalOpen } = useModal();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [selectedRota, setSelectedRota] = useState<any>(null);
   const [localFilters, setLocalFilters] = useState({
     departmentId: rotaFilters?.departmentId || "",
@@ -283,9 +284,8 @@ const RotaCalendar: React.FC<RotaCalendarProps> = ({
     };
   }, [isFilterOpen, setIsFilterOpen]);
 
-  const [completeRota, { isLoading: isLoadingCompleteRota }] =
+  const [completeRota] =
     useCompleteRotaMutation();
-  const [claimRota, { isLoading: isLoadingClaimRota }] = useClaimRotaMutation();
   // Group rota by employee
   const employeeRotas = useMemo(() => {
     const grouped = new Map<number, EmployeeRota>();
@@ -294,7 +294,7 @@ const RotaCalendar: React.FC<RotaCalendarProps> = ({
       if (!grouped.has(shift.employeeId)) {
         grouped.set(shift.employeeId, {
           employeeId: shift.employeeId,
-        employeeName: shift.employeeName,
+          employeeName: shift.employeeName,
           totalHours: 0,
           totalCost: 0,
           shiftCount: 0,
@@ -362,7 +362,7 @@ const RotaCalendar: React.FC<RotaCalendarProps> = ({
     const payload = {
       rotaId: shift.id,
     };
-    console.log("payload", payload);
+
     try {
       const response = await completeRota(payload).unwrap();
       if (response?.code === 201 || response?.code === 200) {
@@ -395,40 +395,11 @@ const RotaCalendar: React.FC<RotaCalendarProps> = ({
   };
 
   const handleClaim = async (shift: ApiShift) => {
-    console.log("Claim:", shift);
-    const payload = {
-      rotaId: shift.id,
-    };
-    console.log("payload", payload);
-    try {
-      const response = await claimRota(payload).unwrap();
-      if (response?.code === 201 || response?.code === 200) {
-        showAlert("Success", response?.message, "Success");
-      }
-    } catch (err: unknown) {
-      console.log("error", err);
-    }
+    await setSelectedRota(shift);
+    setIsModalOpen("claim-rota");
+
   };
 
-  // Calculate week summary
-  const weekSummary = useMemo(() => {
-    const totalHours = shifts.reduce((sum, item) => sum + item.hoursWorked, 0);
-    const totalCost = totalHours * 10; // Placeholder rate
-    return { totalHours, totalCost };
-  }, [shifts]);
-
-  // Calculate daily summaries
-  const dailySummaries = useMemo(() => {
-    return weekDays.map((day) => {
-      const dayShifts = shifts.filter((item) => {
-        const shiftDate = parseISO(item.workDate);
-        return isSameDay(shiftDate, day);
-      });
-      const hours = dayShifts.reduce((sum, item) => sum + item.hoursWorked, 0);
-      const cost = hours * 10; // Placeholder rate
-      return { day, hours, cost, shiftCount: dayShifts.length };
-    });
-  }, [shifts, weekDays]);
 
   const handlePreviousWeek = () => {
     setCurrentWeek(addDays(currentWeek, -7));
@@ -440,7 +411,7 @@ const RotaCalendar: React.FC<RotaCalendarProps> = ({
 
   // Filter options
   const departmentOptions =
-    departmentsResponse?.data?.map((dept: any) => ({
+    departmentsResponse?.data?.map((dept: { id: number; name: string }) => ({
       value: dept.id.toString(),
       label: dept.name,
     })) || [];
@@ -614,42 +585,6 @@ const RotaCalendar: React.FC<RotaCalendarProps> = ({
       <div className="bg-white rounded-lg border border-gray-200 overflow-hidden mt-5">
         {/* Week Summary Header */}
         <div className="border-b border-gray-200 p-4 bg-gray-50">
-          <div className="flex items-start justify-between gap-4 mb-4">
-            <div className="flex-shrink-0">
-              <h3 className="font-semibold text-gray-900 text-sm">
-                Week {format(weekStart, "w")} summary
-              </h3>
-              <div className="flex items-center gap-4 mt-2">
-                <span className="text-sm text-gray-600">
-                  H {Math.floor(weekSummary.totalHours)}h{" "}
-                  {Math.round((weekSummary.totalHours % 1) * 60)}m
-                </span>
-                <span className="text-sm text-gray-600">
-                  C £{weekSummary.totalCost.toFixed(2)}
-                </span>
-              </div>
-            </div>
-            <div className="flex gap-2 flex-1 overflow-x-auto">
-              {dailySummaries.map((summary, index) => (
-                <div
-                  key={index}
-                  className="text-center px-3 py-2 bg-white rounded border border-gray-200 flex-shrink-0 min-w-[100px]"
-                >
-                  <div className="text-xs font-medium text-gray-700">
-                    {format(summary.day, "d")} {format(summary.day, "EEE")}
-                  </div>
-                  <div className="text-xs text-gray-600 mt-1">
-                    {Math.floor(summary.hours)}h{" "}
-                    {Math.round((summary.hours % 1) * 60)}m
-                  </div>
-                  <div className="text-xs text-gray-600">
-                    £{summary.cost.toFixed(2)}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
           {/* Week Navigation */}
           <div className="flex items-center justify-between">
             <button
@@ -787,9 +722,9 @@ const RotaCalendar: React.FC<RotaCalendarProps> = ({
                                     onDelete={handleDelete}
                                     onCancel={handleCancel}
                                     onClaim={handleClaim}
-        />
-      </div>
-    </div>
+                                  />
+                                </div>
+                              </div>
                             ) : (
                               <div className="border-2 border-dashed border-gray-200 rounded min-h-[70px] flex items-center justify-center bg-gray-50">
                                 <span className="text-gray-400 text-xs">—</span>
@@ -812,6 +747,7 @@ const RotaCalendar: React.FC<RotaCalendarProps> = ({
         <CancelRota rotaId={selectedRota?.id.toString()} />
       )}
       {isModalOpen === "edit-rota" && <EditRota rotaId={selectedRota?.id.toString()} />}
+      {isModalOpen === "claim-rota" && <ClaimRota rotaId={selectedRota?.id.toString()} />}
     </>
   );
 };

@@ -10,9 +10,12 @@ import { showAlert } from "../ui/ShowAlert";
 import { useDispatch } from "react-redux";
 import { updateUser } from "@/redux/slice/user.slice";
 
+import { persistor } from "@/redux/store";
+
 const Signin = () => {
   const router = useRouter();
   const dispatch = useDispatch();
+  const [isNavigating, setIsNavigating] = React.useState(false);
 
   const [loginUser] = useLoginUserMutation();
 
@@ -25,6 +28,7 @@ const Signin = () => {
       const result = await loginUser(payload).unwrap();
 
       if (result?.code === 200 && result?.data?.token) {
+        setIsNavigating(true);
         // Update Redux state first (synchronous update)
         dispatch(
           updateUser({
@@ -36,16 +40,17 @@ const Signin = () => {
           })
         );
 
+        // Ensure state is persisted before navigation
+        await persistor.flush();
+
         // Show success message
         showAlert("Login Success", result?.message, "success");
 
         // Navigate after state update
-        // Use Promise to ensure state is processed before navigation
-        Promise.resolve().then(() => {
-          router.replace("/dashboard");
-        });
+        router.replace("/dashboard");
       }
     } catch (err: unknown) {
+      setIsNavigating(false);
       const errorMessage =
         (err as { data?: { message?: string } })?.data?.message ||
         "Login failed. Please try again.";
@@ -67,7 +72,7 @@ const Signin = () => {
         render={({ handleSubmit, form, submitting }) => (
           <SigninForm
             handleSubmit={handleSubmit}
-            submitting={submitting}
+            submitting={submitting || isNavigating}
             form={form}
           />
         )}

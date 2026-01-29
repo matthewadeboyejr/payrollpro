@@ -57,9 +57,9 @@ const EditRota = ({ rotaId }: EditRotaProps) => {
     return {
       workDate: workDateForInput,
       employeeId: rotaDetails.employeeId
-        ? String(rotaDetails.employeeId)
+        ? rotaDetails.employeeId
         : undefined,
-      shiftId: rotaDetails.shiftId ? String(rotaDetails.shiftId) : undefined,
+      shiftId: rotaDetails.shiftId ? rotaDetails.shiftId : undefined,
     } as Partial<NewRotaFormValues>;
   }, [rotaDetails]);
 

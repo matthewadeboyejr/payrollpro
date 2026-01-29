@@ -2,12 +2,13 @@ import Modal from "@/components/ui/Modal";
 import React from "react";
 import { useModal } from "@/context/ModalContext";
 import ViewSkeleton from "@/components/ui/ViewSkeleton";
-import { useGetEmployeeByIdQuery } from "@/services/api/constants/employee.constant";
+
 import StatusBadge from "@/utils/StatusBadge";
 import { formatDT } from "@/utils/formatDT";
 import { FiUsers } from "react-icons/fi";
 import { useGetRotaByIdQuery } from "@/services/api/constants/shift.constant";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const ViewRota = ({ selectedRota }: { selectedRota: any }) => {
   const { setIsModalOpen } = useModal();
 

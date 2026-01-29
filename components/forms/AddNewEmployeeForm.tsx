@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import React, { useMemo } from "react";
 import TextInput from "../ui/TextInput";
 import {
   AddNewEmployeeFormProps,
@@ -7,7 +7,6 @@ import {
 import SelectInput from "../ui/SelectInput";
 import useConstantData from "@/hooks/useConstantData";
 import { FormApi } from "final-form";
-import { FormRenderProps } from "react-final-form";
 
 import {
   useGetEmploymentTypesQuery,
@@ -25,36 +24,39 @@ const AddNewEmployeeForm = ({
   form,
   handleSubmit,
 }: AddNewEmployeeFormComponentProps) => {
-  const [gradeLevelId, setGradeLevelId] = useState<string | undefined>(
-    undefined
-  );
   const { departmentOptions, positionOptions } = useConstantData();
   const { data: employmentTypes } = useGetEmploymentTypesQuery(undefined);
   const { data: workScheduleTypes } = useGetWorkScheduleTypesQuery(undefined);
   const workScheduleTypeOptions = workScheduleTypes?.map(
-    (workScheduleType: any) => ({
+    (workScheduleType: { id: string; name: string }) => ({
       value: workScheduleType?.id,
       label: workScheduleType?.name,
     })
   );
-  const employmentTypeOptions = employmentTypes?.map((employmentType: any) => ({
-    value: employmentType?.id,
-    label: employmentType?.name,
-  }));
+  const employmentTypeOptions = employmentTypes?.map(
+    (employmentType: { id: string; name: string }) => ({
+      value: employmentType?.id,
+      label: employmentType?.name,
+    })
+  );
   const { data: gradeLevels } = useGetGradeLevelsQuery(undefined);
-  const gradeLevelOptions = gradeLevels?.map((gradeLevel: any) => ({
-    value: gradeLevel?.id,
-    label: gradeLevel?.name,
-  }));
+  const gradeLevelOptions = gradeLevels?.map(
+    (gradeLevel: { id: string; name: string }) => ({
+      value: gradeLevel?.id,
+      label: gradeLevel?.name,
+    })
+  );
   const [
     getSalaryBandsByGradeLevelId,
-    { data: salaryBands, error, isLoading },
+    { data: salaryBands },
   ] = useLazyGetSalaryBandsByGradeLevelIdQuery();
   const salaryBandOptions = useMemo(() => {
-    return salaryBands?.data?.map((salaryBand: any) => ({
-      value: salaryBand?.id,
-      label: salaryBand?.code,
-    }));
+    return salaryBands?.data?.map(
+      (salaryBand: { id: string; code: string }) => ({
+        value: salaryBand?.id,
+        label: salaryBand?.code,
+      })
+    );
   }, [salaryBands]);
 
   return (
@@ -171,7 +173,6 @@ const AddNewEmployeeForm = ({
                 form={form}
                 onChange={(e) => {
                   const value = e.target.value;
-                  setGradeLevelId(value);
                   if (value) {
                     getSalaryBandsByGradeLevelId(value);
                     // Clear salary band when grade level changes

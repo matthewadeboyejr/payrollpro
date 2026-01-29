@@ -1,30 +1,25 @@
 import React, { useState } from "react";
-import DropdownComponent, { Dropdown } from "../ui/Dropdown";
+import { Dropdown } from "../ui/Dropdown";
 import { FiFilter, FiPlus, FiSearch } from "react-icons/fi";
-import Modal from "../ui/Modal";
-import AddNewEmployeeForm from "../forms/AddNewEmployeeForm";
 
-import { Form } from "react-final-form";
-import { validate } from "validate.js";
-import { AddNewEmployeeFormValues } from "../types/formFields";
-import { addNewEmployeeConstraints } from "../forms/contraints/contraints";
 import { BiExport } from "react-icons/bi";
-import { useGetShiftsQuery } from "@/services/api/constants/shift.constant";
 import { useModal } from "@/context/ModalContext";
 import { Shifts } from "../types/shifts";
 import AddShift from "../shift-rota/sub-component/AddShift";
 import { useShift } from "@/context/ShiftContext";
 import TableSkeleton from "../ui/TableSkeleton";
+import ViewShift from "../shift-rota/sub-component/ViewShift";
+import EditShift from "../shift-rota/sub-component/EditShift";
+import { useAction } from "@/hooks/useAction";
 
 const RotaAndSchedulingTable = () => {
   const { isModalOpen, setIsModalOpen } = useModal();
-  const { departmentId, setDepartmentId, shifts, setShifts, shiftsData, isLoadingShifts } =
-    useShift();
-  console.log(shiftsData);
+  const { deleteShiftAction } = useAction();
+  const { shiftsData, isLoadingShifts } = useShift();
   const [search, setSearch] = useState("");
   const [initialValues, setInitialValues] = useState<Shifts | null>(null);
-  const [selectedShiftId, setSelectedShiftId] = useState<number | null>(null);
- 
+  const [selectedShiftId, setSelectedShiftId] = useState<string | null>(null);
+
 
 
   return (
@@ -75,88 +70,94 @@ const RotaAndSchedulingTable = () => {
         </div>
       </div>
       <div className="relative overflow-x-auto pb-28">
-       {isLoadingShifts? <TableSkeleton columns={5} rows={5} /> : <>
-        <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            <tr>
-              <th scope="col" className="px-6 py-3">
-                Shift Name
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Department
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Is Overnight
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Start Time
-              </th>
-              <th scope="col" className="px-6 py-3">
-                End Time
-              </th>
-
-              <th scope="col" className="px-6 py-3">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-
-
-
-            {shiftsData && shiftsData.length === 0 ? (
+        {isLoadingShifts ? <TableSkeleton columns={5} rows={5} /> : <>
+          <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr>
-                <td colSpan={5} className="px-6 py-4 text-center">
-                  No shifts found
-                </td>
-              </tr>
-            ) : (
-              shiftsData?.map((shift: any) => (
-              <tr className=" border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
-                <td className="px-6 py-4">{shift?.name}</td>
-                <td className="px-6 py-4">{shift?.departmentName}</td>
-                <td className="px-6 py-4">
-                  {shift?.isOvernight ? "Yes" : "No"}
-                </td>
-                <td className="px-6 py-4">{shift?.startTime}</td>
-                <td className="px-6 py-4">{shift?.endTime}</td>
+                <th scope="col" className="px-6 py-3">
+                  Shift Name
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Department
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Is Overnight
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Start Time
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  End Time
+                </th>
 
-                <td className="px-6 py-4 relative">
-                  <Dropdown
-                    options={[
-                      {
-                        title: "View",
-                        onClick: () => {
-                          setSelectedShiftId(shift.id);
-                          setIsModalOpen("view-shift");
-                        },
-                      },
-                      {
-                        title: "Edit",
-                        onClick: () => {
-                          setInitialValues(shift);
-                          setIsModalOpen("edit-shift");
-                        },
-                      },
-                      {
-                        title: "Delete",
-                        onClick: () => {
-                          ("");
-                        },
-                      },
-                    ]}
-                    label="Actions"
-                    size="sm"
-                  />
+                <th scope="col" className="px-6 py-3">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+
+
+
+              {shiftsData && shiftsData.length === 0 ? (
+                <tr>
+                  <td colSpan={5} className="px-6 py-4 text-center">
+                    No shifts found
                   </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-       </>}
+              ) : (
+                shiftsData?.map((shift: Shifts) => (
+                  <tr
+                    key={shift.id}
+                    className=" border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200"
+                  >
+                    <td className="px-6 py-4">{shift?.name}</td>
+                    <td className="px-6 py-4">{shift?.departmentName}</td>
+                    <td className="px-6 py-4">
+                      {shift?.isOvernight ? "Yes" : "No"}
+                    </td>
+                    <td className="px-6 py-4">{shift?.startTime}</td>
+                    <td className="px-6 py-4">{shift?.endTime}</td>
+
+                    <td className="px-6 py-4 relative">
+                      <Dropdown
+                        options={[
+                          {
+                            title: "View",
+                            onClick: () => {
+                              setSelectedShiftId(shift.id);
+                              setIsModalOpen("view-shift");
+                            },
+                          },
+                          {
+                            title: "Edit",
+                            onClick: () => {
+                              setInitialValues(shift);
+                              setSelectedShiftId(shift.id);
+                              setIsModalOpen("edit-shift");
+                            },
+                          },
+                          {
+                            title: "Delete",
+                            onClick: () => {
+                              deleteShiftAction(shift.id);
+                            },
+                          },
+                        ]}
+                        label="Actions"
+                        size="sm"
+                      />
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </>}
       </div>
       {isModalOpen === "add-shift" && <AddShift />}
+      {isModalOpen === "view-shift" && <ViewShift selectedShift={selectedShiftId} />}
+      {isModalOpen === "edit-shift" && selectedShiftId !== null && <EditShift initialValues={initialValues} shiftId={selectedShiftId} />}
     </div>
   );
 };
