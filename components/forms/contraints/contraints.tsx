@@ -267,4 +267,49 @@ export const claimRotaConstraints = {
   },
 };
 
+export const addNewExpenseConstraints = {
+  employeeId: {
+    presence: true,
+  },
+  categoryId: {
+    presence: true,
+  },
+  amount: {
+    presence: true,
+  },
+  receipt: {
+    presence: true,
+  },
+  description: {
+    presence: true,
+  },
+};
 
+
+export const reviewExpenseConstraints = {
+  status: {
+    presence: true,
+  },
+  comment: {
+    presence: true,
+  },
+};
+
+
+export const addNewIncomeConstraints = {
+  employeeId: {
+    presence: true,
+  },
+  categoryId: {
+    presence: true,
+  },
+  amount: {
+    presence: true,
+  },
+  incomeDate: {
+    presence: true,
+  },
+  description: {
+    presence: true,
+  },
+};

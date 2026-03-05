@@ -1,283 +1,202 @@
 import React, { useState } from "react";
 import DropdownComponent, { Dropdown } from "../ui/Dropdown";
 import { FiPlus, FiSearch } from "react-icons/fi";
-import Modal from "../ui/Modal";
-import AddNewExpenseForm from "../forms/AddNewExpenseForm";
-
-import { Form } from "react-final-form";
-import { validate } from "validate.js";
-import {
-  AddNewExpenseFormValues,
-  ReviewExpenseFormValues,
-  ExpenseDetailsProps,
-} from "../types/formFields";
-import { addNewEmployeeConstraints } from "../forms/contraints/contraints";
 import { BiExport } from "react-icons/bi";
-import ReviewExpenseForm from "../forms/ReviewExpenseForm";
+import { useGetExpenseQuery } from "@/services/api/constants/expense.constant";
+import { useAction } from "@/hooks/useAction";
+import AddExpense from "@/components/expenseManagement/sub-component/AddExpense";
+import EditExpense from "@/components/expenseManagement/sub-component/EditExpense";
+
+import ReviewExpense from "@/components/expenseManagement/sub-component/ReviewExpense";
+import ViewExpense from "@/components/expenseManagement/sub-component/ViewExpense";
+import { useModal } from "@/context/ModalContext";
+import ExpenseSummaryCards from "@/components/expenseManagement/ExpenseSummaryCards";
 
 const ExpenseManagementTable = () => {
-  const [search, setSearch] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState<
-    "add" | "edit" | "review" | null
-  >(null);
+  const [expenseFilters, setExpenseFilters] = useState({
+    status: "",
+    page: 1,
+    pageSize: 10,
+    search: ""
+  });
+  const { deleteExpenseAction } = useAction();
+  const { isModalOpen, setIsModalOpen } = useModal();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [selectedExpense, setSelectedExpense] = useState<any>(null);
 
-  const onSubmit = (
-    values: AddNewExpenseFormValues | ReviewExpenseFormValues
-  ) => {
-    console.log(values);
-  };
+  const { data: expensesData, isLoading } = useGetExpenseQuery({
+    employeeId: "", // Fetch all for now, or implement filter
+    status: expenseFilters.status,
+    page: expenseFilters.page,
+    pageSize: expenseFilters.pageSize,
+    search: expenseFilters.search
+  });
 
-  const validateForm = (
-    values: AddNewExpenseFormValues | ReviewExpenseFormValues
-  ) => {
-    return validate(values, addNewEmployeeConstraints) || undefined;
-  };
+  // Note: create, edit, review mutations, user selector, and form validations are now in sub-components
 
   return (
-    <div className="flex flex-col gap-4 bg-white p-4 rounded-sm">
-      <div className="flex items-center gap-2">
-        <h2 className="text-lg font-semibold">Expense Records</h2>
-      </div>
-      <div className="flex  flex-col md:flex-row justify-between items-center gap-2">
-        <div className="flex flex-1 items-center gap-2 border border-gray-200 px-2 py-3 rounded-sm w-full md:w-auto  bg-gray-50">
-          <FiSearch className="text-gray-500" />
-          <input
-            type="text"
-            placeholder="search employee by name or email"
-            className=" outline-none  focus:outline-none focus:ring-focus focus:ring-focus text-sm w-full"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
+    <div className="space-y-5">
+      <ExpenseSummaryCards />
+      <div className="flex flex-col gap-4 bg-white p-4 rounded-sm dark:bg-gray-800">
+        <div className="flex items-center gap-2">
+          <h2 className="text-lg font-semibold dark:text-white">Expense Records</h2>
         </div>
+        <div className="flex  flex-col md:flex-row justify-between items-center gap-2">
+          <div className="flex flex-1 items-center gap-2 border border-gray-200 px-2 py-3 rounded-sm w-full md:w-auto  bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+            <FiSearch className="text-gray-500 dark:text-gray-400" />
+            <input
+              type="text"
+              placeholder="search employee by name or email"
+              className=" outline-none  focus:outline-none focus:ring-focus focus:ring-focus text-sm w-full bg-transparent dark:text-white dark:placeholder-gray-400"
+              value={expenseFilters.search}
+              onChange={(e) => setExpenseFilters({ ...expenseFilters, search: e.target.value })}
+            />
+          </div>
 
-        <div className="flex items-center gap-2 w-full md:w-auto justify-end">
-          <button
-            className="primary-btn flex items-center gap-2 w-full md:w-auto"
-            onClick={() => setIsModalOpen("add")}
-          >
-            <FiPlus />
-            <span>Add Expense</span>
-          </button>
+          <div className="flex items-center gap-2 w-full md:w-auto justify-end">
+            <button
+              className="primary-btn flex items-center gap-2 w-full md:w-auto"
+              onClick={() => {
+                setSelectedExpense(null);
+                setIsModalOpen("add");
+              }}
+            >
+              <FiPlus />
+              <span>Add Expense</span>
+            </button>
 
-          <DropdownComponent
-            options={[
-              {
-                title: "Approved",
-                onClick: () => {},
-              },
-              {
-                title: "Rejected",
-                onClick: () => {},
-              },
-              { title: "Pending", onClick: () => {} },
-              { title: "Reimbursed", onClick: () => {} },
-            ]}
-            label="Status"
-            size="sm"
-          />
-          <button
-            className="secondary-btn flex items-center gap-2 w-full md:w-auto"
-            onClick={() => {
-              console.log("export");
-            }}
-          >
-            <span>
-              <BiExport className="text-blue-500" />
-            </span>
-            <span>Export</span>
-          </button>
+            <DropdownComponent
+              options={[
+                {
+                  title: "All",
+                  onClick: () => { setExpenseFilters({ ...expenseFilters, status: "" }) },
+                },
+                {
+                  title: "Approved",
+                  onClick: () => { setExpenseFilters({ ...expenseFilters, status: "1" }) },
+                },
+                {
+                  title: "Rejected",
+                  onClick: () => { setExpenseFilters({ ...expenseFilters, status: "2" }) },
+                },
+                { title: "Pending", onClick: () => { setExpenseFilters({ ...expenseFilters, status: "0" }) } },
+              ]}
+              label="Status"
+              size="sm"
+            />
+            <button
+              className="secondary-btn flex items-center gap-2 w-full md:w-auto"
+              onClick={() => {
+                console.log("export");
+              }}
+            >
+              <span>
+                <BiExport className="text-blue-500" />
+              </span>
+              <span>Export</span>
+            </button>
+          </div>
         </div>
+        <div className="relative overflow-visible">
+          <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+              <tr>
+                <th scope="col" className="px-6 py-3">
+                  Employee
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Category
+                </th>
+
+                <th scope="col" className="px-6 py-3">
+                  Description
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Amount
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Date
+                </th>
+
+                <th scope="col" className="px-6 py-3">
+                  Status
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {isLoading ? (
+                <tr><td colSpan={7} className="px-6 py-4 text-center">Loading...</td></tr>
+              ) : expensesData?.items?.length > 0 ? (
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                expensesData.items.map((expense: any) => (
+                  <tr key={expense.id} className=" border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
+                    <td className="px-6 py-4 flex flex-col gap-2 items-start">
+                      <span className="text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                        {expense.employeeName || "Unknown Employee"}
+                      </span>
+
+                    </td>
+                    <td className="px-6 py-4"> {expense.categoryName}</td>
+                    <td className="px-6 py-4">{expense.description}</td>
+
+                    <td className="px-6 py-4">£{expense.amount}</td>
+                    <td className="px-6 py-4">{new Date(expense.createdAt).toLocaleDateString()}</td>
+                    <td className="px-6 py-4">
+                      <span className={`px-2 py-1 rounded-full text-xs ${expense.status === 'Approved' ? 'bg-green-200 text-green-800' :
+                        expense.status === 'Rejected' ? 'bg-red-200 text-red-800' :
+                          'bg-yellow-200 text-yellow-800'
+                        }`}>
+                        {expense.status}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 relative">
+                      <Dropdown
+                        options={[
+                          {
+                            title: "View",
+                            onClick: () => {
+                              setSelectedExpense(expense);
+                              setIsModalOpen("view");
+                            },
+                          },
+                          {
+                            title: "Edit", onClick: () => {
+                              setSelectedExpense(expense)
+                              setIsModalOpen("edit");
+                            }
+                          },
+                          {
+                            title: "Review",
+                            onClick: () => {
+                              setSelectedExpense(expense);
+                              setIsModalOpen("review");
+                            },
+                          },
+                          { title: "Delete", onClick: () => deleteExpenseAction(expense.id) },
+                        ]}
+                        label="Actions"
+                        size="sm"
+                      />
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr><td colSpan={7} className="px-6 py-4 text-center">No expense records found</td></tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+        {isModalOpen === "add" && <AddExpense />}
+        {isModalOpen === "edit" && selectedExpense && <EditExpense initialValues={selectedExpense} />}
+        {isModalOpen === "review" && selectedExpense && <ReviewExpense data={selectedExpense} />}
+        {isModalOpen === "view" && selectedExpense && <ViewExpense data={selectedExpense} />}
       </div>
-      <div className="relative overflow-x-auto">
-        <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            <tr>
-              <th scope="col" className="px-6 py-3">
-                Employee
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Category
-              </th>
-
-              <th scope="col" className="px-6 py-3">
-                Description
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Amount
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Date
-              </th>
-
-              <th scope="col" className="px-6 py-3">
-                Status
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr className=" border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
-              <td className="px-6 py-4 flex flex-col gap-2 items-start">
-                <span className="text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                  John Smith
-                </span>
-                <span className="text-xs text-gray-500 whitespace-nowrap dark:text-gray-400">
-                  +44 7700 900123
-                </span>
-              </td>
-              <td className="px-6 py-4"> Travel</td>
-              <td className="px-6 py-4">Business trip to London</td>
-
-              <td className="px-6 py-4">£450.00</td>
-              <td className="px-6 py-4">15/01/2024</td>
-              <td className="px-6 py-4">
-                <span className="bg-green-200 text-green-800 px-2 py-1 rounded-full text-xs">
-                  Approved
-                </span>
-              </td>
-              <td className="px-6 py-4 relative">
-                <Dropdown
-                  options={[
-                    { title: "Edit", onClick: () => setIsModalOpen("edit") },
-                    {
-                      title: "Review",
-                      onClick: () => setIsModalOpen("review"),
-                    },
-                    { title: "Delete", onClick: () => {} },
-                  ]}
-                  label="Actions"
-                  size="sm"
-                />
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      {isModalOpen === "add" && (
-        <Modal
-          size={"2xl"}
-          heading={"Add New Expense"}
-          desc={"Add a new expense to the system"}
-          onClose={() => setIsModalOpen(null)}
-          submitBtnText="Add Expense"
-        >
-          <Form<AddNewExpenseFormValues>
-            onSubmit={onSubmit}
-            validate={validateForm}
-            render={({ handleSubmit, form, submitting }) => (
-              <AddNewExpenseForm
-                handleSubmit={handleSubmit}
-                form={form}
-                submitting={submitting}
-              />
-            )}
-          />
-        </Modal>
-      )}
-      {isModalOpen === "edit" && (
-        <Modal
-          size={"2xl"}
-          heading={"Edit Expense"}
-          desc={"Edit the expense"}
-          onClose={() => setIsModalOpen(null)}
-          submitBtnText="Edit Expense"
-        >
-          <Form<AddNewExpenseFormValues>
-            onSubmit={onSubmit}
-            validate={validateForm}
-            render={({ handleSubmit, form, submitting }) => (
-              <AddNewExpenseForm
-                handleSubmit={handleSubmit}
-                form={form}
-                submitting={submitting}
-              />
-            )}
-          />
-        </Modal>
-      )}
-      {isModalOpen === "review" && (
-        <Modal
-          size={"2xl"}
-          heading={"Review Expense"}
-          //desc={"Review the expense and add comments"}
-          onClose={() => setIsModalOpen(null)}
-          secondaryBtnText="Reject"
-          secondaryBtnColor="bg-red-500 hover:bg-red-600"
-          submitBtnText="Approve"
-        >
-          <ExpenseDetails
-            title="Client dinner meeting"
-            employee="Emily Davis"
-            category="Meal"
-            amount="GBP 85.50"
-            date="14/01/2024"
-            employeeId="EMP002"
-            receipt="receipt_002.pdf"
-          />
-          <Form<ReviewExpenseFormValues>
-            onSubmit={onSubmit}
-            validate={validateForm}
-            render={({ handleSubmit, form, submitting }) => (
-              <ReviewExpenseForm
-                handleSubmit={handleSubmit}
-                form={form}
-                submitting={submitting}
-              />
-            )}
-          />
-        </Modal>
-      )}
     </div>
   );
 };
 
 export default ExpenseManagementTable;
 
-export const ExpenseDetails = ({
-  title,
-  employee,
-  category,
-  amount,
-  date,
-  employeeId,
-  receipt,
-}: ExpenseDetailsProps) => {
-  return (
-    <div className="space-y-4 mb-4 bg-gray-50 p-4 rounded-sm">
-      <div className="flex justify-between items-center">
-        <div className="flex flex-col gap-1">
-          <span className="text-sm font-semibold text-black">{title}</span>
-          <span className="text-sm text-gray-500 font-medium">{employee}</span>
-        </div>
-        <div>
-          <span className="text-sm text-black border px-2 py-1 rounded-2xl w-fit font-semibold">
-            {category}
-          </span>
-        </div>
-      </div>
-      <div className="grid grid-cols-2 gap-2">
-        <div className="flex flex-col gap-1">
-          <span className="text-sm text-gray-500 font-medium">Amount:</span>
-          <span className="text-sm font-semibold text-black">{amount}</span>
-        </div>
-        <div className="flex flex-col gap-1">
-          <span className="text-sm text-gray-500 font-medium">Date:</span>
-          <span className="text-sm font-semibold text-black">{date}</span>
-        </div>
-
-        <div className="flex flex-col gap-1">
-          <span className="text-sm text-gray-500 font-medium">
-            Employee ID:
-          </span>
-          <span className="text-sm font-semibold text-black">{employeeId}</span>
-        </div>
-        <div className="flex flex-col gap-1">
-          <span className="text-sm text-gray-500 font-medium">Receipt:</span>
-          <span className="text-sm font-semibold text-blue-500">{receipt}</span>
-        </div>
-      </div>
-    </div>
-  );
-};

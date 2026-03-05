@@ -20,29 +20,28 @@ const RecentActivity = () => {
     },
   ];
   return (
-    <div className="bg-white p-4 rounded-lg w-full">
+    <div className="bg-white p-4 rounded-lg w-full dark:bg-gray-800">
       <div className="flex items-center gap-2 mb-5">
-        <CiClock2 className="font-bold" />
-        <h2 className="text-lg font-semibold">Recent Activity</h2>
+        <CiClock2 className="font-bold dark:text-white" />
+        <h2 className="text-lg font-semibold dark:text-white">Recent Activity</h2>
       </div>
       <div className="flex flex-col gap-2">
         {activity.map((item, index) => (
           <div
             key={index}
-            className="flex items-center gap-5 bg-gray-100 p-2 rounded-lg"
+            className="flex items-center gap-5 bg-gray-100 p-2 rounded-lg dark:bg-gray-700"
           >
             <div
-              className={`w-2 h-2 rounded-full ${
-                item.status === "success"
+              className={`w-2 h-2 rounded-full ${item.status === "success"
                   ? "bg-green-400"
                   : item.status === "pending"
-                  ? "bg-yellow-400"
-                  : "bg-red-400"
-              }`}
+                    ? "bg-yellow-400"
+                    : "bg-red-400"
+                }`}
             ></div>
-            <p className="text-xs text-gray-500 flex flex-col  gap-1">
-              <span className="font-semibold text-black">{item.title}</span>
-              <span className="text-gray-500">{item.time}</span>
+            <p className="text-xs text-gray-500 flex flex-col gap-1 dark:text-gray-400">
+              <span className="font-semibold text-black dark:text-white">{item.title}</span>
+              <span className="text-gray-500 dark:text-gray-400">{item.time}</span>
             </p>
           </div>
         ))}

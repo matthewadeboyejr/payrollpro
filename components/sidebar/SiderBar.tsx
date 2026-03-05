@@ -44,29 +44,27 @@ const SiderBar = () => {
 
   return (
     <aside
-      className={`${
-        isMobile ? "fixed inset-y-0 left-0 z-50" : "hidden md:block"
-      }  bg-white p-5 h-screen border-r border-gray-200 transition-all duration-300 ${
-        collapsed ? "w-16" : "w-64"
-      }`}
+      className={`${isMobile ? "fixed inset-y-0 left-0 z-50" : "hidden md:block"
+        }  bg-white p-5 h-screen border-r border-gray-200 transition-all duration-300 dark:bg-gray-800 dark:border-gray-700 ${collapsed ? "w-16" : "w-64"
+        }`}
     >
       <div className="flex flex-col gap-5">
-        <div className="flex items-center gap-2 border-b border-gray-200 pb-5">
+        <div className="flex items-center gap-2 border-b border-gray-200 pb-5 dark:border-gray-700">
           <div className="bg-gradient-to-r bg-blue-600 rounded-sm p-2 w-fit text-2xl text-white">
             <LuBuilding2 className="" />
           </div>
           {!collapsed && (
             <div className="flex items-center gap-2">
               <div className="flex flex-col">
-                <h1 className="text-lg font-semibold">PayrollPro</h1>
-                <p className="text-sm text-gray-500">Enterprise Edition</p>
+                <h1 className="text-lg font-semibold dark:text-gray-100">PayrollPro</h1>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Enterprise Edition</p>
               </div>
               <button
                 onClick={() => dispatch(toggleSidebar())}
                 aria-label="Close sidebar"
-                className="bg-blue-100 p-2 rounded-lg md:hidden"
+                className="bg-blue-100 p-2 rounded-lg md:hidden dark:bg-blue-900 dark:text-white"
               >
-                <IoClose className="text-blue-500" />
+                <IoClose className="text-blue-500 dark:text-white" />
               </button>
             </div>
           )}
@@ -79,7 +77,7 @@ const SiderBar = () => {
           return (
             <div className="flex flex-col gap-2" key={menu.title}>
               {!collapsed && (
-                <h4 className="text-sm opacity-50 p-2 font-medium">
+                <h4 className="text-sm opacity-50 p-2 font-medium dark:text-gray-400">
                   {menu.title}
                 </h4>
               )}
@@ -91,11 +89,10 @@ const SiderBar = () => {
                       key={submenu.label}
                       href={submenu.url}
                       onClick={() => dispatch(setActiveMenu(submenu.url))}
-                      className={`flex items-center gap-2 text-xs font-medium p-2 rounded-md transition-all duration-200 ${
-                        isActive
-                          ? "text-blue-600 bg-blue-50 border-l-2 border-blue-600"
-                          : "hover:text-black hover:bg-gray-100"
-                      }`}
+                      className={`flex items-center gap-2 text-xs font-medium p-2 rounded-md transition-all duration-200 ${isActive
+                          ? "text-blue-600 bg-blue-50 border-l-2 border-blue-600 dark:text-blue-400 dark:bg-blue-900/30 dark:border-blue-400"
+                          : "hover:text-black hover:bg-gray-100 dark:text-gray-300 dark:hover:text-white dark:hover:bg-gray-700"
+                        }`}
                       title={collapsed ? submenu.label : undefined}
                     >
                       <div> {submenu.icon}</div>

@@ -3,12 +3,12 @@ import { BiBell } from "react-icons/bi";
 import { SettingFormProps } from "../types/formFields";
 import Toggle from "../ui/Toggle";
 
-const Notifications = ({}: SettingFormProps) => {
+const Notifications = ({ }: SettingFormProps) => {
   return (
-    <section className="w-full mt-5 bg-white p-4 rounded-lg">
+    <section className="w-full mt-5 bg-white p-4 rounded-lg dark:bg-gray-800">
       <div className="flex items-center gap-2 mb-5">
-        <BiBell className="font-bold" />
-        <h2 className="text-lg font-semibold">Notification Preferences</h2>
+        <BiBell className="font-bold dark:text-white" />
+        <h2 className="text-lg font-semibold dark:text-white">Notification Preferences</h2>
       </div>
       <div className="w-full space-y-4">
         <Toggle

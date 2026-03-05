@@ -93,13 +93,18 @@ const SearchableSelectInput = ({
       <Field name={name} disabled={readonly}>
         {({ input }) => (
           <div className="relative">
-            <button
-              type="button"
+            <div
+              role="button"
+              tabIndex={readonly ? -1 : 0}
               onClick={() => !readonly && setIsOpen(!isOpen)}
-              disabled={readonly}
-              className={`w-full relative border border-gray-200 px-2 py-2 rounded-sm focus:outline-none focus:ring-focus text-left flex items-center justify-between ${
-                readonly ? "bg-gray-100 cursor-not-allowed" : "bg-white"
-              }`}
+              onKeyDown={(e) => {
+                if (!readonly && (e.key === "Enter" || e.key === " ")) {
+                  e.preventDefault();
+                  setIsOpen(!isOpen);
+                }
+              }}
+              className={`w-full relative border border-gray-200 px-2 py-2 rounded-sm focus:outline-none focus:ring-focus text-left flex items-center justify-between cursor-pointer ${readonly ? "bg-gray-100 cursor-not-allowed" : "bg-white"
+                }`}
             >
               <span className={input.value ? "text-gray-900" : "text-gray-500"}>
                 {input.value ? getSelectedLabel(input.value) : "Select..."}
@@ -121,12 +126,11 @@ const SearchableSelectInput = ({
                   </button>
                 )}
                 <FiChevronDown
-                  className={`transition-transform ${
-                    isOpen ? "rotate-180" : ""
-                  }`}
+                  className={`transition-transform ${isOpen ? "rotate-180" : ""
+                    }`}
                 />
               </div>
-            </button>
+            </div>
 
             {isOpen && !readonly && (
               <div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-sm shadow-lg max-h-60 overflow-hidden">
@@ -158,11 +162,10 @@ const SearchableSelectInput = ({
                           setIsOpen(false);
                           setSearchTerm("");
                         }}
-                        className={`w-full px-4 py-2 text-left hover:bg-gray-100 transition-colors ${
-                          input.value === option.value
-                            ? "bg-blue-50 text-blue-600"
-                            : "text-gray-900"
-                        }`}
+                        className={`w-full px-4 py-2 text-left hover:bg-gray-100 transition-colors ${input.value === option.value
+                          ? "bg-blue-50 text-blue-600"
+                          : "text-gray-900"
+                          }`}
                       >
                         {option.label}
                       </button>

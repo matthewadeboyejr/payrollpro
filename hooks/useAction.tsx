@@ -1,6 +1,7 @@
 import { showAlert } from "@/components/ui/ShowAlert";
 import { useDeactivateUserMutation } from "@/services/api/constants/auth.constant";
 import { useDeactivateemployeeMutation } from "@/services/api/constants/employee.constant";
+import { useDeleteExpenseCategoriesMutation, useDeleteExpenseMutation, useDeleteIncomeCategoriesMutation } from "@/services/api/constants/expense.constant";
 //import { useRejectLeaveRequestMutation } from "@/services/api/constants/Leave.constant";
 import { useDeactivateSalaryBandMutation } from "@/services/api/constants/setting.constant";
 import { useDeleteRotaMutation, useDeleteShiftMutation } from "@/services/api/constants/shift.constant";
@@ -15,6 +16,13 @@ export const useAction = () => {
     useDeactivateSalaryBandMutation();
   const [deleteRota, { isLoading: isDeletingRota }] = useDeleteRotaMutation();
   const [deleteShift, { isLoading: isDeletingShift }] = useDeleteShiftMutation();
+  const [deleteExpense, { isLoading: isDeletingExpense }] = useDeleteExpenseMutation();
+  const [deleteIncomeCategories, { isLoading: isDeletingIncomeCategories }] = useDeleteIncomeCategoriesMutation();
+  const [deleteExpenseCategories, { isLoading: isDeletingExpenseCategories }] = useDeleteExpenseCategoriesMutation();
+
+
+
+  //actions
   const deactivate = async (userId: string) => {
     if (!userId) {
       console.error("Invalid rowData: Missing ID");
@@ -172,6 +180,97 @@ export const useAction = () => {
     }
   };
 
+  const deleteExpenseAction = async (expenseId: string) => {
+    if (!expenseId) {
+      console.error("Invalid rowData: Missing ID");
+      return;
+    }
+
+    const result = await Swal.fire({
+      title: "Delete  Expense?",
+      text: "This action will permanently delete this expense!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#bd5a00",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, Delete!",
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await deleteExpense(expenseId).unwrap();
+        showAlert("Success", "Expense Deleted", "success");
+      } catch (error: any) {
+        console.error("Reset Failed:", error);
+        showAlert(
+          "Error",
+          error?.data?.message || error?.message || "Failed to Delete expense",
+          "error"
+        );
+      }
+    }
+  };
+  const deleteIncomeCategoriesAction = async (expenseId: string) => {
+    if (!expenseId) {
+      console.error("Invalid rowData: Missing ID");
+      return;
+    }
+
+    const result = await Swal.fire({
+      title: "Delete Income Category?",
+      text: "This action will permanently delete this income category!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#bd5a00",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, Delete!",
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await deleteIncomeCategories(expenseId).unwrap();
+        showAlert("Success", "Income Category Deleted", "success");
+      } catch (error: any) {
+        console.error("Reset Failed:", error);
+        showAlert(
+          "Error",
+          error?.data?.message || error?.message || "Failed to Delete income category",
+          "error"
+        );
+      }
+    }
+  };
+  const deleteExpenseCategoriesAction = async (expenseId: string) => {
+    if (!expenseId) {
+      console.error("Invalid rowData: Missing ID");
+      return;
+    }
+
+    const result = await Swal.fire({
+      title: "Delete Income Category?",
+      text: "This action will permanently delete this income category!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#bd5a00",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, Delete!",
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await deleteExpenseCategories(expenseId).unwrap();
+        showAlert("Success", "Expense Category Deleted", "success");
+      } catch (error: any) {
+        console.error("Reset Failed:", error);
+        showAlert(
+          "Error",
+          error?.data?.message || error?.message || "Failed to Delete Expense category",
+          "error"
+        );
+      }
+    }
+  };
+
   return {
     deactivate,
     isDeactivating,
@@ -183,5 +282,11 @@ export const useAction = () => {
     isDeletingRota,
     deleteShiftAction,
     isDeletingShift,
+    deleteExpenseAction,
+    isDeletingExpense,
+    deleteIncomeCategoriesAction,
+    isDeletingIncomeCategories,
+    deleteExpenseCategoriesAction,
+    isDeletingExpenseCategories,
   };
 };

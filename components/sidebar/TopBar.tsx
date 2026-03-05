@@ -51,7 +51,7 @@ const TopBar = () => {
       <div className="flex items-center gap-4">
         <button
           onClick={() => dispatch(toggleSidebar())}
-          className="text-2xl md:hidden bg-blue-100 p-2 rounded-lg hover:bg-blue-200 transition-all duration-300 cursor-pointer"
+          className="text-2xl md:hidden bg-blue-100 p-2 rounded-lg hover:bg-blue-200 transition-all duration-300 cursor-pointer dark:bg-blue-900 dark:text-white"
           aria-label="Toggle sidebar"
         >
           {isOpen ? <MdMenuOpen /> : <MdMenu />}
@@ -60,26 +60,26 @@ const TopBar = () => {
         {!isMobile && (
           <button
             onClick={() => dispatch(toggleCollapsed())}
-            className="text-sm bg-gray-100 px-3 py-1 rounded-md hover:bg-gray-200 transition-all duration-300"
+            className="text-sm bg-gray-100 px-3 py-1 rounded-md hover:bg-gray-200 transition-all duration-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
             aria-label="Collapse sidebar"
           >
             {collapsed ? "Expand" : "Collapse"}
           </button>
         )}
 
-        <h1 className="text-sm md:text-lg  font-semibold">{getPageTitle()}</h1>
+        <h1 className="text-sm md:text-lg font-semibold dark:text-white">{getPageTitle()}</h1>
       </div>
 
       <div className="flex items-center gap-2">
-        <p className="text-sm text-black bg-blue-100 p-3 rounded-lg">
+        <p className="text-sm text-black bg-blue-100 p-3 rounded-lg dark:bg-blue-900 dark:text-white">
           <IoNotificationsOutline />
         </p>
-        <p className="text-xs text-black font-semibold bg-gray-200 py-1 px-2 rounded-sm text-nowrap">
+        <p className="text-xs text-black font-semibold bg-gray-200 py-1 px-2 rounded-sm text-nowrap dark:bg-gray-700 dark:text-white">
           Live Data
         </p>
         {user && isAuthenticated && (
           <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-600">Welcome, {user.name}</span>
+            <span className="text-sm text-gray-600 dark:text-gray-300">Welcome, {user.name}</span>
             <LogoutButton className="text-xs bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md transition-colors duration-200">
               Logout
             </LogoutButton>

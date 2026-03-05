@@ -79,31 +79,31 @@ const Rota = () => {
   return (
     <>
       {/* Tabs - Underline Style */}
-      <section className="w-full mt-5 border-b border-gray-200">
+      <section className="w-full mt-5 border-b border-gray-200 dark:border-gray-700">
         <div className="flex gap-6">
           <button
             onClick={() => setActiveTab("all")}
             className={`relative px-1 py-3 font-medium text-sm transition-all duration-200 ${activeTab === "all"
-              ? "text-blue-600"
-              : "text-gray-600 hover:text-gray-900"
+              ? "text-blue-600 dark:text-blue-400"
+              : "text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
               }`}
           >
             All Rota
             {activeTab === "all" && (
-              <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 rounded-t"></span>
+              <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 dark:bg-blue-400 rounded-t"></span>
             )}
           </button>
 
           <button
             onClick={() => setActiveTab("open")}
             className={`relative px-1 py-3 font-medium text-sm transition-all duration-200 ${activeTab === "open"
-              ? "text-blue-600"
-              : "text-gray-600 hover:text-gray-900"
+              ? "text-blue-600 dark:text-blue-400"
+              : "text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
               }`}
           >
             Open Shifts
             {activeTab === "open" && (
-              <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 rounded-t"></span>
+              <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 dark:bg-blue-400 rounded-t"></span>
             )}
           </button>
         </div>
@@ -141,12 +141,12 @@ const Rota = () => {
 
 
       <div className="flex flex-col md:flex-row justify-between items-center gap-2 mt-5">
-        <div className="flex flex-1 items-center gap-2 border border-gray-200 px-2 py-3 rounded-sm w-full md:w-auto bg-gray-50">
-          <FiSearch className="text-gray-500" />
+        <div className="flex flex-1 items-center gap-2 border border-gray-200 px-2 py-3 rounded-sm w-full md:w-auto bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
+          <FiSearch className="text-gray-500 dark:text-gray-400" />
           <input
             type="text"
             placeholder="Search employee name..."
-            className="outline-none focus:outline-none focus:ring-focus focus:ring-focus text-sm w-full bg-transparent"
+            className="outline-none focus:outline-none focus:ring-focus focus:ring-focus text-sm w-full bg-transparent dark:text-white dark:placeholder-gray-400"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -161,9 +161,9 @@ const Rota = () => {
                   });
                 }
               }}
-              className="p-1 hover:bg-gray-200 rounded transition-colors"
+              className="p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded transition-colors"
             >
-              <FiX className="text-gray-500" size={16} />
+              <FiX className="text-gray-500 dark:text-gray-400" size={16} />
             </button>
           )}
         </div>

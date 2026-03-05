@@ -13,12 +13,12 @@ const RotaAndScheduling = () => {
       <AboutPage about="Manage employee schedules and track working hours" />
 
       <section className="flex gap-5 flex-col md:flex-row  w-full mt-5">
-        <div className="bg-white p-5 rounded-md flex gap-2 border border-gray-200">
+        <div className="bg-white p-5 rounded-md flex gap-2 border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
           <button
             onClick={() => setTab("shift")}
             className={`px-4 py-2 rounded-sm font-medium transition-all duration-200 ${tab === "shift"
-              ? "bg-blue-500 text-white"
-              : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              ? "bg-blue-500 text-white dark:bg-blue-600"
+              : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
               }`}
           >
             Shifts
@@ -27,8 +27,8 @@ const RotaAndScheduling = () => {
           <button
             onClick={() => setTab("rota")}
             className={`px-4 py-2 rounded-sm font-medium transition-all duration-200 ${tab === "rota"
-              ? "bg-blue-500 text-white"
-              : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              ? "bg-blue-500 text-white dark:bg-blue-600"
+              : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
               }`}
           >
             Rotas

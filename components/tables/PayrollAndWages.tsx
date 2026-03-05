@@ -22,17 +22,17 @@ const PayrollAndWagesTable = () => {
   };
 
   return (
-    <div className="flex flex-col gap-4 bg-white p-4 rounded-sm">
+    <div className="flex flex-col gap-4 bg-white p-4 rounded-sm dark:bg-gray-800">
       <div className="flex items-center gap-2">
-        {/* <h2 className="text-lg font-semibold">Shift Schedule</h2> */}
+        {/* <h2 className="text-lg font-semibold dark:text-white">Shift Schedule</h2> */}
       </div>
       <div className="flex  flex-col md:flex-row justify-between items-center gap-2">
-        <div className="flex flex-1 items-center gap-2 border border-gray-200 px-2 py-3 rounded-sm w-full md:w-auto  bg-gray-50">
-          <FiSearch className="text-gray-500" />
+        <div className="flex flex-1 items-center gap-2 border border-gray-200 px-2 py-3 rounded-sm w-full md:w-auto  bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+          <FiSearch className="text-gray-500 dark:text-gray-400" />
           <input
             type="text"
             placeholder="search employee by name or email"
-            className=" outline-none  focus:outline-none focus:ring-focus focus:ring-focus text-sm w-full"
+            className=" outline-none  focus:outline-none focus:ring-focus focus:ring-focus text-sm w-full bg-transparent dark:text-white dark:placeholder-gray-400"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -125,10 +125,10 @@ const PayrollAndWagesTable = () => {
               <td className="px-6 py-4">
                 <DropdownComponent
                   options={[
-                    { title: "View Payslip", onClick: () => {} },
+                    { title: "View Payslip", onClick: () => { } },
                     {
                       title: "Download PDF",
-                      onClick: () => {},
+                      onClick: () => { },
                     },
                   ]}
                   label="Actions"

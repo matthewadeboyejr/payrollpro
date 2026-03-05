@@ -194,16 +194,26 @@ export interface EditEmployeeFormProps extends FinalFormProps {
 
 export interface AddNewExpenseFormValues {
   employeeId: string;
-  category: string;
+  categoryId: string;
   description: string;
   currency: string;
   amount: string;
-  date: string;
   status: string;
-  receiptReference: string;
+  receipt: string;
 }
 
-export type AddNewExpenseFormProps = FinalFormProps;
+
+export interface AddNewIncomeFormValues {
+  employeeId: string;
+  categoryId: string;
+  amount: string;
+  description: string;
+  incomeDate: string;
+}
+
+export interface AddNewExpenseFormProps extends FinalFormProps {
+  id?: string;
+}
 export interface NewLeaveFormValues {
   employeeId: string;
   employeeNo: string;
@@ -223,7 +233,8 @@ export interface NewLeaveFormValues {
 
 export type NewLeaveFormProps = FinalFormProps;
 export interface ReviewExpenseFormValues {
-  comments: string;
+  comment: string;
+  status: string;
 }
 
 export type ReviewExpenseFormProps = FinalFormProps;
@@ -234,7 +245,9 @@ export interface ReviewLeaveFormValues {
 
 export type ReviewLeaveFormProps = FinalFormProps;
 
-export type FormProps = FinalFormProps;
+export type FormProps = FinalFormProps & {
+  id?: string;
+};
 
 // Generic form validation types
 export interface FormValidationResult {
@@ -344,4 +357,38 @@ export interface NewRotaFormValues {
 
 export interface ClaimRotaFormValues {
   employeeId: string;
+}
+
+export interface IncomeCategory {
+  id: string;
+  name: string;
+  isTaxable: boolean;
+}
+
+export interface ExpenseCategory {
+  id: string;
+  name: string;
+  monthlyLimit: number;
+}
+
+export interface AddIncomeCategoryFormValues {
+  name: string;
+  isTaxable: boolean;
+}
+
+export interface EditIncomeCategoryFormValues {
+  id: string;
+  name: string;
+  isTaxable: boolean;
+}
+
+export interface AddExpenseCategoryFormValues {
+  name: string;
+  monthlyLimit: number;
+}
+
+export interface EditExpenseCategoryFormValues {
+  id: string;
+  name: string;
+  monthlyLimit: number;
 }

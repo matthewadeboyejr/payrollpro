@@ -1,3 +1,5 @@
+import React from "react";
+import { useTheme } from "next-themes";
 import { SettingFormProps } from "../types/formFields";
 import { BsDatabase } from "react-icons/bs";
 import SelectInput from "../ui/SelectInput";
@@ -6,25 +8,34 @@ import { BiBell } from "react-icons/bi";
 import Toggle from "../ui/Toggle";
 
 const System = ({ form }: SettingFormProps) => {
+  const { theme, setTheme } = useTheme();
+
+  // Sync theme with form state
+  React.useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (form as any).change("darkMode", theme === "dark");
+  }, [theme, form]);
+
   return (
     <div>
-      <section className="w-full mt-5 bg-white p-4 rounded-lg">
+      <section className="w-full mt-5 bg-white p-4 rounded-lg dark:bg-gray-800">
         <div className="flex items-center gap-2 mb-5">
-          <BiBell className="font-bold" />
-          <h2 className="text-lg font-semibold">Appearance & Interface</h2>
+          <BiBell className="font-bold dark:text-white" />
+          <h2 className="text-lg font-semibold dark:text-white">Appearance & Interface</h2>
         </div>
         <div className="w-full space-y-4">
           <Toggle
             name="darkMode"
             label="Dark Mode"
             description="Switch to dark theme"
+            onChange={(e) => setTheme(e.target.checked ? "dark" : "light")}
           />
         </div>
       </section>
-      <section className="w-full mt-5 bg-white p-4 rounded-lg">
+      <section className="w-full mt-5 bg-white p-4 rounded-lg dark:bg-gray-800">
         <div className="flex items-center gap-2 mb-5">
-          <BsDatabase className="font-bold" />
-          <h2 className="text-lg font-semibold">Data Management</h2>
+          <BsDatabase className="font-bold dark:text-white" />
+          <h2 className="text-lg font-semibold dark:text-white">Data Management</h2>
         </div>
         <div className="w-full space-y-4">
           <Toggle

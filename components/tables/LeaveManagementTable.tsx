@@ -33,18 +33,18 @@ const LeaveManagementTable = () => {
   }
 
   return (
-    <div className="flex flex-col gap-4 bg-white p-4 rounded-sm">
+    <div className="flex flex-col gap-4 bg-white p-4 rounded-sm dark:bg-gray-800">
       <div className="flex flex-col">
-        <h2 className="text-lg font-semibold">Leave Requests</h2>
-        <p>View and manage all leave requests</p>
+        <h2 className="text-lg font-semibold dark:text-white">Leave Requests</h2>
+        <p className="dark:text-gray-400">View and manage all leave requests</p>
       </div>
       <div className="flex  flex-col md:flex-row justify-between items-center gap-2">
-        <div className="flex flex-1 items-center gap-2 border border-gray-200 px-2 py-3 rounded-sm w-full md:w-auto  bg-gray-50">
-          <FiSearch className="text-gray-500" />
+        <div className="flex flex-1 items-center gap-2 border border-gray-200 px-2 py-3 rounded-sm w-full md:w-auto  bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+          <FiSearch className="text-gray-500 dark:text-gray-400" />
           <input
             type="text"
             placeholder="search employee by name or email"
-            className=" outline-none  focus:outline-none focus:ring-focus focus:ring-focus text-sm w-full"
+            className=" outline-none  focus:outline-none focus:ring-focus focus:ring-focus text-sm w-full bg-transparent dark:text-white dark:placeholder-gray-400"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -189,16 +189,16 @@ const LeaveManagementTable = () => {
                           },
                         },
                         ...(request?.status?.toLowerCase() !== "approved" &&
-                        request?.status?.toLowerCase() !== "rejected"
+                          request?.status?.toLowerCase() !== "rejected"
                           ? [
-                              {
-                                title: "Review",
-                                onClick: () => {
-                                  setInitialValues(request);
-                                  setIsModalOpen("review-leaveRequest");
-                                },
+                            {
+                              title: "Review",
+                              onClick: () => {
+                                setInitialValues(request);
+                                setIsModalOpen("review-leaveRequest");
                               },
-                            ]
+                            },
+                          ]
                           : []),
                       ]}
                       label="Actions"

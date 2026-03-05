@@ -28,18 +28,18 @@ const TextInput = ({
 
   return (
     <div className="mb-3 flex flex-col flex-grow w-full">
-      <label htmlFor={name} className=" text-xs pb-2">
+      <label htmlFor={name} className=" text-xs pb-2 dark:text-gray-300">
         {label}
       </label>
 
-      <div className="relative border border-gray-200 px-2 py-2 rounded-sm w-full">
+      <div className="relative border border-gray-200 px-2 py-2 rounded-sm w-full dark:border-gray-700">
         <Field
           name={name}
           type={inputType}
           component="input"
           placeholder={placeholder}
           readOnly={readonly}
-          className={` focus:outline-none focus:ring-focus  ${classes} w-full`}
+          className={` focus:outline-none focus:ring-focus bg-transparent dark:text-white dark:placeholder-gray-400 ${classes} w-full`}
         />
 
         {type === "password" && (
@@ -49,7 +49,11 @@ const TextInput = ({
             className="absolute top-1/2 right-3 -translate-y-1/2 "
             onClick={togglePasswordVisibility}
           >
-            {showPassword ? <FiEyeOff color="grey" /> : <FiEye color="grey" />}
+            {showPassword ? (
+              <FiEyeOff className="text-gray-500 dark:text-gray-400" />
+            ) : (
+              <FiEye className="text-gray-500 dark:text-gray-400" />
+            )}
           </button>
         )}
       </div>

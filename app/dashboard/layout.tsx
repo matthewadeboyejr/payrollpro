@@ -14,7 +14,7 @@ export default function DashboardLayout({
 
   return (
     <ProtectedRoute>
-      <div className="flex w-screen h-screen bg-gray-100">
+      <div className="flex w-screen h-screen bg-gray-100 dark:bg-gray-900">
         <SiderBar />
 
         {/* Mobile overlay */}
@@ -28,7 +28,7 @@ export default function DashboardLayout({
         )}
 
         <div className="flex-1 w-full flex flex-col gap-5 overflow-y-auto">
-          <div className="sticky top-0 z-10 bg-white rounded-b-md py-2 px-5">
+          <div className="sticky top-0 z-10 bg-white rounded-b-md py-2 px-5 dark:bg-gray-800">
             <TopBar />
           </div>
           <div className="p-5">{children}</div>

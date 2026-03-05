@@ -44,9 +44,8 @@ const DropdownComponent = ({ options, label, size, value }: DropdownProps) => {
     <div className="relative " ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`flex items-center rounded border border-[#2663eb] px-3 py-3 cursor-pointer ${
-          sizeClasses[size || "lg"]
-        }  font-medium hover:bg-gray-50 transition-colors`}
+        className={`flex items-center rounded border border-[#2663eb] px-3 py-3 cursor-pointer ${sizeClasses[size || "lg"]
+          }  font-medium hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors`}
       >
         <span className="text-sm font-semibold min-w-[50px] text-[#2663eb]">
           {dropLabel}
@@ -55,12 +54,12 @@ const DropdownComponent = ({ options, label, size, value }: DropdownProps) => {
       </button>
 
       {isOpen && (
-        <div className="absolute top-full left-0 mt-1 w-full bg-white border border-gray-200 rounded-md shadow-lg z-20 max-h-[200px] overflow-y-auto">
+        <div className="absolute top-full left-0 mt-1 w-full bg-white border border-gray-200 rounded-md shadow-lg z-20 max-h-[200px] overflow-y-auto dark:bg-gray-800 dark:border-gray-700">
           {options?.map((option, index) => (
             <button
               key={index}
               onClick={() => handleItemClick(option)}
-              className="w-full text-left px-3 py-2 hover:bg-gray-100 transition-colors text-sm"
+              className="w-full text-left px-3 py-2 hover:bg-gray-100 transition-colors text-sm dark:text-gray-200 dark:hover:bg-gray-700"
             >
               {option.title}
             </button>
@@ -102,10 +101,10 @@ export const Dropdown = ({ options }: DropdownProps) => {
   return (
     <div className="relative" ref={dropdownRef}>
       <button className="cursor-pointer" onClick={() => setIsOpen(!isOpen)}>
-        <HiOutlineDotsVertical color="black" size={20} />
+        <HiOutlineDotsVertical className="text-black dark:text-white" size={20} />
       </button>
       {isOpen && (
-        <div className="absolute flex flex-col gap-2 top-full  right-0 mt-1 w-fit bg-white border border-gray-200 rounded-md shadow-lg z-20 max-h-[200px] overflow-y-auto">
+        <div className="absolute flex flex-col gap-2 top-full right-0 mt-1 w-fit bg-white border border-gray-200 rounded-md shadow-lg z-50 dark:bg-gray-800 dark:border-gray-700">
           {options?.map((option, index) => (
             <button
               key={index}
@@ -113,7 +112,7 @@ export const Dropdown = ({ options }: DropdownProps) => {
                 e.stopPropagation();
                 handleItemClick(option);
               }}
-              className="w-full text-nowrap text-left px-3 py-2 hover:bg-gray-100 transition-colors text-sm"
+              className="w-full text-nowrap text-left px-3 py-2 hover:bg-gray-100 transition-colors text-sm dark:text-gray-200 dark:hover:bg-gray-700"
             >
               {option.title}
             </button>

@@ -19,14 +19,14 @@ const SelectInput = ({
 
   return (
     <div className="mb-3 flex flex-col w-full">
-      <label htmlFor={name} className="text-xs pb-2">
+      <label htmlFor={name} className="text-xs pb-2 dark:text-gray-300">
         {label}
       </label>
       <Field name={name} disabled={readonly} multiple={multiple}>
         {({ input }) => (
           <select
             {...input}
-            className="relative border border-gray-200 px-2 py-2 rounded-sm focus:outline-none focus:ring-focus"
+            className="relative border border-gray-200 px-2 py-2 rounded-sm focus:outline-none focus:ring-focus bg-transparent dark:bg-gray-800 dark:border-gray-700 dark:text-white"
             disabled={readonly}
             multiple={multiple}
             onChange={(e) => {

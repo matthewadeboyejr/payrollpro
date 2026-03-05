@@ -1,54 +1,44 @@
 "use client";
 
-import React from "react";
-import { FiCheckCircle } from "react-icons/fi";
-import Cards from "@/components/ui/Cards";
+import React, { useState } from "react";
 import AboutPage from "@/components/ui/AboutPage";
-import { FaRegClock } from "react-icons/fa";
 import ExpenseManagementTable from "@/components/tables/ExpenseManagementTable";
-import { FaArrowTrendUp } from "react-icons/fa6";
-import { RiBillLine } from "react-icons/ri";
+import IncomeManagementTable from "@/components/tables/IncomeManagementTable";
+
 const ExpenseManagement = () => {
+  const [tab, setTab] = useState<"expenses" | "income">("expenses");
+
   return (
     <main className="w-full">
-      <AboutPage about="Track and manage employee expenses" />
+      <AboutPage about="Track and manage employee expenses and company income" />
+
+
       <section className="flex gap-5 flex-col md:flex-row  w-full mt-5">
-        <Cards
-          title="Total Expenses"
-          icon={<RiBillLine />}
-          value="£2,035.50"
-          data=""
-          color="green"
-          details="All time"
-        />{" "}
-        <Cards
-          title="This Month"
-          icon={<FaArrowTrendUp />}
-          value="£0.00"
-          data=""
-          color=""
-          details="Current month spending"
-        />{" "}
-        <Cards
-          title="Pending Approval"
-          icon={<FaRegClock />}
-          value="1"
-          data="Require attention"
-          color="green"
-          details="Awaiting approval"
-        />
-        <Cards
-          title="Approved"
-          icon={<FiCheckCircle />}
-          value="1"
-          data=""
-          color="green"
-          details="Ready for reimbursement"
-        />
+        <div className="bg-white p-5 rounded-md flex gap-2 border border-gray-200">
+          <button
+            onClick={() => setTab("expenses")}
+            className={`px-4 py-2 rounded-sm font-medium transition-all duration-200 ${tab === "expenses"
+              ? "bg-blue-500 text-white"
+              : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              }`}
+          >
+            Expenses
+          </button>
+
+          <button
+            onClick={() => setTab("income")}
+            className={`px-4 py-2 rounded-sm font-medium transition-all duration-200 ${tab === "income"
+              ? "bg-blue-500 text-white"
+              : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              }`}
+          >
+            Income
+          </button>
+        </div>
       </section>
 
       <section className="w-full mt-5">
-        <ExpenseManagementTable />
+        {tab === "expenses" ? <ExpenseManagementTable /> : <IncomeManagementTable />}
       </section>
     </main>
   );

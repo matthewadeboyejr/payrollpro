@@ -12,4 +12,6 @@ export interface ModalProps {
   submitBtnDisabled?: boolean;
   secondaryBtnColor?: string;
   isSubmitting?: boolean;
+  secondaryButtonAction?: () => void;
+  formId?: string;
 }

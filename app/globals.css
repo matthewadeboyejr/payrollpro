@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@variant dark (&:where(.dark, .dark *));
 
 :root {
   color-scheme: light;
@@ -14,12 +15,13 @@
   --font-sans: var(--font-inter-sans);
 }
 
-/* @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-} */
+.dark {
+  color-scheme: dark;
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  --accent: #2663eb;
+  --paragraph: #ededed;
+}
 
 @layer utilities {
   .text-accent {
@@ -64,5 +66,5 @@ h1,
 h2,
 h3,
 h4 {
-  color: #0a0a0a;
+  color: var(--foreground);
 }

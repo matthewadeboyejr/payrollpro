@@ -4,6 +4,7 @@ import "./globals.css";
 import { ReduxProvider } from "@/redux/Provider";
 import { Toaster } from "react-hot-toast";
 import { ModalProvider } from "@/context/ModalContext";
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
 
 const inter = Inter({
   variable: "--font-inter-sans",
@@ -25,8 +26,15 @@ export default function RootLayout({
       <body className={`${inter.variable}  antialiased`}>
         <ReduxProvider>
           <ModalProvider>
-            {children}
-            <Toaster />
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              {children}
+              <Toaster />
+            </ThemeProvider>
           </ModalProvider>
         </ReduxProvider>
       </body>

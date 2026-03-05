@@ -115,21 +115,21 @@ const ShiftActionMenu: React.FC<ShiftActionMenuProps> = ({
           e.stopPropagation();
           setIsOpen(!isOpen);
         }}
-        className="p-1.5 hover:bg-gray-100 rounded transition-colors bg-white shadow-sm border border-gray-200"
+        className="p-1.5 hover:bg-gray-100 rounded transition-colors bg-white shadow-sm border border-gray-200 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
       >
-        <FiMoreVertical className="text-gray-700" size={14} />
+        <FiMoreVertical className="text-gray-700 dark:text-gray-300" size={14} />
       </button>
       {isOpen && (
-        <div className="absolute right-0 top-9 z-50 bg-white border border-gray-200 rounded-sm shadow-xl min-w-[160px]">
+        <div className="absolute right-0 top-9 z-50 bg-white border border-gray-200 rounded-sm shadow-xl min-w-[160px] dark:bg-gray-800 dark:border-gray-700">
           <button
             type="button"
             onClick={() => {
               onView(shift);
               setIsOpen(false);
             }}
-            className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 flex items-center gap-2"
+            className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 flex items-center gap-2 dark:text-gray-300 dark:hover:bg-gray-700"
           >
-            <FiEye className="text-gray-600" size={14} />
+            <FiEye className="text-gray-600 dark:text-gray-400" size={14} />
             View
           </button>
           {!shift.completedAt && (
@@ -139,7 +139,7 @@ const ShiftActionMenu: React.FC<ShiftActionMenuProps> = ({
                 onComplete(shift);
                 setIsOpen(false);
               }}
-              className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 flex items-center gap-2"
+              className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 flex items-center gap-2 dark:text-gray-300 dark:hover:bg-gray-700"
             >
               <FiCheck className="text-green-600" size={14} />
               Complete
@@ -153,7 +153,7 @@ const ShiftActionMenu: React.FC<ShiftActionMenuProps> = ({
                   onEdit(shift);
                   setIsOpen(false);
                 }}
-                className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 flex items-center gap-2"
+                className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 flex items-center gap-2 dark:text-gray-300 dark:hover:bg-gray-700"
               >
                 <FiEdit className="text-blue-600" size={14} />
                 Edit
@@ -164,7 +164,7 @@ const ShiftActionMenu: React.FC<ShiftActionMenuProps> = ({
                   onCancel(shift);
                   setIsOpen(false);
                 }}
-                className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 flex items-center gap-2"
+                className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 flex items-center gap-2 dark:text-gray-300 dark:hover:bg-gray-700"
               >
                 <FiX className="text-orange-600" size={14} />
                 Cancel
@@ -178,7 +178,7 @@ const ShiftActionMenu: React.FC<ShiftActionMenuProps> = ({
                 onClaim(shift);
                 setIsOpen(false);
               }}
-              className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 flex items-center gap-2"
+              className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 flex items-center gap-2 dark:text-gray-300 dark:hover:bg-gray-700"
             >
               <FiUser className="text-purple-600" size={14} />
               Claim
@@ -190,7 +190,7 @@ const ShiftActionMenu: React.FC<ShiftActionMenuProps> = ({
               onDelete(shift);
               setIsOpen(false);
             }}
-            className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 flex items-center gap-2 text-red-600"
+            className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 flex items-center gap-2 text-red-600 dark:hover:bg-gray-700"
           >
             <FiTrash2 size={14} />
             Delete
@@ -344,10 +344,10 @@ const RotaCalendar: React.FC<RotaCalendarProps> = ({
   };
 
   const getShiftBorderColor = (shift: ApiShift) => {
-    if (shift.isCancelled) return "border-red-300 bg-red-50";
-    if (shift.isOpen) return "border-blue-300 bg-blue-50";
-    if (shift.completedAt) return "border-green-300 bg-green-50";
-    return "border-blue-200 bg-white";
+    if (shift.isCancelled) return "border-red-300 bg-red-50 dark:bg-red-900/20 dark:border-red-800";
+    if (shift.isOpen) return "border-blue-300 bg-blue-50 dark:bg-blue-900/20 dark:border-blue-800";
+    if (shift.completedAt) return "border-green-300 bg-green-50 dark:bg-green-900/20 dark:border-green-800";
+    return "border-blue-200 bg-white dark:bg-gray-700 dark:border-gray-600";
   };
 
   const handleView = (shift: ApiShift) => {
@@ -488,24 +488,24 @@ const RotaCalendar: React.FC<RotaCalendarProps> = ({
         <div className="fixed inset-0 z-50 flex items-start justify-end pt-16 pr-4">
           <div
             ref={filterRef}
-            className="bg-white border border-gray-200 rounded-lg shadow-xl w-full max-w-md"
+            className="bg-white border border-gray-200 rounded-lg shadow-xl w-full max-w-md dark:bg-gray-800 dark:border-gray-700"
           >
-            <div className="flex items-center justify-between p-4 border-b border-gray-200">
-              <h3 className="text-lg font-semibold text-gray-900">
+            <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                 Filter Rota
               </h3>
               <button
                 onClick={() => setIsFilterOpen?.(false)}
-                className="p-1 hover:bg-gray-100 rounded transition-colors"
+                className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
               >
-                <FiX className="text-gray-600" size={20} />
+                <FiX className="text-gray-600 dark:text-gray-400" size={20} />
               </button>
             </div>
 
             <div className="p-4 space-y-4">
               {/* Department Filter */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Department
                 </label>
                 <select
@@ -513,7 +513,7 @@ const RotaCalendar: React.FC<RotaCalendarProps> = ({
                   onChange={(e) =>
                     handleFilterChange("departmentId", e.target.value)
                   }
-                  className="w-full border border-gray-200 px-3 py-2 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full border border-gray-200 px-3 py-2 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                 >
                   <option value="">All Departments</option>
                   {departmentOptions.map(
@@ -528,13 +528,13 @@ const RotaCalendar: React.FC<RotaCalendarProps> = ({
 
               {/* Month Filter */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Month
                 </label>
                 <select
                   value={localFilters.month}
                   onChange={(e) => handleFilterChange("month", e.target.value)}
-                  className="w-full border border-gray-200 px-3 py-2 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full border border-gray-200 px-3 py-2 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                 >
                   {monthOptions.map((option) => (
                     <option key={option.value} value={option.value}>
@@ -546,13 +546,13 @@ const RotaCalendar: React.FC<RotaCalendarProps> = ({
 
               {/* Year Filter */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Year
                 </label>
                 <select
                   value={localFilters.year}
                   onChange={(e) => handleFilterChange("year", e.target.value)}
-                  className="w-full border border-gray-200 px-3 py-2 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full border border-gray-200 px-3 py-2 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                 >
                   <option value="">All Years</option>
                   {yearOptions.map((option) => (
@@ -564,10 +564,10 @@ const RotaCalendar: React.FC<RotaCalendarProps> = ({
               </div>
             </div>
 
-            <div className="flex items-center justify-end gap-2 p-4 border-t border-gray-200">
+            <div className="flex items-center justify-end gap-2 p-4 border-t border-gray-200 dark:border-gray-700">
               <button
                 onClick={handleClearFilters}
-                className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded transition-colors"
+                className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded transition-colors dark:text-gray-300 dark:hover:bg-gray-700"
               >
                 Clear
               </button>
@@ -582,26 +582,26 @@ const RotaCalendar: React.FC<RotaCalendarProps> = ({
         </div>
       )}
 
-      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden mt-5">
+      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden mt-5 dark:bg-gray-800 dark:border-gray-700">
         {/* Week Summary Header */}
-        <div className="border-b border-gray-200 p-4 bg-gray-50">
+        <div className="border-b border-gray-200 p-4 bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
           {/* Week Navigation */}
           <div className="flex items-center justify-between">
             <button
               onClick={handlePreviousWeek}
-              className="p-2 hover:bg-gray-200 rounded transition-colors"
+              className="p-2 hover:bg-gray-200 rounded transition-colors dark:hover:bg-gray-700"
             >
-              <FiChevronLeft />
+              <FiChevronLeft className="dark:text-white" />
             </button>
-            <div className="text-sm font-medium text-gray-700">
+            <div className="text-sm font-medium text-gray-700 dark:text-white">
               {format(weekDays[0], "MMM d")} -{" "}
               {format(weekDays[6], "MMM d, yyyy")}
             </div>
             <button
               onClick={handleNextWeek}
-              className="p-2 hover:bg-gray-200 rounded transition-colors"
+              className="p-2 hover:bg-gray-200 rounded transition-colors dark:hover:bg-gray-700"
             >
-              <FiChevronRight />
+              <FiChevronRight className="dark:text-white" />
             </button>
           </div>
         </div>
@@ -610,17 +610,17 @@ const RotaCalendar: React.FC<RotaCalendarProps> = ({
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
-              <tr className="bg-gray-50 border-b border-gray-200">
-                <th className="sticky left-0 z-10 bg-gray-50 px-4 py-3 text-left text-xs font-medium text-gray-700 border-r border-gray-200 min-w-[220px]">
+              <tr className="bg-gray-50 border-b border-gray-200 dark:bg-gray-700 dark:border-gray-600">
+                <th className="sticky left-0 z-10 bg-gray-50 px-4 py-3 text-left text-xs font-medium text-gray-700 border-r border-gray-200 min-w-[220px] dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600">
                   Staff
                 </th>
                 {weekDays.map((day, index) => (
                   <th
                     key={index}
-                    className="px-3 py-3 text-center text-xs font-medium text-gray-700 min-w-[140px] border-l border-gray-200"
+                    className="px-3 py-3 text-center text-xs font-medium text-gray-700 min-w-[140px] border-l border-gray-200 dark:text-gray-300 dark:border-gray-600"
                   >
-                    <div className="font-semibold">{format(day, "d")}</div>
-                    <div className="text-gray-500 text-[10px] mt-0.5">
+                    <div className="font-semibold text-gray-700 dark:text-white">{format(day, "d")}</div>
+                    <div className="text-gray-500 text-[10px] mt-0.5 dark:text-gray-400">
                       {format(day, "EEE")}
                     </div>
                   </th>
@@ -630,10 +630,10 @@ const RotaCalendar: React.FC<RotaCalendarProps> = ({
             <tbody>
               {departmentGroups.map(([departmentName, employees]) => (
                 <React.Fragment key={departmentName}>
-                  <tr className="bg-gray-100 border-b border-gray-200">
+                  <tr className="bg-gray-100 border-b border-gray-200 dark:bg-gray-700 dark:border-gray-600">
                     <td
                       colSpan={8}
-                      className="px-4 py-2 text-sm font-semibold text-gray-700 sticky left-0 z-10 bg-gray-100"
+                      className="px-4 py-2 text-sm font-semibold text-gray-700 sticky left-0 z-10 bg-gray-100 dark:bg-gray-700 dark:text-gray-200"
                     >
                       {departmentName}
                     </td>
@@ -641,22 +641,22 @@ const RotaCalendar: React.FC<RotaCalendarProps> = ({
                   {employees.map((employeeRota) => (
                     <tr
                       key={employeeRota.employeeId}
-                      className="border-b border-gray-100 hover:bg-gray-50"
+                      className="border-b border-gray-100 hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-800"
                     >
-                      <td className="sticky left-0 z-10 bg-white px-4 py-3 border-r border-gray-200">
+                      <td className="sticky left-0 z-10 bg-white px-4 py-3 border-r border-gray-200 dark:bg-gray-800 dark:border-gray-700">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center flex-shrink-0">
-                            <FiUser className="text-gray-600" size={20} />
+                          <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center flex-shrink-0 dark:bg-gray-600">
+                            <FiUser className="text-gray-600 dark:text-gray-300" size={20} />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <div className="font-medium text-sm text-gray-900 truncate">
+                            <div className="font-medium text-sm text-gray-900 truncate dark:text-white">
                               {employeeRota.employeeName}
                             </div>
-                            <div className="text-xs text-gray-600">
+                            <div className="text-xs text-gray-600 dark:text-gray-400">
                               {Math.floor(employeeRota.totalHours)}h{" "}
                               {Math.round((employeeRota.totalHours % 1) * 60)}m
                             </div>
-                            <div className="text-xs text-gray-600">
+                            <div className="text-xs text-gray-600 dark:text-gray-400">
                               £{employeeRota.totalCost.toFixed(2)} •{" "}
                               {employeeRota.shiftCount} shifts
                             </div>
@@ -668,13 +668,13 @@ const RotaCalendar: React.FC<RotaCalendarProps> = ({
                         return (
                           <td
                             key={dayIndex}
-                            className="px-2 py-2 align-top border-l border-gray-100"
+                            className="px-2 py-2 align-top border-l border-gray-100 dark:border-gray-700"
                           >
                             {shift ? (
                               <div
                                 className={`${getShiftBorderColor(
                                   shift
-                                )} border-2 rounded p-2 relative min-h-[70px] cursor-pointer hover:shadow-md transition-all`}
+                                )} border-2 rounded p-2 relative min-h-[70px] cursor-pointer hover:shadow-md transition-all dark:bg-opacity-10 dark:text-gray-100`}
                                 onClick={(e) => {
                                   if (
                                     (e.target as HTMLElement).closest(
@@ -687,25 +687,25 @@ const RotaCalendar: React.FC<RotaCalendarProps> = ({
                                 }}
                               >
                                 <div className="pr-7">
-                                  <div className="text-xs font-semibold text-gray-900">
+                                  <div className="text-xs font-semibold text-gray-900 dark:text-white">
                                     {formatTime(shift.shiftStart)} -{" "}
                                     {formatTime(shift.shiftEnd)}
                                   </div>
-                                  <div className="text-xs text-gray-600 mt-1">
+                                  <div className="text-xs text-gray-600 mt-1 dark:text-gray-400">
                                     {shift.shiftName}
                                   </div>
                                   {shift.isOpen && (
-                                    <div className="text-[10px] text-blue-600 mt-1 font-medium">
+                                    <div className="text-[10px] text-blue-600 mt-1 font-medium dark:text-blue-400">
                                       Open
                                     </div>
                                   )}
                                   {shift.isCancelled && (
-                                    <div className="text-[10px] text-red-600 mt-1 font-medium">
+                                    <div className="text-[10px] text-red-600 mt-1 font-medium dark:text-red-400">
                                       Cancelled
                                     </div>
                                   )}
                                   {shift.completedAt && (
-                                    <div className="text-[10px] text-green-600 mt-1 font-medium">
+                                    <div className="text-[10px] text-green-600 mt-1 font-medium dark:text-green-400">
                                       Completed
                                     </div>
                                   )}
@@ -726,8 +726,8 @@ const RotaCalendar: React.FC<RotaCalendarProps> = ({
                                 </div>
                               </div>
                             ) : (
-                              <div className="border-2 border-dashed border-gray-200 rounded min-h-[70px] flex items-center justify-center bg-gray-50">
-                                <span className="text-gray-400 text-xs">—</span>
+                              <div className="border-2 border-dashed border-gray-200 rounded min-h-[70px] flex items-center justify-center bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
+                                <span className="text-gray-400 text-xs dark:text-gray-500">—</span>
                               </div>
                             )}
                           </td>

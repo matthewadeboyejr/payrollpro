@@ -4,15 +4,14 @@ import { SettingFormProps } from "../types/formFields";
 import TextInput from "../ui/TextInput";
 import { BiBuilding, BiGlobe } from "react-icons/bi";
 import SelectInput from "../ui/SelectInput";
-import SalaryBandTable from "../tables/SalaryBandTable";
 
 const General = ({ form }: SettingFormProps) => {
   return (
     <div>
-      <section className="w-full mt-5 bg-white p-4 rounded-lg">
+      <section className="w-full mt-5 bg-white p-4 rounded-lg dark:bg-gray-800">
         <div className="flex items-center gap-2 mb-5">
-          <BiBuilding className="font-bold" />
-          <h2 className="text-lg font-semibold">Company Information</h2>
+          <BiBuilding className="font-bold dark:text-white" />
+          <h2 className="text-lg font-semibold dark:text-white">Company Information</h2>
         </div>
         <div className="w-full">
           <div className="grid grid-cols-2 gap-2">
@@ -34,10 +33,10 @@ const General = ({ form }: SettingFormProps) => {
         </div>
       </section>
 
-      <section className="w-full mt-5 bg-white p-4 rounded-lg">
+      <section className="w-full mt-5 bg-white p-4 rounded-lg dark:bg-gray-800">
         <div className="flex items-center gap-2 mb-5">
-          <BiGlobe className="font-bold" />
-          <h2 className="text-lg font-semibold">Regional Settings</h2>
+          <BiGlobe className="font-bold dark:text-white" />
+          <h2 className="text-lg font-semibold dark:text-white">Regional Settings</h2>
         </div>
         <div className="w-full">
           <div className="grid grid-cols-2 gap-2">
@@ -82,15 +81,6 @@ const General = ({ form }: SettingFormProps) => {
               form={form}
             />
           </div>
-        </div>
-      </section>
-      <section className="w-full mt-5 bg-white p-4 rounded-lg">
-        <div className="flex items-center gap-2 mb-5">
-          <BiGlobe className="font-bold" />
-          <h2 className="text-lg font-semibold">Salary Bands</h2>
-        </div>
-        <div className="w-full">
-          <SalaryBandTable />
         </div>
       </section>
     </div>

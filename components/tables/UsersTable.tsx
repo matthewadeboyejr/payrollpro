@@ -45,14 +45,14 @@ const UsersTable = () => {
   }
 
   return (
-    <div className="flex flex-col gap-4 bg-white p-4 rounded-sm">
+    <div className="flex flex-col gap-4 bg-white p-4 rounded-sm dark:bg-gray-800">
       <div className="flex flex-col md:flex-row justify-between items-center gap-2">
-        <div className="flex flex-1 items-center gap-2 border border-gray-200 px-2 py-3 rounded-sm w-full md:w-auto  bg-gray-50">
-          <FiSearch className="text-gray-500" />
+        <div className="flex flex-1 items-center gap-2 border border-gray-200 px-2 py-3 rounded-sm w-full md:w-auto  bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+          <FiSearch className="text-gray-500 dark:text-gray-400" />
           <input
             type="text"
             placeholder="search user by name or email"
-            className="w-full outline-none  focus:outline-none focus:ring-focus focus:ring-focus text-sm"
+            className="w-full outline-none  focus:outline-none focus:ring-focus focus:ring-focus text-sm bg-transparent dark:text-white dark:placeholder-gray-400"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />

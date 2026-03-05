@@ -4,27 +4,48 @@ import React from "react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import { FiUsers } from "react-icons/fi";
+import { useTheme } from "next-themes";
 
 const PieChart = () => {
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
+
   const options = {
     chart: {
       type: "pie",
+      backgroundColor: "transparent",
     },
     title: {
       text: "",
     },
     subtitle: {
       text: "Click slices to view details",
+      style: {
+        color: isDark ? "#9ca3af" : "#666666",
+      },
     },
     plotOptions: {
       pie: {
         allowPointSelect: true,
         cursor: "pointer",
+        borderColor: isDark ? "#1f2937" : "#ffffff", // Match gray-800 or white border
         dataLabels: {
           enabled: true,
           format: "{point.name}: {point.percentage:.1f} %",
+          style: {
+            color: isDark ? "#d1d5db" : "#333333",
+            textOutline: "none",
+          },
         },
         showInLegend: true,
+      },
+    },
+    legend: {
+      itemStyle: {
+        color: isDark ? "#d1d5db" : "#333333",
+      },
+      itemHoverStyle: {
+        color: isDark ? "#ffffff" : "#000000",
       },
     },
     series: [
@@ -106,10 +127,10 @@ const PieChart = () => {
     },
   };
   return (
-    <div className="bg-white p-4 rounded-lg w-full">
+    <div className="bg-white p-4 rounded-lg w-full dark:bg-gray-800">
       <div className="flex items-center gap-2 mb-5">
-        <FiUsers />
-        <h2 className="text-lg font-semibold">Department Cost Distribution</h2>
+        <FiUsers className="dark:text-white" />
+        <h2 className="text-lg font-semibold dark:text-white">Department Cost Distribution</h2>
       </div>
       <HighchartsReact highcharts={Highcharts} options={options} />
     </div>

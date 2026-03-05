@@ -97,7 +97,7 @@ const OpenShiftsTable: React.FC<OpenShiftsTableProps> = ({ shifts }) => {
 
   return (
     <>
-      <div className="flex flex-col gap-4 bg-white p-4 rounded-sm mt-5">
+      <div className="flex flex-col gap-4 bg-white p-4 rounded-sm mt-5 dark:bg-gray-800">
         <div className="relative overflow-x-auto">
           <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">

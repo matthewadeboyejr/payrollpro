@@ -19,3 +19,13 @@ export const LEAVETYPE = "LeaveType";
 // Shift constants
 export const SHIFTS = "shifts";
 export const ROTA = "rota";
+
+//expenses
+export const EXPENSES = "expenses";
+export const EXPENSE_CATEGORIES = "expense-categories";
+export const EXPENSE_SUMMARY = "expenses/expense-summary";
+
+//income
+export const INCOME = "incomes";
+export const INCOME_CATEGORIES = "income-categories";
+export const INCOME_SUMMARY = "incomes/income-summary";
