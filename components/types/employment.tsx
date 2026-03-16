@@ -8,4 +8,11 @@ export interface Employee {
   position: string;
   startDate: string;
   status: string;
+  Address?: string;
+  weeklyHours?: number;
+  workingDaysPerWeek?: number;
+  employmentTypeName?: string;
+  gradeLevelName?: string;
+  salaryBandCode?: string;
+  customSalary?: number;
 }

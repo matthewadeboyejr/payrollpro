@@ -64,6 +64,30 @@ export const employeeApiSlice = apiSlice.injectEndpoints({
       }),
       providesTags: ["Employee"],
     }),
+    updateEmployeeTax: builder.mutation({
+      query: ({ employeeId, data }: { employeeId: string; data: any }) => ({
+        url: `${EMPLOYEES}/${employeeId}/tax`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["Employee"],
+    }),
+    updateEmployeeBank: builder.mutation({
+      query: ({ employeeId, data }: { employeeId: string; data: any }) => ({
+        url: `${EMPLOYEES}/${employeeId}/bank`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["Employee"],
+    }),
+    updateEmployeePension: builder.mutation({
+      query: ({ employeeId, data }: { employeeId: string; data: any }) => ({
+        url: `${EMPLOYEES}/${employeeId}/pension`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["Employee"],
+    }),
     getEmploymentTypes: builder.query({
       query: () => ({
         url: `${EMPLOYMENT_TYPES}`,
@@ -103,4 +127,7 @@ export const {
   useGetSalaryBandsByGradeLevelIdQuery,
   useGetGradeLevelsQuery,
   useGetWorkScheduleTypesQuery,
+  useUpdateEmployeeTaxMutation,
+  useUpdateEmployeeBankMutation,
+  useUpdateEmployeePensionMutation,
 } = employeeApiSlice;

@@ -10,21 +10,19 @@ import { useModal } from "@/context/ModalContext";
 import { useAction } from "@/hooks/useAction";
 import { formatDT } from "@/utils/formatDT";
 import EditEmployee from "../employeeManagement/sub-component/EditEmployee";
-import ViewEmployee from "../employeeManagement/sub-component/ViewEmployee";
 import CreateLeaveRequest from "../leaveManagement/sub-component/CreateLeaveRequest";
 import StatusBadge from "@/utils/StatusBadge";
 import { useDebounce } from "@/hooks/useDebounce";
+import { useRouter } from "next/navigation";
 
 const EmployeeManagementTable = () => {
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 400);
   const { isModalOpen, setIsModalOpen } = useModal();
   const { deactivateEmployee } = useAction();
+  const router = useRouter();
   const { data, isLoading } = useGetEmployeesQuery(debouncedSearch);
   const [initialValues, setInitialValues] = useState<Employee | null>(null);
-  const [selectedEmployeeId, setSelectedEmployeeId] = useState<string | null>(
-    null
-  );
   const employees = data?.data;
 
   if (isLoading) {
@@ -105,11 +103,12 @@ const EmployeeManagementTable = () => {
                   <td className="px-6 py-4 relative">
                     <Dropdown
                       options={[
-                        {
+                         {
                           title: "View",
                           onClick: () => {
-                            setSelectedEmployeeId(employee.id);
-                            setIsModalOpen("view-employee");
+                            router.push(
+                              `/dashboard/employees-management/${employee.id}`
+                            );
                           },
                         },
                         {
@@ -149,9 +148,6 @@ const EmployeeManagementTable = () => {
       )}
       {isModalOpen === "create-leaveRequest" && (
         <CreateLeaveRequest initialValues={initialValues || null} />
-      )}
-      {isModalOpen === "view-employee" && (
-        <ViewEmployee selectedEmployeeId={selectedEmployeeId as string} />
       )}
     </div>
   );
