@@ -9,7 +9,8 @@ const AddNewSalaryBandForm = ({
   form,
   handleSubmit,
 }: AddNewSalaryBandFormProps) => {
-  const { data: gradeLevels } = useGetGradeLevelsQuery(undefined);
+  const { data: response } = useGetGradeLevelsQuery(undefined);
+  const gradeLevels = response?.data;
   const gradeLevelOptions = gradeLevels?.map((gradeLevel: { id: string; name: string }) => ({
     value: gradeLevel?.id,
     label: gradeLevel?.name,

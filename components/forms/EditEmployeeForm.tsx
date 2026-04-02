@@ -29,18 +29,18 @@ const EditEmployeeForm = ({
   const { departmentOptions, positionOptions, statuses } = useConstantData();
   const { data: employmentTypes } = useGetEmploymentTypesQuery(undefined);
   const { data: workScheduleTypes } = useGetWorkScheduleTypesQuery(undefined);
-  const workScheduleTypeOptions = workScheduleTypes?.map(
+  const workScheduleTypeOptions = workScheduleTypes?.data?.map(
     (workScheduleType: { id: string; name: string }) => ({
       value: workScheduleType?.id,
       label: workScheduleType?.name,
     })
   );
-  const employmentTypeOptions = employmentTypes?.map((employmentType: { id: string; name: string }) => ({
+  const employmentTypeOptions = employmentTypes?.data?.map((employmentType: { id: string; name: string }) => ({
     value: employmentType?.id,
     label: employmentType?.name,
   }));
   const { data: gradeLevels } = useGetGradeLevelsQuery(undefined);
-  const gradeLevelOptions = gradeLevels?.map((gradeLevel: { id: string; name: string }) => ({
+  const gradeLevelOptions = gradeLevels?.data?.map((gradeLevel: { id: string; name: string }) => ({
     value: gradeLevel?.id,
     label: gradeLevel?.name,
   }));

@@ -1,20 +1,30 @@
 "use client";
 
 import React, { useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useGetEmployeeByIdQuery } from "@/services/api/constants/employee.constant";
 import AboutPage from "@/components/ui/AboutPage";
 import ViewSkeleton from "@/components/ui/ViewSkeleton";
-import { FiArrowLeft, FiUser, FiBriefcase, FiCreditCard, FiPercent } from "react-icons/fi";
+import { FiArrowLeft, FiUser, FiBriefcase, FiCreditCard, FiPercent, FiFileText } from "react-icons/fi";
 import EmployeeGeneralInfo from "../../../../components/employeeManagement/details/EmployeeGeneralInfo";
 import EmployeeTaxForm from "../../../../components/employeeManagement/details/EmployeeTaxForm";
 import EmployeeBankForm from "../../../../components/employeeManagement/details/EmployeeBankForm";
 import EmployeePensionForm from "../../../../components/employeeManagement/details/EmployeePensionForm";
+import EmployeePayslipList from "../../../../components/employeeManagement/details/EmployeePayslipList";
 
 const EmployeeDetailsPage = () => {
-  const { id } = useParams();
+  const params = useParams();
+  const id = typeof params?.id === "string" ? params.id : Array.isArray(params?.id) ? params.id[0] : "";
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState("general");
+  const searchParams = useSearchParams();
+  const tabParam = searchParams.get("tab");
+  const [activeTab, setActiveTab] = useState(tabParam || "general");
+
+  React.useEffect(() => {
+    if (tabParam) {
+      setActiveTab(tabParam);
+    }
+  }, [tabParam]);
 
   const { data: employeeData, isLoading } = useGetEmployeeByIdQuery(id as string, {
     skip: !id,
@@ -42,6 +52,7 @@ const EmployeeDetailsPage = () => {
     { id: "tax", label: "Tax Details", icon: <FiBriefcase /> },
     { id: "bank", label: "Bank Account", icon: <FiCreditCard /> },
     { id: "pension", label: "Pension Scheme", icon: <FiPercent /> },
+    { id: "payslips", label: "Payslips", icon: <FiFileText /> },
   ];
 
   return (
@@ -88,6 +99,9 @@ const EmployeeDetailsPage = () => {
           )}
           {activeTab === "pension" && (
             <EmployeePensionForm employeeId={id as string} initialData={pensionData} />
+          )}
+          {activeTab === "payslips" && (
+            <EmployeePayslipList employeeId={id as string} />
           )}
         </div>
       </div>

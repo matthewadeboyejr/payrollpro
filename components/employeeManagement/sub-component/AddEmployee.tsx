@@ -10,6 +10,7 @@ import { addNewEmployeeConstraints } from "@/components/forms/contraints/contrai
 import { validate } from "validate.js";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { AiOutlinePlus } from "react-icons/ai";
+import { useRouter } from "next/navigation";
 
 interface FormRef {
   reset: () => void;
@@ -17,6 +18,7 @@ interface FormRef {
 }
 
 const AddEmployee = () => {
+  const router = useRouter();
   const { setIsModalOpen } = useModal();
   const [step, setStep] = useState<"basic-info" | "salary-info">("basic-info");
   const [formRef, setFormRef] = useState<FormRef | null>(null);
@@ -71,9 +73,18 @@ const AddEmployee = () => {
       console.log("response", response);
       if (response?.code === 201 || response?.code === 200) {
         showAlert("Success", response?.message, "success");
+
+        // Extract new employee ID from response
+        const newEmployeeId = response?.data?.id || response?.data?.employee?.id;
+
         // Reset form after successful submission
         if (formRef) {
           formRef.reset();
+        }
+
+        // Navigate to employee details page with Tax tab active
+        if (newEmployeeId) {
+          router.push(`/dashboard/employees-management/${newEmployeeId}?tab=tax`);
         }
       }
     } catch (err: unknown) {
@@ -114,38 +125,35 @@ const AddEmployee = () => {
             }
 
             return (
-              <div>
+              <div className="" >
                 {/* Step Indicator */}
                 <div className="flex items-center justify-between mb-4">
                   {steps.map((stepItem, index) => (
                     <React.Fragment key={stepItem.id}>
                       <div className="flex items-center">
                         <div
-                          className={`w-8 h-8 rounded-full flex items-center justify-center font-semibold text-sm ${
-                            index <= currentStepIndex
-                              ? "bg-blue-500 text-white"
-                              : "bg-gray-200 text-gray-500"
-                          }`}
+                          className={`w-8 h-8 rounded-full flex items-center justify-center font-semibold text-sm ${index <= currentStepIndex
+                            ? "bg-blue-500 text-white"
+                            : "bg-gray-200 text-gray-500"
+                            }`}
                         >
                           {stepItem.number}
                         </div>
                         <span
-                          className={`ml-2 text-sm font-medium ${
-                            index <= currentStepIndex
-                              ? "text-blue-500"
-                              : "text-gray-500"
-                          }`}
+                          className={`ml-2 text-sm font-medium ${index <= currentStepIndex
+                            ? "text-blue-500"
+                            : "text-gray-500"
+                            }`}
                         >
                           {stepItem.label}
                         </span>
                       </div>
                       {index < steps.length - 1 && (
                         <div
-                          className={`flex-1 h-0.5 mx-4 ${
-                            index < currentStepIndex
-                              ? "bg-blue-500"
-                              : "bg-gray-200"
-                          }`}
+                          className={`flex-1 h-0.5 mx-4 ${index < currentStepIndex
+                            ? "bg-blue-500"
+                            : "bg-gray-200"
+                            }`}
                         />
                       )}
                     </React.Fragment>
@@ -163,11 +171,10 @@ const AddEmployee = () => {
                     type="button"
                     onClick={handlePrevious}
                     disabled={isFirstStep}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-sm font-medium transition-all ${
-                      isFirstStep
-                        ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                        : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                    }`}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-sm font-medium transition-all ${isFirstStep
+                      ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                      : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                      }`}
                   >
                     <FiChevronLeft />
                     Previous

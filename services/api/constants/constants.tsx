@@ -19,6 +19,7 @@ export const LEAVETYPE = "LeaveType";
 // Shift constants
 export const SHIFTS = "shifts";
 export const ROTA = "rota";
+export const PAYROLL = "payroll";
 
 //expenses
 export const EXPENSES = "expenses";

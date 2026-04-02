@@ -103,8 +103,8 @@ const EmployeeManagementTable = () => {
                   <td className="px-6 py-4 relative">
                     <Dropdown
                       options={[
-                         {
-                          title: "View",
+                        {
+                          title: employee.status === "Active" ? "View" : "Complete Onboarding",
                           onClick: () => {
                             router.push(
                               `/dashboard/employees-management/${employee.id}`

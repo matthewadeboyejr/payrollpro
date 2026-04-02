@@ -12,6 +12,7 @@ import Users from "@/components/settings/Users";
 import SalaryBands from "@/components/settings/SalaryBands";
 import IncomeCategories from "@/components/settings/IncomeCategories";
 import ExpenseCategories from "@/components/settings/ExpenseCategories";
+import { useSearchParams } from "next/navigation";
 import {
   BiBuilding,
   BiShield,
@@ -20,10 +21,21 @@ import {
   BiUser,
   BiMoney,
   BiCategory,
+  BiCog,
 } from "react-icons/bi";
+import Payroll from "@/components/settings/Payroll";
 
 const Settings = () => {
-  const [activeTab, setActiveTab] = useState("General");
+  const searchParams = useSearchParams();
+  const tabParam = searchParams.get("tab");
+  
+  const [activeTab, setActiveTab] = useState(tabParam || "General");
+
+  React.useEffect(() => {
+    if (tabParam) {
+      setActiveTab(tabParam);
+    }
+  }, [tabParam]);
 
   const menuItems = [
     { label: "General", icon: <BiBuilding className="text-xl" /> },
@@ -32,6 +44,7 @@ const Settings = () => {
     { label: "System", icon: <BiServer className="text-xl" /> },
     { label: "Users", icon: <BiUser className="text-xl" /> },
     { label: "Salary Bands", icon: <BiMoney className="text-xl" /> },
+    { label: "Payroll", icon: <BiCog className="text-xl" /> },
     { label: "Income Categories", icon: <BiCategory className="text-xl" /> },
     { label: "Expense Categories", icon: <BiCategory className="text-xl" /> },
   ];
@@ -74,8 +87,8 @@ const Settings = () => {
         </aside>
 
         {/* Content Area */}
-        <div className="flex-1 w-full">
-          {!["Users", "Salary Bands", "Income Categories", "Expense Categories"].includes(activeTab) && (
+        <div className="flex-1 min-w-0 w-full">
+          {!["Users", "Salary Bands", "Payroll", "Income Categories", "Expense Categories"].includes(activeTab) && (
             <div className="flex justify-between items-center mb-6 bg-white p-4 rounded-lg shadow-sm dark:bg-gray-800">
               <h2 className="text-xl font-bold text-gray-800 dark:text-white">{activeTab}</h2>
               <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors font-medium shadow-sm">
@@ -98,6 +111,7 @@ const Settings = () => {
           />
           {activeTab === "Users" && <Users />}
           {activeTab === "Salary Bands" && <SalaryBands />}
+          {activeTab === "Payroll" && <Payroll />}
           {activeTab === "Income Categories" && <IncomeCategories />}
           {activeTab === "Expense Categories" && <ExpenseCategories />}
         </div>

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import DropdownComponent from "../ui/Dropdown";
+import { Dropdown } from "../ui/Dropdown";
 import { FiPlus, FiSearch } from "react-icons/fi";
 import { useGetUsersQuery } from "@/services/api/constants/auth.constant";
 
@@ -142,7 +142,7 @@ const UsersTable = () => {
                   </td>
 
                   <td className="px-6 py-4">
-                    <DropdownComponent
+                    <Dropdown
                       options={[
                         {
                           title: "View",

@@ -1,5 +1,6 @@
 import { FormApi } from "final-form";
 import { FormRenderProps } from "react-final-form";
+import { ReactNode } from "react";
 
 export interface FormState {
   submitFailed: boolean | undefined;
@@ -7,7 +8,7 @@ export interface FormState {
 }
 
 export interface TextInputProps {
-  label: string;
+  label: ReactNode;
   name: string;
   type?: string;
   placeholder?: string;
@@ -18,14 +19,14 @@ export interface TextInputProps {
 }
 
 export interface TextareaInputProps {
-  label: string;
+  label: ReactNode;
   name: string;
   placeholder?: string;
   form: unknown;
   desc?: string;
 }
 export interface SelectInputProps {
-  label: string;
+  label: ReactNode;
   name: string;
   form: unknown;
   options: { value: string; label: string }[];
@@ -75,6 +76,8 @@ export type SignupFormProps = FinalFormProps;
 export interface AddNewEmployeeFormValues {
   firstName: "string";
   lastName: "string";
+  dateOfBirth: "string";
+  gender: "string";
   email: "string";
   phone: "string";
   address: "string";
@@ -123,6 +126,17 @@ export interface EditLeaveTypeValues {
   startDate: string;
   endDate: string;
   employeeNo: string;
+}
+
+export interface EmployeePensionFormValues {
+  pensionScheme: string;
+  contributionPercent: number; // Changed from percentage string to number
+  contributionMethod: string;
+  optedOut: boolean;
+  optOutReason?: string;
+  pensionReference?: string;
+  isAutoEnrolled: boolean;
+  isEligibleForAutoEnrolment: boolean;
 }
 
 export type AddNewEmployeeFormProps = FinalFormProps;
@@ -392,3 +406,48 @@ export interface EditExpenseCategoryFormValues {
   name: string;
   monthlyLimit: number;
 }
+
+export interface RunPayrollFormValues {
+  year: number;
+  month: number;
+  useTaxPeriods: boolean;
+  taxYearStartYear: number;
+  taxPeriodNumber: number;
+  departmentId: number;
+  taxRate: number;
+  pensionRate: number;
+  otherDeductionRate: number;
+  useUkProgressiveTax: boolean;
+  taxRegion: string;
+  includeEmployeeNationalInsurance: boolean;
+  currency: string;
+}
+
+
+export interface PayrollConfiguration {
+  id: number;
+  effectiveFrom: string;
+  taxYearStartMonth: number;
+  taxYearStartDay: number;
+  defaultTaxRegion: string;
+  enableProgressiveTax: boolean;
+  enableEmployeeNi: boolean;
+  autoEnrollEarningsTriggerAnnual: number;
+  defaultEmployeePensionRate: number;
+  defaultEmployerPensionRate: number;
+  isActive: boolean;
+}
+
+export interface AddPayrollConfigurationFormValues {
+  effectiveFrom: string;
+  taxYearStartMonth: number;
+  taxYearStartDay: number;
+  defaultTaxRegion: string;
+  enableProgressiveTax: boolean;
+  enableEmployeeNi: boolean;
+  autoEnrollEarningsTriggerAnnual: number;
+  defaultEmployeePensionRate: number;
+  defaultEmployerPensionRate: number;
+  isActive?: boolean;
+}
+

@@ -9,7 +9,8 @@ const DropdownComponent = ({ options, label, size, value }: DropdownProps) => {
   const [dropLabel, setDropLabel] = useState(value || label);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const handleItemClick = (item: { title: string; onClick: () => void }) => {
+  const handleItemClick = (item: { title: string; onClick: () => void; disabled?: boolean }) => {
+    if (item.disabled) return;
     setDropLabel(item.title);
     setIsOpen(false);
     if (item.onClick) {
@@ -58,10 +59,14 @@ const DropdownComponent = ({ options, label, size, value }: DropdownProps) => {
           {options?.map((option, index) => (
             <button
               key={index}
+              disabled={option.disabled}
               onClick={() => handleItemClick(option)}
-              className="w-full text-left px-3 py-2 hover:bg-gray-100 transition-colors text-sm dark:text-gray-200 dark:hover:bg-gray-700"
+              className={`w-full text-left px-3 py-2 hover:bg-gray-100 transition-colors text-sm dark:text-gray-200 dark:hover:bg-gray-700 flex items-center gap-2 ${
+                option.disabled ? "opacity-50 cursor-not-allowed" : ""
+              }`}
             >
-              {option.title}
+              {option.icon && <span className="flex-shrink-0">{option.icon}</span>}
+              <span>{option.title}</span>
             </button>
           ))}
         </div>
@@ -76,7 +81,8 @@ export const Dropdown = ({ options }: DropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const handleItemClick = (item: { title: string; onClick: () => void }) => {
+  const handleItemClick = (item: { title: string; onClick: () => void; disabled?: boolean }) => {
+    if (item.disabled) return;
     if (item.onClick) {
       item.onClick();
     }
@@ -108,13 +114,17 @@ export const Dropdown = ({ options }: DropdownProps) => {
           {options?.map((option, index) => (
             <button
               key={index}
+              disabled={option.disabled}
               onClick={(e) => {
                 e.stopPropagation();
                 handleItemClick(option);
               }}
-              className="w-full text-nowrap text-left px-3 py-2 hover:bg-gray-100 transition-colors text-sm dark:text-gray-200 dark:hover:bg-gray-700"
+              className={`w-full text-nowrap text-left px-3 py-2 hover:bg-gray-100 transition-colors text-sm dark:text-gray-200 dark:hover:bg-gray-700 flex items-center gap-2 ${
+                option.disabled ? "opacity-50 cursor-not-allowed" : ""
+              }`}
             >
-              {option.title}
+              {option.icon && <span className="flex-shrink-0">{option.icon}</span>}
+              <span>{option.title}</span>
             </button>
           ))}
         </div>

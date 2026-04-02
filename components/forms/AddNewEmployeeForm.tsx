@@ -27,13 +27,13 @@ const AddNewEmployeeForm = ({
   const { departmentOptions, positionOptions } = useConstantData();
   const { data: employmentTypes } = useGetEmploymentTypesQuery(undefined);
   const { data: workScheduleTypes } = useGetWorkScheduleTypesQuery(undefined);
-  const workScheduleTypeOptions = workScheduleTypes?.map(
+  const workScheduleTypeOptions = workScheduleTypes?.data?.map(
     (workScheduleType: { id: string; name: string }) => ({
       value: workScheduleType?.id,
       label: workScheduleType?.name,
     })
   );
-  const employmentTypeOptions = employmentTypes?.map(
+  const employmentTypeOptions = employmentTypes?.data?.map(
     (employmentType: { id: string; name: string }) => ({
       value: employmentType?.id,
       label: employmentType?.name,
@@ -46,6 +46,8 @@ const AddNewEmployeeForm = ({
       label: gradeLevel?.name,
     })
   );
+
+  console.log(gradeLevelOptions)
   const [
     getSalaryBandsByGradeLevelId,
     { data: salaryBands },
@@ -60,7 +62,7 @@ const AddNewEmployeeForm = ({
   }, [salaryBands]);
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 h-80 overflow-y-auto">
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         {step === "basic-info" ? (
           <>
@@ -80,6 +82,64 @@ const AddNewEmployeeForm = ({
                 placeholder="Doe"
                 form={form}
               />
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              <TextInput
+                label="Middle Name (Optional)"
+                name="middleName"
+                type="text"
+                placeholder="John Doe"
+                form={form}
+              />
+              <TextInput
+                label="Previous Name (If Any)"
+                name="previousName"
+                type="text"
+                placeholder="Doe"
+                form={form}
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              <TextInput
+                label="Date of Birth"
+                name="dateOfBirth"
+                type="date"
+                placeholder=""
+                form={form}
+              />
+              <SelectInput
+                label="Gender"
+                name="gender"
+                options={[
+                  { value: "male", label: "Male" },
+                  { value: "female", label: "Female" },
+                ]}
+                form={form}
+              />
+            </div>
+            <div className="grid grid-cols-1 gap-2">
+              <SelectInput
+                label="Marital Status"
+                name="maritalStatus"
+                options={[
+                  { value: "Single", label: "Single" },
+                  { value: "Married", label: "Married" },
+                  { value: "Divorced", label: "Divorced" },
+                  { value: "Widowed", label: "Widowed" },
+                ]}
+                form={form}
+              />
+              {/* <SelectInput
+                label="Nationality"
+                name="nationality"
+                options={[
+                  { value: "British", label: "British" },
+                  { value: "American", label: "American" },
+                  { value: "EU/EEA", label: "EU/EEA" },
+                  { value: "Other", label: "Other" },
+                ]}
+                form={form}
+              /> */}
             </div>
             <div className="grid grid-cols-2 gap-2">
               <TextInput
