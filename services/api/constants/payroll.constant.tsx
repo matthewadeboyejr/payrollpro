@@ -130,26 +130,36 @@ export const payrollApiSlice = apiSlice.injectEndpoints({
       providesTags: ["PayrollRti" as any],
     }),
     generatePayrollRti: builder.mutation({
-      query: (payrollRunId) => ({
+      query: ({ payrollRunId, data }) => ({
         url: `${PAYROLL}/runs/${payrollRunId}/rti`,
         method: "POST",
+        body: data,
       }),
       invalidatesTags: ["PayrollRti" as any],
     }),
     markRtiAsSubmitted: builder.mutation({
-      query: (id) => ({
+      query: ({ id, data }) => ({
         url: `${PAYROLL}/rti/${id}/mark-submitted`,
         method: "PUT",
+        body: data,
       }),
       invalidatesTags: ["PayrollRti" as any],
     }),
 
     // PayrollRules - Tax
     getTaxRules: builder.query({
-      query: () => ({
-        url: `${PAYROLL}/rules/tax`,
-        method: "GET",
-      }),
+      query: (params: { taxYearLabel?: string; region?: string } = {}) => {
+        const { taxYearLabel, region } = params;
+        let url = `${PAYROLL}/rules/tax`;
+        const queryParams = new URLSearchParams();
+        if (taxYearLabel) queryParams.append("taxYearLabel", taxYearLabel);
+        if (region) queryParams.append("region", region);
+        const queryStr = queryParams.toString();
+        return {
+          url: queryStr ? `${url}?${queryStr}` : url,
+          method: "GET",
+        };
+      },
       providesTags: ["PayrollRules" as any],
     }),
     createTaxRule: builder.mutation({
@@ -185,10 +195,18 @@ export const payrollApiSlice = apiSlice.injectEndpoints({
 
     // PayrollRules - NI
     getNiRules: builder.query({
-      query: () => ({
-        url: `${PAYROLL}/rules/ni`,
-        method: "GET",
-      }),
+      query: (params: { taxYearLabel?: string; niCategory?: string } = {}) => {
+        const { taxYearLabel, niCategory } = params;
+        let url = `${PAYROLL}/rules/ni`;
+        const queryParams = new URLSearchParams();
+        if (taxYearLabel) queryParams.append("taxYearLabel", taxYearLabel);
+        if (niCategory) queryParams.append("niCategory", niCategory);
+        const queryStr = queryParams.toString();
+        return {
+          url: queryStr ? `${url}?${queryStr}` : url,
+          method: "GET",
+        };
+      },
       providesTags: ["PayrollRules" as any],
     }),
     createNiRule: builder.mutation({

@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import DropdownComponent, { Dropdown } from "../ui/Dropdown";
-import { FiSearch } from "react-icons/fi";
+import { FiSearch, FiCalendar } from "react-icons/fi";
 import Modal from "../ui/Modal";
+import EmptyState from "../ui/EmptyState";
 
 import { useGetLeaveRequestQuery } from "@/services/api/constants/Leave.constant";
 import { getLeave, LeaveDetails as LeaveDetailsType } from "../types/Leave";
@@ -210,6 +211,14 @@ const LeaveManagementTable = () => {
             })}
           </tbody>
         </table>
+
+        {leaveRequests?.length === 0 && !isLoading && (
+          <EmptyState
+            icon={FiCalendar}
+            title="No Leave Requests"
+            description="There are no leave requests to display. When employees submit requests for annual leave, sick leave, or other types of absence, they will appear here."
+          />
+        )}
       </div>
 
       {isModalOpen === "view" && initialValues && (

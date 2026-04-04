@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Dropdown } from "../ui/Dropdown";
-import { FiPlus, FiSearch } from "react-icons/fi";
+import { FiPlus, FiSearch, FiBriefcase } from "react-icons/fi";
 
 import UsersTableSkeleton from "../ui/UsersTableSkeleton";
+import EmptyState from "../ui/EmptyState";
 
 import { useModal } from "@/context/ModalContext";
 import { useAction } from "@/hooks/useAction";
@@ -188,16 +189,21 @@ const SalaryBandTable = () => {
                 </tr>
               );
             })}
-
-            {salaryBandsData && salaryBandsData.length === 0 && (
-              <tr>
-                <td colSpan={7} className="px-6 py-4 text-center">
-                  No salary bands found
-                </td>
-              </tr>
-            )}
           </tbody>
         </table>
+
+        {salaryBandsData && salaryBandsData.length === 0 && !isLoading && (
+          <EmptyState
+            icon={FiBriefcase}
+            title="No Salary Bands"
+            description="Salary bands and grade levels are not defined yet. Create salary bands to manage employee compensation structures and grade levels."
+            action={{
+              label: "Add Salary Band",
+              onClick: () => setIsModalOpen("add-salaryBand"),
+              icon: <FiPlus />
+            }}
+          />
+        )}
       </div>
       {isModalOpen === "add-salaryBand" && <AddSalaryBand />}
       {isModalOpen === "edit-salaryBand" && initialValues && (

@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Dropdown } from "../ui/Dropdown";
-import { FiPlus, FiSearch } from "react-icons/fi";
+import { FiPlus, FiSearch, FiUserCheck } from "react-icons/fi";
 import { useGetUsersQuery } from "@/services/api/constants/auth.constant";
+import EmptyState from "../ui/EmptyState";
 
 import { formatDT } from "@/utils/formatDT";
 import StatusBadge from "@/utils/StatusBadge";
@@ -172,16 +173,21 @@ const UsersTable = () => {
                 </tr>
               );
             })}
-
-            {users && users.length === 0 && (
-              <tr>
-                <td colSpan={7} className="px-6 py-4 text-center">
-                  No users found
-                </td>
-              </tr>
-            )}
           </tbody>
         </table>
+
+        {users && users.length === 0 && !isLoading && (
+          <EmptyState
+            icon={FiUserCheck}
+            title="No System Users"
+            description="Your user directory is currently empty. Add administrators, payroll officers, or managers to grant them access to the platform."
+            action={{
+              label: "Add User",
+              onClick: () => setIsModalOpen("add"),
+              icon: <FiPlus />
+            }}
+          />
+        )}
       </div>
       {isModalOpen === "add" && <AddUser />}
       {isModalOpen === "edit" && initialValues && (

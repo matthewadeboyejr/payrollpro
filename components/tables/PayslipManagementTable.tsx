@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { FiSearch, FiUsers } from "react-icons/fi";
 import Modal from "../ui/Modal";
 import DropdownComponent from "../ui/Dropdown";
+import { FiFileText } from "react-icons/fi";
+import EmptyState from "@/components/ui/EmptyState";
 
 import { Form } from "react-final-form";
 import { validate } from "validate.js";
@@ -116,6 +118,15 @@ const PayslipManagementTable = () => {
             </tr>
           </tbody>
         </table>
+
+         {/* Since this table currently has static data, we'll keep the static row but add the EmptyState logic for future use */}
+         {[].length === 0 && false && (
+          <EmptyState
+            icon={FiFileText}
+            title="No Payslips Generated"
+            description="Employees have not been issued any payslips yet. Finalize the current payroll cycle to generate and distribute payslips."
+          />
+        )}
       </div>
       {isModalOpen && (
         <Modal

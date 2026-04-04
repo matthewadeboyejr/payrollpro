@@ -12,6 +12,8 @@ import {
 } from "@/services/api/constants/shift.constant";
 import { showAlert } from "@/components/ui/ShowAlert";
 import { useAction } from "@/hooks/useAction";
+import { FiCalendar } from "react-icons/fi";
+import EmptyState from "@/components/ui/EmptyState";
 
 // Type Definitions
 interface ApiShift {
@@ -127,69 +129,68 @@ const OpenShiftsTable: React.FC<OpenShiftsTableProps> = ({ shifts }) => {
               </tr>
             </thead>
             <tbody>
-              {shifts.length === 0 ? (
-                <tr>
-                  <td colSpan={7} className="px-6 py-4 text-center text-gray-500">
-                    No open shifts available
-                  </td>
-                </tr>
-              ) : (
-                shifts.map((shift: ApiShift) => {
-                  const { date: workDate } = formatDT(shift.workDate);
-                  return (
-                    <tr
-                      key={shift.id}
-                      className="border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200"
-                    >
-
-                      <td className="px-6 py-4">{workDate || "-"}</td>
-                      <td className="px-6 py-4">{shift.shiftName || "-"}</td>
-                      <td className="px-6 py-4">
-                        {formatTime(shift.shiftStart) || "-"}
-                      </td>
-                      <td className="px-6 py-4">
-                        {formatTime(shift.shiftEnd) || "-"}
-                      </td>
-                      <td className="px-6 py-4">
-                        {shift.departmentName || "-"}
-                      </td>
-                      <td className="px-6 py-4">
-                        {shift.hoursWorked || 0} hrs
-                      </td>
-                      <td className="px-6 py-4 relative">
-                        <Dropdown
-                          options={[
-                            {
-                              title: "View",
-                              onClick: () => handleView(shift),
-                            },
-                            {
-                              title: "Claim",
-                              onClick: () => handleClaim(shift),
-                            },
-                            {
-                              title: "Edit",
-                              onClick: () => handleEdit(shift),
-                            },
-                            {
-                              title: "Cancel",
-                              onClick: () => handleCancel(shift),
-                            },
-                            {
-                              title: "Delete",
-                              onClick: () => handleDelete(shift),
-                            },
-                          ]}
-                          label="Actions"
-                          size="sm"
-                        />
-                      </td>
-                    </tr>
-                  );
-                })
-              )}
+              {shifts.map((shift: ApiShift) => {
+                const { date: workDate } = formatDT(shift.workDate);
+                return (
+                  <tr
+                    key={shift.id}
+                    className="border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200"
+                  >
+                    <td className="px-6 py-4">{workDate || "-"}</td>
+                    <td className="px-6 py-4">{shift.shiftName || "-"}</td>
+                    <td className="px-6 py-4 text-blue-600 dark:text-blue-400 font-medium">
+                      {formatTime(shift.shiftStart) || "-"}
+                    </td>
+                    <td className="px-6 py-4 text-orange-600 dark:text-orange-400 font-medium">
+                      {formatTime(shift.shiftEnd) || "-"}
+                    </td>
+                    <td className="px-6 py-4">
+                      {shift.departmentName || "-"}
+                    </td>
+                    <td className="px-6 py-4 font-bold">
+                      {shift.hoursWorked || 0} hrs
+                    </td>
+                    <td className="px-6 py-4 relative">
+                      <Dropdown
+                        options={[
+                          {
+                            title: "View",
+                            onClick: () => handleView(shift),
+                          },
+                          {
+                            title: "Claim",
+                            onClick: () => handleClaim(shift),
+                          },
+                          {
+                            title: "Edit",
+                            onClick: () => handleEdit(shift),
+                          },
+                          {
+                            title: "Cancel",
+                            onClick: () => handleCancel(shift),
+                          },
+                          {
+                            title: "Delete",
+                            onClick: () => handleDelete(shift),
+                          },
+                        ]}
+                        label="Actions"
+                        size="sm"
+                      />
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
+
+          {shifts.length === 0 && (
+            <EmptyState
+              icon={FiCalendar}
+              title="No Open Shifts"
+              description="There are no open shifts available for claiming at the moment. Check back later or contact your manager for shift assignments."
+            />
+          )}
         </div>
       </div>
 

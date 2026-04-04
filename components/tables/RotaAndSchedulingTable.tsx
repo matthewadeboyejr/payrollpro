@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Dropdown } from "../ui/Dropdown";
-import { FiFilter, FiPlus, FiSearch } from "react-icons/fi";
+import { FiFilter, FiPlus, FiSearch, FiClock } from "react-icons/fi";
 
 import { BiExport } from "react-icons/bi";
+import EmptyState from "../ui/EmptyState";
 import { useModal } from "@/context/ModalContext";
 import { Shifts } from "../types/shifts";
 import AddShift from "../shift-rota/sub-component/AddShift";
@@ -96,63 +97,67 @@ const RotaAndSchedulingTable = () => {
               </tr>
             </thead>
             <tbody>
+              {shiftsData?.map((shift: Shifts) => (
+                <tr
+                  key={shift.id}
+                  className=" border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50/50 dark:hover:bg-gray-700/50 transition-colors group"
+                >
+                  <td className="px-6 py-4 font-medium text-gray-900 dark:text-white uppercase tracking-tight">{shift?.name}</td>
+                  <td className="px-6 py-4">{shift?.departmentName}</td>
+                  <td className="px-6 py-4">
+                    <span className={`px-2 py-1 rounded-md text-[10px] font-bold uppercase ${shift?.isOvernight ? 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400' : 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-400'}`}>
+                      {shift?.isOvernight ? "Overnight" : "Standard"}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 font-semibold text-blue-600 dark:text-blue-400">{shift?.startTime}</td>
+                  <td className="px-6 py-4 font-semibold text-orange-600 dark:text-orange-400">{shift?.endTime}</td>
 
-
-
-              {shiftsData && shiftsData.length === 0 ? (
-                <tr>
-                  <td colSpan={5} className="px-6 py-4 text-center">
-                    No shifts found
+                  <td className="px-6 py-4 relative">
+                    <Dropdown
+                      options={[
+                        {
+                          title: "View",
+                          onClick: () => {
+                            setSelectedShiftId(shift.id);
+                            setIsModalOpen("view-shift");
+                          },
+                        },
+                        {
+                          title: "Edit",
+                          onClick: () => {
+                            setInitialValues(shift);
+                            setSelectedShiftId(shift.id);
+                            setIsModalOpen("edit-shift");
+                          },
+                        },
+                        {
+                          title: "Delete",
+                          onClick: () => {
+                            deleteShiftAction(shift.id);
+                          },
+                        },
+                      ]}
+                      label="Actions"
+                      size="sm"
+                    />
                   </td>
                 </tr>
-              ) : (
-                shiftsData?.map((shift: Shifts) => (
-                  <tr
-                    key={shift.id}
-                    className=" border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200"
-                  >
-                    <td className="px-6 py-4">{shift?.name}</td>
-                    <td className="px-6 py-4">{shift?.departmentName}</td>
-                    <td className="px-6 py-4">
-                      {shift?.isOvernight ? "Yes" : "No"}
-                    </td>
-                    <td className="px-6 py-4">{shift?.startTime}</td>
-                    <td className="px-6 py-4">{shift?.endTime}</td>
-
-                    <td className="px-6 py-4 relative">
-                      <Dropdown
-                        options={[
-                          {
-                            title: "View",
-                            onClick: () => {
-                              setSelectedShiftId(shift.id);
-                              setIsModalOpen("view-shift");
-                            },
-                          },
-                          {
-                            title: "Edit",
-                            onClick: () => {
-                              setInitialValues(shift);
-                              setSelectedShiftId(shift.id);
-                              setIsModalOpen("edit-shift");
-                            },
-                          },
-                          {
-                            title: "Delete",
-                            onClick: () => {
-                              deleteShiftAction(shift.id);
-                            },
-                          },
-                        ]}
-                        label="Actions"
-                        size="sm"
-                      />
-                    </td>
-                  </tr>
-                ))
-              )}
+              ))}
             </tbody>
           </table>
+
+          {shiftsData && shiftsData.length === 0 && !isLoadingShifts && (
+            <EmptyState
+              icon={FiClock}
+              title="No Shifts Scheduled"
+              description="The shift schedule is currently empty. Define shift timings and assign them to departments to start scheduling your workforce."
+              action={{
+                label: "Add Shift",
+                onClick: () => setIsModalOpen("add-shift"),
+                icon: <FiPlus />
+              }}
+            />
+          )}
         </>}
       </div>
       {isModalOpen === "add-shift" && <AddShift />}

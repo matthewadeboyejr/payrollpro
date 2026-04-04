@@ -10,6 +10,8 @@ import { HMRCSubmissionFormValues } from "../types/formFields";
 import { hmrcSubmissionConstraints } from "../forms/contraints/contraints";
 import { BiCalculator } from "react-icons/bi";
 import TaxCalculatorForm from "../forms/TaxCalculatorForm";
+import { FiPercent } from "react-icons/fi";
+import EmptyState from "@/components/ui/EmptyState";
 
 const TaxManagementTable = () => {
   const [search, setSearch] = useState("");
@@ -140,6 +142,15 @@ const TaxManagementTable = () => {
             </tr>
           </tbody>
         </table>
+
+        {/* Since this table currently has static data, we'll keep the static row but add the EmptyState logic for future use */}
+        {[].length === 0 && false && (
+          <EmptyState
+            icon={FiPercent}
+            title="No Tax Records"
+            description="No tax or NI deduction records found for the current period. Finalize a payroll run to generate tax calculations and HMRC submission data."
+          />
+        )}
       </div>
       {isModalOpen === "hmrc" && (
         <Modal

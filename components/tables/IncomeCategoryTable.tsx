@@ -1,8 +1,9 @@
 
 import React, { useState } from "react";
 import { Dropdown } from "../ui/Dropdown";
-import { FiPlus, FiSearch } from "react-icons/fi";
+import { FiPlus, FiSearch, FiList } from "react-icons/fi";
 import UsersTableSkeleton from "../ui/UsersTableSkeleton";
+import EmptyState from "../ui/EmptyState";
 import { useModal } from "@/context/ModalContext";
 import { useAction } from "@/hooks/useAction";
 import {
@@ -135,15 +136,21 @@ const IncomeCategoryTable = () => {
                                 </td>
                             </tr>
                         ))}
-                        {filteredCategories.length === 0 && (
-                            <tr>
-                                <td colSpan={4} className="px-6 py-4 text-center">
-                                    No income categories found
-                                </td>
-                            </tr>
-                        )}
                     </tbody>
                 </table>
+
+                {filteredCategories.length === 0 && !isLoading && (
+                    <EmptyState
+                        icon={FiList}
+                        title="No Categories"
+                        description="Additional income categories are not defined yet. Add categories like 'Bonus', 'Commission', or 'Overtime' to help classify non-salary payments."
+                        action={{
+                            label: "Add Category",
+                            onClick: () => setIsModalOpen("add-incomeCategory"),
+                            icon: <FiPlus />
+                        }}
+                    />
+                )}
             </div>
             {isModalOpen === "add-incomeCategory" && <AddIncomeCategory />}
             {isModalOpen === "edit-incomeCategory" && initialValues && (

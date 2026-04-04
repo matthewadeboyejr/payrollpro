@@ -2,8 +2,9 @@
 
 import React, { useState } from "react";
 import { Dropdown } from "../ui/Dropdown";
-import { FiPlus, FiSearch } from "react-icons/fi";
+import { FiPlus, FiSearch, FiSettings } from "react-icons/fi";
 import UsersTableSkeleton from "../ui/UsersTableSkeleton";
+import EmptyState from "../ui/EmptyState";
 import { useModal } from "@/context/ModalContext";
 import Spinner from "../ui/Spinner";
 import { 
@@ -116,7 +117,7 @@ const PayrollConfigurationTable = () => {
           </thead>
           <tbody>
             {configs.map((config: PayrollConfiguration, index: number) => (
-              <tr key={config.id} className="border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
+              <tr key={config.id} className="border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50/50 dark:hover:bg-gray-700/50 transition-colors group">
                 <td className="px-6 py-4 font-medium text-gray-900 dark:text-white">{index + 1}</td>
                 <td className="px-6 py-4">{format(new Date(config.effectiveFrom), "dd MMM yyyy")}</td>
                 <td className="px-6 py-4">{config.taxYearStartDay}/{config.taxYearStartMonth}</td>
@@ -152,13 +153,21 @@ const PayrollConfigurationTable = () => {
                 </td>
               </tr>
             ))}
-            {configs.length === 0 && (
-              <tr>
-                <td colSpan={9} className="px-6 py-4 text-center">No configurations found</td>
-              </tr>
-            )}
           </tbody>
         </table>
+
+        {configs.length === 0 && !isLoading && (
+          <EmptyState
+            icon={FiSettings}
+            title="No Configurations"
+            description="No payroll configurations found. Create your first configuration to define tax years, regions, and default rates."
+            action={{
+              label: "Add Configuration",
+              onClick: () => setIsModalOpen("add-payroll-config"),
+              icon: <FiPlus />
+            }}
+          />
+        )}
       </div>
 
       {isModalOpen === "add-payroll-config" && <AddPayrollConfiguration />}

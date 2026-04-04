@@ -1,8 +1,9 @@
 
 import React, { useState } from "react";
 import { Dropdown } from "../ui/Dropdown";
-import { FiPlus, FiSearch } from "react-icons/fi";
+import { FiPlus, FiSearch, FiTrendingUp } from "react-icons/fi";
 import { BiExport } from "react-icons/bi";
+import EmptyState from "@/components/ui/EmptyState";
 import {
     useGetIncomeQuery,
 
@@ -25,6 +26,16 @@ interface IncomeFilters {
     endDate: string;
 }
 
+interface Income {
+    id: string;
+    employeeName?: string;
+    categoryName: string;
+    description: string;
+    amount: number;
+    incomeDate: string;
+    isTaxable: boolean;
+}
+
 const IncomeManagementTable = () => {
     const { isModalOpen, setIsModalOpen } = useModal();
     const [incomeFilters] = useState<IncomeFilters>({
@@ -36,8 +47,7 @@ const IncomeManagementTable = () => {
         endDate: "",
     });
     const [search, setSearch] = useState("");
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const [selectedIncome, setSelectedIncome] = useState<any>(null);
+    const [selectedIncome, setSelectedIncome] = useState<Income | null>(null);
 
     const { data: incomeData, isLoading } = useGetIncomeQuery({
         employeeId: "",
@@ -118,65 +128,65 @@ const IncomeManagementTable = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {isLoading ? (
-                                <tr><td colSpan={7} className="px-6 py-4 text-center">Loading...</td></tr>
-                            ) : incomeData?.data?.items?.length > 0 ? (
-                                incomeData.data.items
-                                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                                    .filter((item: any) =>
-                                        item.categoryName?.toLowerCase().includes(search.toLowerCase()) ||
-                                        item.description?.toLowerCase().includes(search.toLowerCase()) ||
-                                        item.employeeName?.toLowerCase().includes(search.toLowerCase())
-                                    )
-                                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                                    .map((income: any) => (
-                                        <tr key={income.id} className="border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
-                                            <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                {income.employeeName}
-                                            </td>
-                                            <td className="px-6 py-4">{income.categoryName}</td>
-                                            <td className="px-6 py-4">{income.description}</td>
-                                            <td className="px-6 py-4">£{income.amount}</td>
-                                            <td className="px-6 py-4">{new Date(income.incomeDate).toLocaleDateString()}</td>
-                                            <td className="px-6 py-4">
-                                                <span className={`px-2 py-1 rounded-full text-xs ${income.isTaxable ? 'bg-red-200 text-red-800' : 'bg-green-200 text-green-800'}`}>
-                                                    {income.isTaxable ? 'Yes' : 'No'}
-                                                </span>
-                                            </td>
-                                            <td className="px-6 py-4 relative">
-                                                <Dropdown
-                                                    options={[
-                                                        {
-                                                            title: "View", onClick: () => {
-                                                                setSelectedIncome(income);
-                                                                setIsModalOpen("view");
-                                                            }
-                                                        },
-                                                        /*  {
-                                                             title: "Review", onClick: () => {
-                                                                 setSelectedIncome(income);
-                                                                 setIsModalOpen("review");
-                                                             }
-                                                         }, */
-                                                        {
-                                                            title: "Edit", onClick: () => {
-                                                                setSelectedIncome(income);
-                                                                setIsModalOpen("edit");
-                                                            }
-                                                        },
-                                                        { title: "Delete", onClick: () => handleDelete(income.id) },
-                                                    ]}
-                                                    label="Actions"
-                                                    size="sm"
-                                                />
-                                            </td>
-                                        </tr>
-                                    ))
-                            ) : (
-                                <tr><td colSpan={7} className="px-6 py-4 text-center">No income records found</td></tr>
-                            )}
+                            {incomeData?.data?.items?.filter((item: Income) =>
+                                item.categoryName?.toLowerCase().includes(search.toLowerCase()) ||
+                                item.description?.toLowerCase().includes(search.toLowerCase()) ||
+                                item.employeeName?.toLowerCase().includes(search.toLowerCase())
+                            ).map((income: Income) => (
+                                <tr key={income.id} className="border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50/50 dark:hover:bg-gray-700/50 transition-colors group">
+                                    <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                        {income.employeeName}
+                                    </td>
+                                    <td className="px-6 py-4">{income.categoryName}</td>
+                                    <td className="px-6 py-4 truncate max-w-xs">{income.description}</td>
+                                    <td className="px-6 py-4 font-bold text-gray-900 dark:text-white uppercase tracking-tighter italic">£{income.amount.toLocaleString()}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap">{new Date(income.incomeDate).toLocaleDateString()}</td>
+                                    <td className="px-6 py-4">
+                                        <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${income.isTaxable ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' : 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'}`}>
+                                            {income.isTaxable ? 'Taxable' : 'Non-Taxable'}
+                                        </span>
+                                    </td>
+                                    <td className="px-6 py-4 relative">
+                                        <Dropdown
+                                            options={[
+                                                {
+                                                    title: "View", onClick: () => {
+                                                        setSelectedIncome(income);
+                                                        setIsModalOpen("view");
+                                                    }
+                                                },
+                                                {
+                                                    title: "Edit", onClick: () => {
+                                                        setSelectedIncome(income);
+                                                        setIsModalOpen("edit");
+                                                    }
+                                                },
+                                                { title: "Delete", onClick: () => handleDelete(income.id) },
+                                            ]}
+                                            label="Actions"
+                                            size="sm"
+                                        />
+                                    </td>
+                                </tr>
+                            ))}
                         </tbody>
                     </table>
+
+                    {incomeData?.data?.items?.length === 0 && !isLoading && (
+                        <EmptyState
+                            icon={FiTrendingUp}
+                            title="No Income Records"
+                            description="No additional income records found for the selected period. This includes bonuses, commissions, or other non-salary earnings."
+                            action={{
+                                label: "Add Income",
+                                onClick: () => {
+                                    setSelectedIncome(null);
+                                    setIsModalOpen("add");
+                                },
+                                icon: <FiPlus />
+                            }}
+                        />
+                    )}
                 </div>
                 {isModalOpen === "add" && <AddIncome />}
                 {isModalOpen === "edit" && selectedIncome && <EditIncome initialValues={selectedIncome} />}

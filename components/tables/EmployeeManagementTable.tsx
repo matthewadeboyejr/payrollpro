@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Dropdown } from "../ui/Dropdown";
-import { FiPlus, FiSearch } from "react-icons/fi";
+import { FiPlus, FiSearch, FiUsers } from "react-icons/fi";
 
 import UsersTableSkeleton from "../ui/UsersTableSkeleton";
+import EmptyState from "../ui/EmptyState";
 import { useGetEmployeesQuery } from "@/services/api/constants/employee.constant";
 import { Employee } from "../types/employment";
 import AddEmployee from "../employeeManagement/sub-component/AddEmployee";
@@ -141,6 +142,19 @@ const EmployeeManagementTable = () => {
             })}
           </tbody>
         </table>
+
+        {employees?.length === 0 && !isLoading && (
+          <EmptyState
+            icon={FiUsers}
+            title="No Employees Found"
+            description="Your employee directory is empty. Add your first employee to start managing their payroll, leave, and documents."
+            action={{
+              label: "Add Employee",
+              onClick: () => setIsModalOpen("add-employee"),
+              icon: <FiPlus />
+            }}
+          />
+        )}
       </div>
       {isModalOpen === "add-employee" && <AddEmployee />}
       {isModalOpen === "edit-employee" && (

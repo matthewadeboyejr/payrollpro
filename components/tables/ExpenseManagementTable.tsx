@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import DropdownComponent, { Dropdown } from "../ui/Dropdown";
-import { FiPlus, FiSearch } from "react-icons/fi";
+import { FiPlus, FiSearch, FiDollarSign } from "react-icons/fi";
 import { BiExport } from "react-icons/bi";
+import EmptyState from "@/components/ui/EmptyState";
 import { useGetExpenseQuery } from "@/services/api/constants/expense.constant";
 import { useAction } from "@/hooks/useAction";
 import AddExpense from "@/components/expenseManagement/sub-component/AddExpense";
@@ -12,6 +13,16 @@ import ViewExpense from "@/components/expenseManagement/sub-component/ViewExpens
 import { useModal } from "@/context/ModalContext";
 import ExpenseSummaryCards from "@/components/expenseManagement/ExpenseSummaryCards";
 
+interface Expense {
+  id: string;
+  employeeName?: string;
+  categoryName: string;
+  description: string;
+  amount: number;
+  createdAt: string;
+  status: string;
+}
+
 const ExpenseManagementTable = () => {
   const [expenseFilters, setExpenseFilters] = useState({
     status: "",
@@ -21,8 +32,7 @@ const ExpenseManagementTable = () => {
   });
   const { deleteExpenseAction } = useAction();
   const { isModalOpen, setIsModalOpen } = useModal();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [selectedExpense, setSelectedExpense] = useState<any>(null);
+  const [selectedExpense, setSelectedExpense] = useState<Expense | null>(null);
 
   const { data: expensesData, isLoading } = useGetExpenseQuery({
     employeeId: "", // Fetch all for now, or implement filter
@@ -127,67 +137,74 @@ const ExpenseManagementTable = () => {
               </tr>
             </thead>
             <tbody>
-              {isLoading ? (
-                <tr><td colSpan={7} className="px-6 py-4 text-center">Loading...</td></tr>
-              ) : expensesData?.items?.length > 0 ? (
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                expensesData.items.map((expense: any) => (
-                  <tr key={expense.id} className=" border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
-                    <td className="px-6 py-4 flex flex-col gap-2 items-start">
-                      <span className="text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                        {expense.employeeName || "Unknown Employee"}
-                      </span>
-
-                    </td>
-                    <td className="px-6 py-4"> {expense.categoryName}</td>
-                    <td className="px-6 py-4">{expense.description}</td>
-
-                    <td className="px-6 py-4">£{expense.amount}</td>
-                    <td className="px-6 py-4">{new Date(expense.createdAt).toLocaleDateString()}</td>
-                    <td className="px-6 py-4">
-                      <span className={`px-2 py-1 rounded-full text-xs ${expense.status === 'Approved' ? 'bg-green-200 text-green-800' :
-                        expense.status === 'Rejected' ? 'bg-red-200 text-red-800' :
-                          'bg-yellow-200 text-yellow-800'
-                        }`}>
-                        {expense.status}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 relative">
-                      <Dropdown
-                        options={[
-                          {
-                            title: "View",
-                            onClick: () => {
-                              setSelectedExpense(expense);
-                              setIsModalOpen("view");
-                            },
+              {expensesData?.items?.map((expense: Expense) => (
+                <tr key={expense.id} className=" border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50/50 dark:hover:bg-gray-700/50 transition-colors group">
+                  <td className="px-6 py-4 flex flex-col gap-2 items-start">
+                    <span className="text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                      {expense.employeeName || "Unknown Employee"}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4"> {expense.categoryName}</td>
+                  <td className="px-6 py-4 text-xs max-w-xs truncate">{expense.description}</td>
+                  <td className="px-6 py-4 font-bold text-gray-900 dark:text-white">£{expense.amount.toLocaleString()}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{new Date(expense.createdAt).toLocaleDateString()}</td>
+                  <td className="px-6 py-4">
+                    <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${expense.status === 'Approved' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' :
+                      expense.status === 'Rejected' ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' :
+                        'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400'
+                      }`}>
+                      {expense.status}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 relative">
+                    <Dropdown
+                      options={[
+                        {
+                          title: "View",
+                          onClick: () => {
+                            setSelectedExpense(expense);
+                            setIsModalOpen("view");
                           },
-                          {
-                            title: "Edit", onClick: () => {
-                              setSelectedExpense(expense)
-                              setIsModalOpen("edit");
-                            }
+                        },
+                        {
+                          title: "Edit", onClick: () => {
+                            setSelectedExpense(expense)
+                            setIsModalOpen("edit");
+                          }
+                        },
+                        {
+                          title: "Review",
+                          onClick: () => {
+                            setSelectedExpense(expense);
+                            setIsModalOpen("review");
                           },
-                          {
-                            title: "Review",
-                            onClick: () => {
-                              setSelectedExpense(expense);
-                              setIsModalOpen("review");
-                            },
-                          },
-                          { title: "Delete", onClick: () => deleteExpenseAction(expense.id) },
-                        ]}
-                        label="Actions"
-                        size="sm"
-                      />
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr><td colSpan={7} className="px-6 py-4 text-center">No expense records found</td></tr>
-              )}
+                        },
+                        { title: "Delete", onClick: () => deleteExpenseAction(expense.id) },
+                      ]}
+                      label="Actions"
+                      size="sm"
+                    />
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
+
+          {expensesData?.items?.length === 0 && !isLoading && (
+            <EmptyState
+              icon={FiDollarSign}
+              title="No Expense Records"
+              description="No expense claims or records found. Employees can submit expenses for reimbursement, or you can add administrative expenses here."
+              action={{
+                label: "Add Expense",
+                onClick: () => {
+                  setSelectedExpense(null);
+                  setIsModalOpen("add");
+                },
+                icon: <FiPlus />
+              }}
+            />
+          )}
         </div>
         {isModalOpen === "add" && <AddExpense />}
         {isModalOpen === "edit" && selectedExpense && <EditExpense initialValues={selectedExpense} />}
