@@ -27,7 +27,7 @@ const AddNewEmployeeForm = ({
   const { departmentOptions, positionOptions } = useConstantData();
   const { data: employmentTypes } = useGetEmploymentTypesQuery(undefined);
   const { data: workScheduleTypes } = useGetWorkScheduleTypesQuery(undefined);
-  const workScheduleTypeOptions = workScheduleTypes?.data?.map(
+  const workScheduleTypeOptions = workScheduleTypes?.map(
     (workScheduleType: { id: string; name: string }) => ({
       value: workScheduleType?.id,
       label: workScheduleType?.name,
