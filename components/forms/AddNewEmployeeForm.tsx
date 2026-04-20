@@ -33,12 +33,14 @@ const AddNewEmployeeForm = ({
       label: workScheduleType?.name,
     })
   );
-  const employmentTypeOptions = employmentTypes?.data?.map(
+  const employmentTypeOptions = employmentTypes?.map(
     (employmentType: { id: string; name: string }) => ({
       value: employmentType?.id,
       label: employmentType?.name,
     })
   );
+
+  console.log(employmentTypes)
   const { data: gradeLevels } = useGetGradeLevelsQuery(undefined);
   const gradeLevelOptions = gradeLevels?.map(
     (gradeLevel: { id: string; name: string }) => ({
