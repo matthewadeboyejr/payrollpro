@@ -30,3 +30,22 @@ export const EXPENSE_SUMMARY = "expenses/expense-summary";
 export const INCOME = "incomes";
 export const INCOME_CATEGORIES = "income-categories";
 export const INCOME_SUMMARY = "incomes/income-summary";
+
+
+//accounting
+export const ACCOUNTING = "accounts";
+export const AUDIT_LOGS = "audit-logs";
+export const BANK_ACCOUNTS = "bank-accounts";
+export const BANK_TRANSACTIONS = "bank-transactions";
+export const BILLS = "bills";
+export const CUSTOMERS = "customers";
+export const ACCOUNTING_EXPENSES = "accounting-expenses";
+export const INVOICES = "invoices";
+export const JOURNALS = "journals";
+export const PAYMENTS = "payments";
+export const PERIODS = "periods";
+export const RECONCILIATIONS = "reconciliations";
+export const RECURRING_TEMPLATES = "recurring-templates";
+export const REPORTS = "reports";
+export const SUPPLIERS = "suppliers";
+export const VAT = "vat-codes";

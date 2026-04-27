@@ -1,4 +1,4 @@
-import { CiSettings, CiMoneyBill } from "react-icons/ci";
+import { CiSettings, CiMoneyBill, CiCalculator1 } from "react-icons/ci";
 import { FaRegClock } from "react-icons/fa";
 import { FiCreditCard, FiHome, FiUser } from "react-icons/fi";
 import { IoCalendarClearOutline } from "react-icons/io5";
@@ -50,7 +50,7 @@ const menus = [
       {
         id: "expense-management",
         role: "admin",
-        label: "Expense Management",
+        label: "Employee Expenses",
         icon: <RiMoneyDollarCircleLine />,
         url: "/dashboard/expense-management",
       },
@@ -60,6 +60,13 @@ const menus = [
         label: "Payroll & Wages",
         icon: <CiMoneyBill />,
         url: "/dashboard/payroll-wages",
+      },
+      {
+        id: "accounting",
+        role: "admin",
+        label: "Accounting",
+        icon: <CiCalculator1 />,
+        url: "/dashboard/accounting",
       },
       {
         id: "tax-management",

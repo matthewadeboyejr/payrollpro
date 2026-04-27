@@ -1,0 +1,37 @@
+
+> payrollpro@0.1.0 build
+> next build
+
+   ▲ Next.js 15.3.8
+   - Environments: .env
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 16.0s
+   Linting and checking validity of types ...
+
+Failed to compile.
+
+./components/accounting/AccountingOverview.tsx
+7:46  Error: 'isLoadingBanks' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+8:44  Error: 'isLoadingVat' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+11:72  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./components/accounting/BankingSection.tsx
+10:3  Error: 'useDeleteAccountingBankTransactionsMutation' is defined but never used.  @typescript-eslint/no-unused-vars
+58:10  Error: 'deleteReconciliation' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+75:35  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+81:21  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+86:37  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+98:21  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+104:44  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+115:21  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+120:41  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+133:21  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+145:42  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+158:21  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+170:43  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+180:14  Error: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+180:21  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+212:45  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
